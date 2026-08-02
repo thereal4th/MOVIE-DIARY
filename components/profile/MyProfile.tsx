@@ -21,7 +21,10 @@ export const MyProfile: React.FC = () => {
     avatar: userProfile?.avatar || "/images/avatars/default.png",
     bannerUrl: userProfile?.bannerUrl || "/images/posters/past_lives.jpg",
     bio: userProfile?.bio ?? "Cinema enthusiasts watching everything from Studio Ghibli to Greta Gerwig masterpieces.",
-    tastePhilosophy: userProfile?.tastePhilosophy ?? "Every screening is an event. We judge films by emotions, set design, and storytelling craftsmanship."
+    tastePhilosophy: userProfile?.tastePhilosophy ?? "Every screening is an event. We judge films by emotions, set design, and storytelling craftsmanship.",
+    favoriteQuote: userProfile?.favoriteQuote ?? "In another life, I would have really liked just doing laundry and taxes with you.",
+    favoriteQuoteMovie: userProfile?.favoriteQuoteMovie ?? "Everything Everywhere All at Once (2022)",
+    favoriteQuoteCharacter: userProfile?.favoriteQuoteCharacter ?? "Waymond Wang"
   });
 
   const handleOpenEditModal = () => {
@@ -31,7 +34,10 @@ export const MyProfile: React.FC = () => {
       avatar: userProfile?.avatar || "",
       bannerUrl: userProfile?.bannerUrl || "/images/posters/past_lives.jpg",
       bio: userProfile?.bio || "",
-      tastePhilosophy: userProfile?.tastePhilosophy || ""
+      tastePhilosophy: userProfile?.tastePhilosophy || "",
+      favoriteQuote: userProfile?.favoriteQuote || "",
+      favoriteQuoteMovie: userProfile?.favoriteQuoteMovie || "",
+      favoriteQuoteCharacter: userProfile?.favoriteQuoteCharacter || ""
     });
     setIsEditModalOpen(true);
   };
@@ -44,27 +50,16 @@ export const MyProfile: React.FC = () => {
       avatar: editForm.avatar,
       bannerUrl: editForm.bannerUrl,
       bio: editForm.bio,
-      tastePhilosophy: editForm.tastePhilosophy
+      tastePhilosophy: editForm.tastePhilosophy,
+      favoriteQuote: editForm.favoriteQuote,
+      favoriteQuoteMovie: editForm.favoriteQuoteMovie,
+      favoriteQuoteCharacter: editForm.favoriteQuoteCharacter
     });
     setIsEditModalOpen(false);
   };
 
-  // Mascot cosmetic state & animations
-  const [mascotSkin, setMascotSkin] = useState<'default' | '3d' | 'director' | 'golden'>('3d');
-  const [isMascotBouncing, setIsMascotBouncing] = useState(false);
-
   // Right Page sub-navigation tab switch
   const [activeSubTab, setActiveSubTab] = useState<'analytics' | 'lists' | 'reviews' | 'badges'>('analytics');
-
-  // Dynamic Mascot Commentary based on real-time diary state
-  const mascotCommentary = useMemo(() => {
-    const total = movies.length;
-    if (total === 0) return "Welcome to your cinephile sanctuary! Log your very first film to get started!";
-    const favCount = movies.filter(m => m.favorite).length;
-    if (mascotSkin === 'director') return `Directing your archive! You have ${favCount} 5★ masterpieces logged in your Top 4 hall of fame!`;
-    if (mascotSkin === 'golden') return `A true academy veteran! You've logged ${total} incredible film treasures this year!`;
-    return `Cozy cinema vibes! You've recorded ${total} films in your physical notebook. Got hot tea ready for tonight's screening?`;
-  }, [movies, mascotSkin]);
 
   // Quick Stats computations
   const quickStats = useMemo(() => {
@@ -127,13 +122,8 @@ export const MyProfile: React.FC = () => {
     return { counts, maxVal };
   }, [movies]);
 
-  const handleMascotInteract = () => {
-    setIsMascotBouncing(true);
-    setTimeout(() => setIsMascotBouncing(false), 1000);
-  };
-
   /* ========================================================================= */
-  /* 📖 LEFT PAGE: Identity, Movie Buddy Mascot, & Top 4 Favorites Showcase    */
+  /* 📖 LEFT PAGE: Identity, Favorite Movie Quote, & Top 4 Favorites Showcase  */
   /* ========================================================================= */
   const leftPageContent = (
     <div className="flex flex-col h-full min-h-0 space-y-4 overflow-hidden">
@@ -213,38 +203,23 @@ export const MyProfile: React.FC = () => {
               )}
             </div>
 
-            {/* Movie Buddy Mascot & Dynamic Speech Bubble */}
-            <div className="w-full bg-linear-to-r from-[var(--surface-subtle)] via-[var(--accent-honey)]/10 to-[var(--surface-card)] p-3.5 rounded-2xl border border-[var(--border-color)] shadow-inner flex items-center gap-3.5">
-              <div
-                onClick={handleMascotInteract}
-                className={`w-14 h-14 rounded-2xl bg-linear-to-tr from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-slate-900 flex flex-col items-center justify-center shrink-0 shadow-md border-2 border-white cursor-pointer select-none transition-transform ${
-                  isMascotBouncing ? 'scale-110 rotate-12 animate-bounce' : 'hover:scale-105'
-                }`}
-              >
-                {mascotSkin === '3d' ? <Glasses className="w-7 h-7 stroke-[2.5]" /> : mascotSkin === 'director' ? <Clapperboard className="w-7 h-7 stroke-[2.5] text-rose-700" /> : mascotSkin === 'golden' ? <Trophy className="w-7 h-7 stroke-[2.5] text-amber-700" /> : <Popcorn className="w-7 h-7 stroke-[2] text-amber-800" />}
-                <span className="text-[7px] font-black uppercase tracking-tight bg-white/90 px-1 py-0.5 rounded-xs mt-0.5">
-                  Buddy 🍿
-                </span>
-              </div>
+            {/* Favorite Movie Quote Showcase */}
+            <div className="w-full bg-linear-to-br from-[var(--surface-subtle)] via-[var(--surface-card)] to-[var(--surface-subtle)] p-4 rounded-2xl border-2 border-[var(--border-color)] shadow-inner relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-bl from-[var(--accent-honey)]/15 via-[var(--accent-sakura)]/10 to-transparent rounded-full pointer-events-none blur-xl"></div>
+              
+              <div className="relative z-10 space-y-2">
+                <blockquote className="text-xs sm:text-sm font-extrabold text-[var(--text-primary)] font-serif italic leading-relaxed pl-3.5 border-l-3 border-[var(--accent-honey)]">
+                  "{userProfile.favoriteQuote || "In another life, I would have really liked just doing laundry and taxes with you."}"
+                </blockquote>
 
-              <div className="flex-1 min-w-0 space-y-1.5">
-                <div className="bg-[var(--surface-card)] p-2 rounded-xl border border-[var(--border-color)] shadow-2xs relative">
-                  <p className="text-[11px] font-bold text-[var(--text-primary)] italic line-clamp-2">
-                    "{mascotCommentary}"
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-0.5">
-                  <span className="text-[8px] font-black uppercase text-[var(--text-muted)]">Props:</span>
-                  {(['default', '3d', 'director', 'golden'] as const).map(skin => (
-                    <button
-                      key={skin}
-                      onClick={() => setMascotSkin(skin)}
-                      className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase shrink-0 cursor-pointer ${mascotSkin === skin ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs' : 'bg-[var(--surface-card)] text-[var(--text-secondary)] border border-[var(--border-color)]'}`}
-                    >
-                      {skin === 'default' ? '🍿 Popcorn' : skin === '3d' ? '🕶️ 3D Specs' : skin === 'director' ? '🎬 Beret' : '🏆 Trophy'}
-                    </button>
-                  ))}
+                <div className="flex items-center justify-end gap-1.5 text-right text-xs pt-0.5 flex-wrap">
+                  <span className="font-extrabold text-[var(--text-primary)] font-sans">
+                    — {userProfile.favoriteQuoteCharacter || "Waymond Wang"}
+                  </span>
+                  <span className="text-[var(--text-muted)] font-bold">in</span>
+                  <span className="font-black text-[var(--accent-sakura-text)] font-sans">
+                    {userProfile.favoriteQuoteMovie || "Everything Everywhere All at Once (2022)"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -789,6 +764,55 @@ export const MyProfile: React.FC = () => {
                   className="w-full px-3.5 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-[var(--text-primary)] font-bold focus:outline-none focus:ring-2 focus:ring-[var(--accent-honey)] resize-none"
                   placeholder="How do you evaluate screenplays and cinematography?"
                 />
+              </div>
+
+              {/* Favorite Movie Quote Section */}
+              <div className="p-3.5 rounded-2xl border border-[var(--border-color)] bg-[var(--surface-subtle)]/50 space-y-3">
+                <span className="text-[11px] font-black uppercase tracking-wider text-[var(--accent-honey-text)] dark:text-amber-400 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Favorite Movie Quote</span>
+                </span>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
+                    The Quote
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={editForm.favoriteQuote}
+                    onChange={(e) => setEditForm({ ...editForm, favoriteQuote: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-[var(--surface-card)] border border-[var(--border-color)] text-[var(--text-primary)] font-serif italic focus:outline-none focus:ring-2 focus:ring-[var(--accent-honey)] resize-none text-xs"
+                    placeholder="In another life, I would have really liked..."
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
+                      Character Name
+                    </label>
+                    <input
+                      type="text"
+                      value={editForm.favoriteQuoteCharacter}
+                      onChange={(e) => setEditForm({ ...editForm, favoriteQuoteCharacter: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-xl bg-[var(--surface-card)] border border-[var(--border-color)] text-[var(--text-primary)] font-bold focus:outline-none focus:ring-2 focus:ring-[var(--accent-honey)] text-xs"
+                      placeholder="e.g. Waymond Wang"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
+                      Movie Title (& Year)
+                    </label>
+                    <input
+                      type="text"
+                      value={editForm.favoriteQuoteMovie}
+                      onChange={(e) => setEditForm({ ...editForm, favoriteQuoteMovie: e.target.value })}
+                      className="w-full px-3 py-1.5 rounded-xl bg-[var(--surface-card)] border border-[var(--border-color)] text-[var(--text-primary)] font-bold focus:outline-none focus:ring-2 focus:ring-[var(--accent-honey)] text-xs"
+                      placeholder="e.g. Everything Everywhere All at Once"
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Modal Actions */}

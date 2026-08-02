@@ -8,6 +8,9 @@ export const INITIAL_USER_PROFILE: UserProfile = {
   favoriteGenres: ['Animation', 'Romance', 'Indie', 'Fantasy', 'Period Drama'],
   joinedDate: 'October 2024',
   tastePhilosophy: 'Believes cinema should feel like a warm hug or an aching, beautiful sunset. Prioritizes visual aesthetics and emotional resonance over explosion count.',
+  favoriteQuote: 'In another life, I would have really liked just doing laundry and taxes with you.',
+  favoriteQuoteMovie: 'Everything Everywhere All at Once (2022)',
+  favoriteQuoteCharacter: 'Waymond Wang',
   badges: [
     {
       id: 'badge-1',
