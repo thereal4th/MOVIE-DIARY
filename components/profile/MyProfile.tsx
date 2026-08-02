@@ -8,10 +8,46 @@ import React, { useState, useMemo } from 'react';
 import { useMovieDiary } from '../../context/MovieDiaryContext';
 import { Movie, Friend } from '../../types/diary';
 import { DualPaneNotebook } from '../layout/DualPaneNotebook';
-import { Award, Users, PenTool, Film, Star, Clock, Calendar, Sparkles, Popcorn, Glasses, Clapperboard, Trophy, Share2, Globe, BarChart3, Bookmark, Scroll, ShieldCheck, TrendingUp, Plus } from 'lucide-react';
+import { Award, Users, PenTool, Film, Star, Clock, Calendar, Sparkles, Popcorn, Glasses, Clapperboard, Trophy, Share2, Globe, BarChart3, Bookmark, Scroll, ShieldCheck, TrendingUp, Plus, Edit3, X } from 'lucide-react';
 
 export const MyProfile: React.FC = () => {
-  const { userProfile, movies, friends, setIsLogModalOpen, setEditingMovie, setPrefillMovie } = useMovieDiary();
+  const { userProfile, updateUserProfile, movies, friends, setIsLogModalOpen, setEditingMovie, setPrefillMovie } = useMovieDiary();
+
+  // Edit Profile modal & form state
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: userProfile?.name || "Fourth & Sheena's Cinema",
+    handle: userProfile?.handle || "fourth_and_sheena",
+    avatar: userProfile?.avatar || "/images/avatars/default.png",
+    bannerUrl: userProfile?.bannerUrl || "/images/posters/past_lives.jpg",
+    bio: userProfile?.bio || "Cinema enthusiasts watching everything from Studio Ghibli to Greta Gerwig masterpieces.",
+    tastePhilosophy: userProfile?.tastePhilosophy || "Every screening is an event. We judge films by emotions, set design, and storytelling craftsmanship."
+  });
+
+  const handleOpenEditModal = () => {
+    setEditForm({
+      name: userProfile?.name || "",
+      handle: userProfile?.handle || "",
+      avatar: userProfile?.avatar || "",
+      bannerUrl: userProfile?.bannerUrl || "/images/posters/past_lives.jpg",
+      bio: userProfile?.bio || "",
+      tastePhilosophy: userProfile?.tastePhilosophy || ""
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateUserProfile({
+      name: editForm.name,
+      handle: editForm.handle,
+      avatar: editForm.avatar,
+      bannerUrl: editForm.bannerUrl,
+      bio: editForm.bio,
+      tastePhilosophy: editForm.tastePhilosophy
+    });
+    setIsEditModalOpen(false);
+  };
 
   // Mascot cosmetic state & animations
   const [mascotSkin, setMascotSkin] = useState<'default' | '3d' | 'director' | 'golden'>('3d');
@@ -116,7 +152,16 @@ export const MyProfile: React.FC = () => {
               className="w-full h-full object-cover object-center opacity-80 filter brightness-95 transform scale-105"
             />
             <div className="absolute inset-0 bg-linear-to-t from-[var(--surface-card)] via-transparent to-black/40"></div>
-            <div className="washi-strip washi-gold right-8 top-3"></div>
+            <div className="washi-strip washi-gold right-16 top-2.5"></div>
+
+            {/* Edit Profile Button (Symbol only in Top Right Corner) */}
+            <button
+              onClick={handleOpenEditModal}
+              className="absolute top-3 right-3.5 z-20 p-2 rounded-xl bg-black/55 hover:bg-[var(--accent-honey)] hover:text-[var(--accent-honey-text)] text-white border border-white/30 transition-all cursor-pointer shadow-md backdrop-blur-xs hover:scale-110 flex items-center justify-center"
+              title="Edit Profile"
+            >
+              <Edit3 className="w-4 h-4 stroke-[2.5]" />
+            </button>
           </div>
 
           {/* Identity Info & Mascot Container */}
@@ -595,5 +640,179 @@ export const MyProfile: React.FC = () => {
     </div>
   );
 
-  return <DualPaneNotebook leftPage={leftPageContent} rightPage={rightPageContent} />;
+  return (
+    <>
+      <DualPaneNotebook leftPage={leftPageContent} rightPage={rightPageContent} />
+
+      {/* EDIT PROFILE MODAL */}
+      {isEditModalOpen && (
+        <div className="fixed inset-0 z-60 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
+          <div
+            className="bg-[var(--surface-card)] border-2 border-[var(--border-color)] rounded-3xl p-6 w-full max-w-lg shadow-2xl relative space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b-2 border-[var(--border-color)]/70 pb-3.5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-[var(--accent-honey)] text-[var(--accent-honey-text)] flex items-center justify-center shrink-0 shadow-md">
+                  <Edit3 className="w-4 h-4 stroke-[2.5]" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-[var(--text-primary)] uppercase tracking-wide font-serif">
+                    Edit Auteur Profile
+                  </h3>
+                  <p className="text-[11px] font-extrabold text-[var(--text-muted)]">
+                    Customize your name, cover photo, avatar, & cinema philosophy
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsEditModalOpen(false)}
+                className="p-1.5 rounded-xl bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+                title="Close"
+              >
+                <X className="w-4 h-4 stroke-[2.5]" />
+              </button>
+            </div>
+
+            {/* Form Fields */}
+            <form onSubmit={handleSaveProfile} className="space-y-4 text-xs font-bold text-[var(--text-primary)]">
+              
+              {/* Cover Photo Banner URL & Live Preview */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-black uppercase tracking-wider text-[var(--text-secondary)]">
+                  Cover Photo Banner (URL or simple path)
+                </label>
+                <div className="h-24 w-full rounded-2xl overflow-hidden border border-[var(--border-color)] bg-slate-950 relative shadow-inner">
+                  <img
+                    src={editForm.bannerUrl || "/images/posters/past_lives.jpg"}
+                    alt="Banner preview"
+                    className="w-full h-full object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).src = "/images/posters/past_lives.jpg"; }}
+                  />
+                  <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                    <span className="px-2 py-0.5 rounded-md bg-black/60 text-white text-[10px] font-extrabold uppercase backdrop-blur-xs">
+                      Live Cover Preview
+                    </span>
+                  </div>
+                </div>
+                <input
+                  type="text"
+                  value={editForm.bannerUrl}
+                  onChange={(e) => setEditForm({ ...editForm, bannerUrl: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-honey)] font-mono text-xs"
+                  placeholder="e.g. /images/posters/past_lives.jpg or https://..."
+                />
+              </div>
+
+              {/* Display Name & Username Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-black uppercase tracking-wider text-[var(--text-secondary)]">
+                    Display Name
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editForm.name}
+                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                    className="w-full px-3.5 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-[var(--text-primary)] font-bold focus:outline-none focus:ring-2 focus:ring-[var(--accent-honey)]"
+                    placeholder="Fourth & Sheena's Cinema"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-black uppercase tracking-wider text-[var(--text-secondary)]">
+                    Username (@handle)
+                  </label>
+                  <div className="relative flex items-center">
+                    <span className="absolute left-3.5 text-[var(--text-muted)] font-mono">@</span>
+                    <input
+                      type="text"
+                      required
+                      value={editForm.handle}
+                      onChange={(e) => setEditForm({ ...editForm, handle: e.target.value })}
+                      className="w-full pl-8 pr-3.5 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-[var(--text-primary)] font-mono focus:outline-none focus:ring-2 focus:ring-[var(--accent-honey)]"
+                      placeholder="fourth_and_sheena"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Profile Avatar URL & Miniature Preview */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-black uppercase tracking-wider text-[var(--text-secondary)]">
+                  Profile Photo Avatar (URL or image path)
+                </label>
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[var(--border-color)] bg-[var(--surface-subtle)] shrink-0 shadow-md">
+                    <img
+                      src={editForm.avatar || "/images/avatars/default.png"}
+                      alt="Avatar Preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => { (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=250"; }}
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    value={editForm.avatar}
+                    onChange={(e) => setEditForm({ ...editForm, avatar: e.target.value })}
+                    className="flex-1 px-3.5 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-honey)] font-mono text-xs"
+                    placeholder="https://... or /images/avatars/..."
+                  />
+                </div>
+              </div>
+
+              {/* Auteur Quote / Bio */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-black uppercase tracking-wider text-[var(--text-secondary)]">
+                  Auteur Bio / Cinema Quote
+                </label>
+                <textarea
+                  rows={2}
+                  value={editForm.bio}
+                  onChange={(e) => setEditForm({ ...editForm, bio: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-[var(--text-primary)] font-serif italic focus:outline-none focus:ring-2 focus:ring-[var(--accent-honey)] resize-none"
+                  placeholder="Tell us about your cinematic style..."
+                />
+              </div>
+
+              {/* Taste Philosophy */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-black uppercase tracking-wider text-[var(--text-secondary)]">
+                  Taste Philosophy
+                </label>
+                <textarea
+                  rows={2}
+                  value={editForm.tastePhilosophy}
+                  onChange={(e) => setEditForm({ ...editForm, tastePhilosophy: e.target.value })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-[var(--text-primary)] font-bold focus:outline-none focus:ring-2 focus:ring-[var(--accent-honey)] resize-none"
+                  placeholder="How do you evaluate screenplays and cinematography?"
+                />
+              </div>
+
+              {/* Modal Actions */}
+              <div className="flex items-center justify-end gap-3 pt-3 border-t-2 border-[var(--border-color)]/70">
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="px-4 py-2 rounded-xl font-black text-xs uppercase tracking-wider bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-color)] transition-all cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 rounded-xl font-black text-xs uppercase tracking-wider bg-[var(--accent-honey)] text-[var(--accent-honey-text)] shadow-md hover:scale-105 transition-all border border-[var(--border-color)] cursor-pointer flex items-center gap-1.5"
+                >
+                  <Edit3 className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>Save Profile</span>
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
