@@ -752,20 +752,6 @@ export const MyProfile: React.FC = () => {
                 />
               </div>
 
-              {/* Taste Philosophy */}
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-black uppercase tracking-wider text-[var(--text-secondary)]">
-                  Taste Philosophy
-                </label>
-                <textarea
-                  rows={2}
-                  value={editForm.tastePhilosophy}
-                  onChange={(e) => setEditForm({ ...editForm, tastePhilosophy: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-[var(--text-primary)] font-bold focus:outline-none focus:ring-2 focus:ring-[var(--accent-honey)] resize-none"
-                  placeholder="How do you evaluate screenplays and cinematography?"
-                />
-              </div>
-
               {/* Favorite Movie Quote Section */}
               <div className="p-3.5 rounded-2xl border border-[var(--border-color)] bg-[var(--surface-subtle)]/50 space-y-3">
                 <span className="text-[11px] font-black uppercase tracking-wider text-[var(--accent-honey-text)] dark:text-amber-400 flex items-center gap-1.5">
