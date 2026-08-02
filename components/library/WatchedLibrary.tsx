@@ -313,7 +313,7 @@ export const WatchedLibrary: React.FC = () => {
             }`}
           >
             <Scroll className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Chronological Feed</span>
+            <span>Feed</span>
           </button>
           <button
             onClick={() => setRightPageMode('grid')}
@@ -322,18 +322,9 @@ export const WatchedLibrary: React.FC = () => {
             }`}
           >
             <Film className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Dense Poster Wall</span>
+            <span>Films</span>
           </button>
         </div>
-
-        {/* Top Action Bar: Quick Log Button */}
-        <button
-          onClick={() => { setPrefillMovie(null); setEditingMovie(null); setIsLogModalOpen(true); }}
-          className="group flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-black text-xs uppercase tracking-wider bg-linear-to-r from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-[var(--text-primary)] border border-[var(--border-color)] hover:border-[var(--text-primary)] shadow-md hover:shadow-lg transition-all cursor-pointer"
-        >
-          <Plus className="w-4 h-4 stroke-[3] group-hover:rotate-90 transition-transform" />
-          <span>+ Log Movie</span>
-        </button>
       </div>
 
       {/* Search & Genre Pill Strip */}

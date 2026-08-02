@@ -144,196 +144,213 @@ export const LogMovieModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn">
-      <div className="relative bg-[var(--surface-card)] border-2 border-[var(--border-color)] rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
-        {/* Header Bar */}
-        <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-4 mb-6">
-          <div className="flex items-center gap-3">
-            <span className="text-3xl">📝</span>
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn overflow-hidden">
+      <div className="relative bg-[var(--surface-card)] border-2 border-[var(--border-color)] rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-hidden shadow-2xl p-5 sm:p-6 flex flex-col justify-between gap-4">
+        
+        {/* Compact Header Bar */}
+        <div className="shrink-0 flex items-center justify-between border-b border-[var(--border-color)] pb-3">
+          <div className="flex items-center gap-2.5">
+            <span className="text-2xl">📝</span>
             <div>
-              <h2 className="text-xl sm:text-2xl font-black text-[var(--text-primary)]">
+              <h2 className="text-lg sm:text-xl font-black text-[var(--text-primary)] leading-tight">
                 {editingMovie ? 'Edit Journal Entry' : prefillMovie ? 'Rate Recommendation' : 'Log a Movie Adventure'}
               </h2>
-              <p className="text-xs text-[var(--text-muted)] font-medium">Record your thoughts, moods, and companions</p>
+              <p className="text-[11px] text-[var(--text-muted)] font-extrabold uppercase tracking-wide">Record your thoughts, moods, and companions</p>
             </div>
           </div>
           <button
             onClick={() => setIsLogModalOpen(false)}
-            className="w-10 h-10 rounded-full bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center font-bold text-lg transition-transform hover:scale-110"
+            className="w-8 h-8 rounded-full bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center font-bold text-base transition-transform hover:scale-110 cursor-pointer"
           >
             ✕
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Row 1: Title, Director & Favorite */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="sm:col-span-2 space-y-1.5">
-              <label className="text-xs font-bold text-[var(--text-secondary)] uppercase">Movie Title *</label>
-              <input
-                type="text"
-                required
-                placeholder="e.g. My Neighbor Totoro"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] focus:border-[var(--accent-blush-text)] text-sm font-extrabold text-[var(--text-primary)] outline-hidden"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[var(--text-secondary)] uppercase">Director</label>
-              <input
-                type="text"
-                placeholder="e.g. Hayao Miyazaki"
-                value={director}
-                onChange={(e) => setDirector(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-sm font-semibold text-[var(--text-primary)] outline-hidden"
-              />
-            </div>
-          </div>
+        {/* Non-Scrollable 2-Column Form Container */}
+        <form onSubmit={handleSubmit} className="flex-1 min-h-0 flex flex-col justify-between overflow-hidden gap-4">
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 flex-1 min-h-0 overflow-hidden">
+            
+            {/* 📍 LEFT COLUMN: Core Metadata, Rating, & Cover Artwork */}
+            <div className="flex flex-col justify-between min-h-0 gap-3.5 overflow-hidden">
+              
+              {/* Title & Director */}
+              <div className="grid grid-cols-3 gap-2.5 shrink-0">
+                <div className="col-span-2 space-y-1">
+                  <label className="text-[11px] font-black text-[var(--text-secondary)] uppercase tracking-wider">Movie Title *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. My Neighbor Totoro"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] focus:border-[var(--accent-sakura-text)] text-xs font-black text-[var(--text-primary)] outline-hidden shadow-inner"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[11px] font-black text-[var(--text-secondary)] uppercase tracking-wider">Director</label>
+                  <input
+                    type="text"
+                    placeholder="Miyazaki"
+                    value={director}
+                    onChange={(e) => setDirector(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-xs font-bold text-[var(--text-primary)] outline-hidden shadow-inner"
+                  />
+                </div>
+              </div>
 
-          {/* Row 2: Interactive Half-Star Rating & Favorite Switch */}
-          <div className="p-5 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <span className="text-xs font-bold text-[var(--text-secondary)] uppercase block mb-1.5">Your 5-Star Rating (Half-star supported)</span>
-              <StarRating rating={userRating} interactive={true} size="lg" onRatingChange={(val) => setUserRating(val)} />
-            </div>
-            <button
-              type="button"
-              onClick={() => setFavorite(!favorite)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition-all ${
-                favorite ? 'bg-pink-500 text-white shadow-md' : 'bg-[var(--surface-card)] text-[var(--text-secondary)] border border-[var(--border-color)]'
-              }`}
-            >
-              <span className="text-base">{favorite ? '♥' : '♡'}</span>
-              <span>{favorite ? 'Marked Favorite!' : 'Add to Favorites'}</span>
-            </button>
-          </div>
-
-          {/* Row 3: Watch Date & Format */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[var(--text-secondary)] uppercase">Date Watched</label>
-              <input
-                type="date"
-                value={dateWatched}
-                onChange={(e) => setDateWatched(e.target.value)}
-                className="w-full px-4 py-3 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-sm font-bold text-[var(--text-primary)] outline-hidden"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-[var(--text-secondary)] uppercase">Viewing Format & Vibe</label>
-              <select
-                value={watchFormat}
-                onChange={(e) => setWatchFormat(e.target.value as WatchFormat)}
-                className="w-full px-4 py-3 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-sm font-bold text-[var(--text-primary)] outline-hidden cursor-pointer"
-              >
-                {availableFormats.map((f) => (
-                  <option key={f} value={f}>{f}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Row 4: Review Notes Critique */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-[var(--text-secondary)] uppercase flex items-center justify-between">
-              <span>Diary Review & Thoughts</span>
-              <span className="text-xs text-[var(--text-muted)] font-normal">What stirred your soul in this film?</span>
-            </label>
-            <textarea
-              rows={3}
-              placeholder="e.g. Curling up on the couch during the rainy campfire scene brought absolute serenity..."
-              value={reviewNotes}
-              onChange={(e) => setReviewNotes(e.target.value)}
-              className="w-full p-4 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-sm font-medium text-[var(--text-primary)] outline-hidden focus:border-[var(--accent-blush-text)] leading-relaxed"
-            />
-          </div>
-
-          {/* Row 5: Mood Tags Picker */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block">Select Viewing Mood Tags</label>
-            <div className="flex flex-wrap gap-2">
-              {availableMoods.map((mood) => {
-                const selected = moodTags.includes(mood);
-                return (
-                  <button
-                    type="button"
-                    key={mood}
-                    onClick={() => toggleMood(mood)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                      selected ? 'bg-[var(--accent-sage)] text-[var(--accent-sage-text)] shadow-xs border-2 border-[var(--accent-sage-text)]/40 scale-105' : 'bg-[var(--surface-subtle)] text-[var(--text-muted)] hover:text-[var(--text-primary)] border border-[var(--border-color)]'
-                    }`}
-                  >
-                    {selected ? `✓ ${mood}` : mood}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Row 6: Tag Friends Watched With */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block">Who Did You Watch This With? (Tag Friends)</label>
-            <div className="flex flex-wrap gap-2.5">
-              {friends.map((friend) => {
-                const selected = taggedFriendIds.includes(friend.id);
-                return (
-                  <button
-                    type="button"
-                    key={friend.id}
-                    onClick={() => toggleFriend(friend.id)}
-                    className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
-                      selected ? 'bg-[var(--accent-blush)] text-[var(--accent-blush-text)] border-2 border-[var(--accent-blush-text)]/40 shadow-xs scale-105' : 'bg-[var(--surface-subtle)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:bg-[var(--surface-hover)]'
-                    }`}
-                  >
-                    <img src={friend.avatar} alt={friend.name} className="w-5 h-5 rounded-full object-cover" />
-                    <span>{selected ? `✓ @${friend.name.split(' ')[0]}` : `@${friend.name.split(' ')[0]}`}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Row 7: Poster Artwork Selection */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold text-[var(--text-secondary)] uppercase block">Cover Artwork</label>
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
-              {posterChoices.map((p) => (
+              {/* Interactive Half-Star Rating & Favorite Switch */}
+              <div className="p-3 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] flex items-center justify-between gap-2 shrink-0 shadow-xs">
+                <div>
+                  <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Your Rating (Half-Star)</span>
+                  <StarRating rating={userRating} interactive={true} size="md" onRatingChange={(val) => setUserRating(val)} />
+                </div>
                 <button
                   type="button"
-                  key={p.path}
-                  onClick={() => setPosterPath(p.path)}
-                  className={`group relative rounded-xl overflow-hidden aspect-[2/3] border-2 transition-all ${
-                    posterPath === p.path ? 'border-[var(--accent-star)] shadow-md scale-105 ring-2 ring-[var(--accent-star)]/50' : 'border-transparent opacity-70 hover:opacity-100'
+                  onClick={() => setFavorite(!favorite)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-black text-[11px] transition-all cursor-pointer ${
+                    favorite ? 'bg-pink-500 text-white shadow-sm scale-102' : 'bg-[var(--surface-card)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:bg-[var(--surface-hover)]'
                   }`}
-                  title={p.label}
                 >
-                  <img src={p.path} alt={p.label} className="w-full h-full object-cover" />
-                  {posterPath === p.path && (
-                    <span className="absolute inset-0 bg-black/30 flex items-center justify-center text-white text-xl font-black">
-                      ✓
-                    </span>
-                  )}
+                  <span className="text-sm">{favorite ? '♥' : '♡'}</span>
+                  <span>{favorite ? 'Favorite!' : '+ Favorite'}</span>
                 </button>
-              ))}
+              </div>
+
+              {/* Watch Date & Format */}
+              <div className="grid grid-cols-2 gap-2.5 shrink-0">
+                <div className="space-y-1">
+                  <label className="text-[11px] font-black text-[var(--text-secondary)] uppercase tracking-wider">Date Watched</label>
+                  <input
+                    type="date"
+                    value={dateWatched}
+                    onChange={(e) => setDateWatched(e.target.value)}
+                    className="w-full px-3 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-xs font-bold text-[var(--text-primary)] outline-hidden"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[11px] font-black text-[var(--text-secondary)] uppercase tracking-wider">Viewing Vibe</label>
+                  <select
+                    value={watchFormat}
+                    onChange={(e) => setWatchFormat(e.target.value as WatchFormat)}
+                    className="w-full px-3 py-2 rounded-xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-xs font-bold text-[var(--text-primary)] outline-hidden cursor-pointer"
+                  >
+                    {availableFormats.map((f) => (
+                      <option key={f} value={f}>{f}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Cover Artwork Selection */}
+              <div className="space-y-1.5 shrink-0">
+                <label className="text-[11px] font-black text-[var(--text-secondary)] uppercase tracking-wider block">Select Cover Artwork</label>
+                <div className="grid grid-cols-6 gap-2">
+                  {posterChoices.map((p) => (
+                    <button
+                      type="button"
+                      key={p.path}
+                      onClick={() => setPosterPath(p.path)}
+                      className={`group relative rounded-xl overflow-hidden aspect-[2/3] border-2 transition-all cursor-pointer ${
+                        posterPath === p.path ? 'border-amber-500 shadow-md scale-105 ring-1 ring-amber-500/50 z-10' : 'border-transparent opacity-70 hover:opacity-100'
+                      }`}
+                      title={p.label}
+                    >
+                      <img src={p.path} alt={p.label} className="w-full h-full object-cover" />
+                      {posterPath === p.path && (
+                        <span className="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-xs font-black">
+                          ✓
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
             </div>
+
+            {/* 📍 RIGHT COLUMN: Review Notes, Mood Tags, & Friend Companions */}
+            <div className="flex flex-col justify-between min-h-0 gap-3.5 overflow-hidden">
+              
+              {/* Diary Review textarea */}
+              <div className="flex-1 min-h-0 flex flex-col space-y-1">
+                <label className="text-[11px] font-black text-[var(--text-secondary)] uppercase tracking-wider flex items-center justify-between shrink-0">
+                  <span>Diary Review & Thoughts</span>
+                  <span className="text-[10px] text-[var(--text-muted)] font-bold">What stirred your soul?</span>
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Curling up during the rainy campfire scene brought absolute serenity..."
+                  value={reviewNotes}
+                  onChange={(e) => setReviewNotes(e.target.value)}
+                  className="w-full flex-1 min-h-[68px] max-h-28 p-3 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] text-xs font-serif italic text-[var(--text-primary)] outline-hidden focus:border-[var(--accent-sakura-text)] leading-relaxed shadow-inner resize-none"
+                />
+              </div>
+
+              {/* Mood Tags Picker */}
+              <div className="space-y-1.5 shrink-0">
+                <label className="text-[11px] font-black text-[var(--text-secondary)] uppercase tracking-wider block">Viewing Mood Tags</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {availableMoods.map((mood) => {
+                    const selected = moodTags.includes(mood);
+                    return (
+                      <button
+                        type="button"
+                        key={mood}
+                        onClick={() => toggleMood(mood)}
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase transition-all cursor-pointer ${
+                          selected ? 'bg-[var(--accent-matcha)] text-[var(--accent-matcha-text)] shadow-2xs border border-[var(--accent-matcha-text)]/40 scale-102' : 'bg-[var(--surface-subtle)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] border border-[var(--border-color)]'
+                        }`}
+                      >
+                        {selected ? `✓ ${mood}` : mood}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Tag Friends Watched With */}
+              <div className="space-y-1.5 shrink-0">
+                <label className="text-[11px] font-black text-[var(--text-secondary)] uppercase tracking-wider block">Who Did You Watch With? (Tag Friends)</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {friends.map((friend) => {
+                    const selected = taggedFriendIds.includes(friend.id);
+                    return (
+                      <button
+                        type="button"
+                        key={friend.id}
+                        onClick={() => toggleFriend(friend.id)}
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black transition-all cursor-pointer ${
+                          selected ? 'bg-[var(--accent-sakura)] text-[var(--accent-sakura-text)] border border-[var(--accent-sakura-text)]/40 shadow-2xs scale-102' : 'bg-[var(--surface-subtle)] text-[var(--text-secondary)] border border-[var(--border-color)] hover:bg-[var(--surface-hover)]'
+                        }`}
+                      >
+                        <img src={friend.avatar} alt={friend.name} className="w-4 h-4 rounded-full object-cover shrink-0" />
+                        <span className="truncate max-w-[80px]">{selected ? `✓ @${friend.name.split(' ')[0]}` : `@${friend.name.split(' ')[0]}`}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </div>
+
           </div>
 
-          {/* Submit Footer */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--border-color)]">
+          {/* Compact Submit Footer */}
+          <div className="shrink-0 flex items-center justify-end gap-3 pt-3 border-t border-[var(--border-color)]">
             <button
               type="button"
               onClick={() => setIsLogModalOpen(false)}
-              className="px-6 py-3 rounded-2xl bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] font-bold text-sm transition-colors"
+              className="px-5 py-2 rounded-xl bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] font-black text-xs transition-colors cursor-pointer border border-[var(--border-color)]"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-8 py-3 rounded-2xl bg-linear-to-r from-[var(--accent-blush)] via-[var(--accent-honey)] to-[var(--accent-sage)] text-[var(--text-primary)] font-black text-sm shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2 border border-white/40"
+              className="px-6 py-2 rounded-xl bg-linear-to-r from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-[var(--text-primary)] font-black text-xs shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 border border-white/40 cursor-pointer uppercase tracking-wider"
             >
               <span>✿</span>
-              <span>{editingMovie ? 'Save Updates' : 'Save to Movie Diary'}</span>
+              <span>{editingMovie ? 'Save Updates' : 'Save to Diary'}</span>
             </button>
           </div>
         </form>
