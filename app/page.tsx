@@ -28,20 +28,20 @@ const DashboardContent: React.FC = () => {
   return (
     <div className="h-screen max-h-screen w-full flex flex-col gingham-tablecloth transition-colors duration-400 font-sans p-1.5 sm:p-2.5 lg:px-4 lg:py-2 items-center overflow-hidden">
       
-      {/* Upper Tablecloth Bar Outside Notebook: "Filmory" on Left, Controls on Right! */}
+      {/* Upper Tablecloth Bar Outside Notebook: "Filmoire" on Left, Controls on Right! */}
       <header className="w-full max-w-[1360px] shrink-0 flex items-center justify-between mb-1.5 select-none z-30 px-2">
         
-        {/* Top Left: Filmory Brand Identity */}
+        {/* Top Left: Filmoire Brand Identity */}
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-2xl bg-linear-to-tr from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] flex items-center justify-center shadow-md border-2 border-white/80 transform -rotate-6 hover:rotate-0 transition-transform text-[var(--text-primary)]">
             <Film className="w-5 h-5 stroke-[2.5]" />
           </div>
           <div>
             <h1 className="font-black text-lg sm:text-xl tracking-tight text-[var(--tablecloth-text)] font-sans leading-none drop-shadow-xs transition-colors">
-              Filmory
+              Filmoire
             </h1>
             <span className="text-[9px] font-black uppercase text-[var(--tablecloth-subtext)] tracking-wider block transition-colors">
-              2-Page Open Cinema Journal
+              Fourth and Sheena's Movie Journal
             </span>
           </div>
         </div>
