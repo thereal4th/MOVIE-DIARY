@@ -79,11 +79,8 @@ const DashboardContent: React.FC = () => {
           {/* Absolutely position side divider tabs on outer right rim! */}
           <NotebookSideTabs />
 
-          {/* Leather Cover Outer Left Hinge */}
-          <div className="shrink-0 w-3 sm:w-5 bg-linear-to-b from-slate-800 via-stone-900 to-slate-950 border-r-2 border-[var(--border-color)] rounded-l-[28px] shadow-inner"></div>
-
           {/* Journal Paper Interior Content Area: 100vh fixed container for Left & Right pages */}
-          <main className="flex-1 min-w-0 min-h-0 overflow-hidden rounded-r-3xl z-10 w-full flex flex-col h-full">
+          <main className="flex-1 min-w-0 min-h-0 overflow-hidden rounded-3xl z-10 w-full flex flex-col h-full">
             {activeTab === 'library' && <WatchedLibrary />}
             {activeTab === 'friends' && <FriendsSection />}
             {activeTab === 'discover' && <RecommendationsSection />}
