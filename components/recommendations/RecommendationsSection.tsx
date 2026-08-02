@@ -177,46 +177,7 @@ export const RecommendationsSection: React.FC = () => {
       {/* Internal Micro-Scrolling Hubs */}
       <div className="flex-1 min-h-0 overflow-y-auto pr-2 pb-6 space-y-6">
         
-        {/* MODULE 1: "BECAUSE YOU LIKED..." CAROUSEL */}
-        <div className="space-y-4">
-          {topLikedDiaryMovies.slice(0, 2).map((likedMovie) => {
-            const recs = becauseYouLikedData[likedMovie.title] || defaultCarousel;
-            return (
-              <div key={likedMovie.id} className="p-4 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-3">
-                <div className="flex items-center justify-between border-b border-[var(--border-color)]/50 pb-2">
-                  <span className="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                    <Heart className="w-3.5 h-3.5 fill-current text-pink-500" />
-                    <span>Because You Liked <strong className="text-[var(--text-primary)] font-bold">"{likedMovie.title}"</strong> ({likedMovie.userRating.toFixed(1)}★)</span>
-                  </span>
-                  <span className="text-[10px] font-extrabold text-[var(--text-muted)]">AI Match DNA</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {recs.map((rec: any) => (
-                    <div key={rec.id} className="p-2.5 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] flex flex-col justify-between space-y-2 group">
-                      <div className="flex items-start gap-2.5">
-                        <img src={rec.poster || '/images/posters/totoro.jpg'} alt={rec.title} onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)} className="w-12 h-16 rounded-xl object-cover shadow-xs shrink-0 cursor-pointer group-hover:scale-105 transition-transform" title="Log to Diary" />
-                        <div className="min-w-0 flex-1">
-                          <p className="font-black text-xs text-[var(--text-primary)] truncate group-hover:text-pink-500 cursor-pointer" onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)}>{rec.title}</p>
-                          <span className="text-[10px] text-amber-500 font-bold block">{rec.rating} • {rec.provider}</span>
-                          <p className="text-[10px] text-[var(--text-secondary)] italic font-serif line-clamp-2 leading-tight mt-1">
-                            "{rec.reason}"
-                          </p>
-                        </div>
-                      </div>
-                      <button onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)} className="w-full py-1 rounded-lg bg-[var(--accent-matcha)] hover:brightness-105 text-[var(--accent-matcha-text)] font-black text-[10px] uppercase shadow-2xs cursor-pointer flex items-center justify-center gap-1">
-                        <Plus className="w-3 h-3 stroke-[3]" />
-                        <span>Log Movie</span>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* MODULE 2: SMART WATCHLIST FILTERS */}
+        {/* MODULE 1: SMART WATCHLIST FILTERS */}
         <div className="p-5 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <h4 className="text-sm font-black text-[var(--text-primary)] flex items-center gap-2 uppercase tracking-wide">
@@ -311,6 +272,45 @@ export const RecommendationsSection: React.FC = () => {
               ))
             )}
           </div>
+        </div>
+
+        {/* MODULE 2: "BECAUSE YOU LIKED..." CAROUSEL */}
+        <div className="space-y-4">
+          {topLikedDiaryMovies.slice(0, 2).map((likedMovie) => {
+            const recs = becauseYouLikedData[likedMovie.title] || defaultCarousel;
+            return (
+              <div key={likedMovie.id} className="p-4 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-3">
+                <div className="flex items-center justify-between border-b border-[var(--border-color)]/50 pb-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                    <Heart className="w-3.5 h-3.5 fill-current text-pink-500" />
+                    <span>Because You Liked <strong className="text-[var(--text-primary)] font-bold">"{likedMovie.title}"</strong> ({likedMovie.userRating.toFixed(1)}★)</span>
+                  </span>
+                  <span className="text-[10px] font-extrabold text-[var(--text-muted)]">AI Match DNA</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {recs.map((rec: any) => (
+                    <div key={rec.id} className="p-2.5 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] flex flex-col justify-between space-y-2 group">
+                      <div className="flex items-start gap-2.5">
+                        <img src={rec.poster || '/images/posters/totoro.jpg'} alt={rec.title} onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)} className="w-12 h-16 rounded-xl object-cover shadow-xs shrink-0 cursor-pointer group-hover:scale-105 transition-transform" title="Log to Diary" />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-black text-xs text-[var(--text-primary)] truncate group-hover:text-pink-500 cursor-pointer" onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)}>{rec.title}</p>
+                          <span className="text-[10px] text-amber-500 font-bold block">{rec.rating} • {rec.provider}</span>
+                          <p className="text-[10px] text-[var(--text-secondary)] italic font-serif line-clamp-2 leading-tight mt-1">
+                            "{rec.reason}"
+                          </p>
+                        </div>
+                      </div>
+                      <button onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)} className="w-full py-1 rounded-lg bg-[var(--accent-matcha)] hover:brightness-105 text-[var(--accent-matcha-text)] font-black text-[10px] uppercase shadow-2xs cursor-pointer flex items-center justify-center gap-1">
+                        <Plus className="w-3 h-3 stroke-[3]" />
+                        <span>Log Movie</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
 
       </div>
