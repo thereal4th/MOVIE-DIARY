@@ -607,7 +607,6 @@ export const MyProfile: React.FC = () => {
                 ))}
               </div>
             </div>
-
           </div>
         )}
 

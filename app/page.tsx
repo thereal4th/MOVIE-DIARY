@@ -14,10 +14,11 @@ import { RecommendationsSection } from '../components/recommendations/Recommenda
 import { MyProfile } from '../components/profile/MyProfile';
 import { LogMovieModal } from '../components/modals/LogMovieModal';
 import { FriendProfileModal } from '../components/friends/FriendProfileModal';
-import { Film, Sun, Moon, Plus, Sparkles } from 'lucide-react';
+import { AccountCenterModal } from '../components/modals/AccountCenterModal';
+import { Film, Sun, Moon, Plus, Sparkles, Settings } from 'lucide-react';
 
 const DashboardContent: React.FC = () => {
-  const { activeTab, theme, toggleTheme, setIsLogModalOpen, setEditingMovie, setPrefillMovie } = useMovieDiary();
+  const { activeTab, theme, toggleTheme, setIsLogModalOpen, setIsAccountModalOpen, setEditingMovie, setPrefillMovie } = useMovieDiary();
 
   const handleOpenLogModal = () => {
     setEditingMovie(null);
@@ -92,6 +93,16 @@ const DashboardContent: React.FC = () => {
       {/* Global Interactive Modals */}
       <LogMovieModal />
       <FriendProfileModal />
+      <AccountCenterModal />
+
+      {/* Floating Lower-Left Account Center Action (No Label) */}
+      <button
+        onClick={() => setIsAccountModalOpen(true)}
+        className="fixed bottom-3.5 left-3.5 sm:bottom-5 sm:left-5 z-50 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] text-[var(--text-primary)] border-2 border-[var(--border-color)] hover:border-[var(--text-primary)] shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer select-none group"
+        title="Open User Dashboard & Account Center"
+      >
+        <Settings className="w-5 h-5 text-rose-500 stroke-[2.5] transition-transform duration-500 group-hover:rotate-90" />
+      </button>
     </div>
   );
 };
