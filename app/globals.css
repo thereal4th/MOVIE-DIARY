@@ -157,14 +157,14 @@ body {
 
 /* Metal Spiral Binder Rings */
 .binder-ring {
-  width: 28px;
-  height: 14px;
+  width: 18px;
+  height: 8px;
   background: linear-gradient(90deg, #6C6A75 0%, #FAF6FC 50%, #403E48 100%);
-  border-radius: 7px;
+  border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.22);
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.22);
   display: block;
-  margin-left: -6px;
+  margin: 0 auto;
 }
 
 .theme-midnight .binder-ring {
