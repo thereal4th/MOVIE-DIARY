@@ -396,7 +396,6 @@ export const RecommendationsSection: React.FC = () => {
         
         {/* MODULE 1: INTERACTIVE TASTE MIXER ("Find a Movie for Two") */}
         <div className="p-5 rounded-3xl bg-linear-to-tr from-[var(--surface-card)] via-rose-500/10 to-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-4 relative overflow-hidden">
-          <div className="washi-strip washi-pink right-6 top-3"></div>
           
           <div>
             <h4 className="text-sm font-black text-[var(--text-primary)] flex items-center gap-1.5 uppercase tracking-wide">

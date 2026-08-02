@@ -20,18 +20,12 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie, onEdit, index = 0 }
   const { toggleFavorite, updateRating, deleteMovie, getTaggedFriends, setSelectedFriend } = useMovieDiary();
   const taggedFriends = getTaggedFriends(movie.taggedFriendIds);
 
-  // Rotate colorful washi tape strips and card background tints based on movie index for variety!
-  const washiStyles = ['washi-pink', 'washi-mint', 'washi-lilac', 'washi-gold'];
+  // Rotate colorful card background tints based on movie index for variety!
   const tintStyles = ['card-tint-pink', 'card-tint-mint', 'card-tint-lilac', 'card-tint-gold'];
-  
-  const selectedWashi = washiStyles[index % washiStyles.length];
   const selectedTint = tintStyles[index % tintStyles.length];
 
   return (
     <article className={`polaroid-card ${selectedTint} p-3.5 sm:p-4 flex flex-col justify-between overflow-hidden relative group`}>
-      {/* Decorative Washi Tape holding down the Polaroid */}
-      <div className={`washi-strip ${selectedWashi}`}></div>
-
       {/* Top Artwork & Overlay Badges */}
       <div>
         <div className="relative overflow-hidden rounded-2xl aspect-[2/3] w-full bg-[var(--surface-subtle)] border-2 border-[var(--border-color)] shadow-inner mb-3 mt-1">

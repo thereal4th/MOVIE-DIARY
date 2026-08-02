@@ -395,7 +395,6 @@ export const FriendsSection: React.FC = () => {
 
         {/* WIDGET 2: SHARED WATCHING WIDGET (Overlapping dates & weekends) */}
         <div className="p-5 rounded-3xl bg-linear-to-tr from-[var(--surface-card)] via-[var(--accent-honey)]/20 to-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-3 relative overflow-hidden">
-          <div className="washi-strip washi-gold right-6 top-3"></div>
           
           <h4 className="text-sm font-black text-[var(--text-primary)] flex items-center gap-2 uppercase tracking-wide">
             <Flame className="w-4 h-4 text-amber-500 fill-amber-500" />

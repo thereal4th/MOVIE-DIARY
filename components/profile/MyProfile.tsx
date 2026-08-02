@@ -152,7 +152,6 @@ export const MyProfile: React.FC = () => {
               className="w-full h-full object-cover object-center opacity-80 filter brightness-95 transform scale-105"
             />
             <div className="absolute inset-0 bg-linear-to-t from-[var(--surface-card)] via-transparent to-black/40"></div>
-            <div className="washi-strip washi-gold right-16 top-2.5"></div>
 
             {/* Edit Profile Button (Symbol only in Top Right Corner) */}
             <button
@@ -273,7 +272,6 @@ export const MyProfile: React.FC = () => {
 
         {/* MODULE 2: SIGNATURE TOP 4 FAVORITE MOVIES ROW */}
         <div className="p-5 rounded-3xl bg-linear-to-tr from-[var(--surface-card)] via-[var(--accent-lavender)]/20 to-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-4 relative overflow-hidden">
-          <div className="washi-strip washi-lilac right-1/3 top-2"></div>
           
           <div className="flex items-center justify-between">
             <div>
