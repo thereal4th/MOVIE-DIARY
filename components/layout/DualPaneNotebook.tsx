@@ -9,7 +9,7 @@ interface DualPaneNotebookProps {
 }
 
 export const DualPaneNotebook: React.FC<DualPaneNotebookProps> = ({ leftPage, rightPage }) => {
-  const { diaryState, setDiaryState, userProfile } = useMovieDiary();
+  const { diaryState, setDiaryState, coverCustomization } = useMovieDiary();
 
   const isClosed = diaryState === 'closed' || diaryState === 'closing';
 
@@ -28,45 +28,48 @@ export const DualPaneNotebook: React.FC<DualPaneNotebookProps> = ({ leftPage, ri
             </div>
           </div>
 
-          {/* BACK FACE (.page-back - Solid Color Outer Notebook Cover with ZERO paper/line textures!) */}
+          {/* BACK FACE (.page-back - Solid Color Outer Notebook Cover with Customization Support!) */}
           <div 
             onClick={() => {
               if (isClosed) setDiaryState('open');
             }}
+            style={{
+              backgroundColor: coverCustomization?.color && coverCustomization.color !== 'default'
+                ? coverCustomization.color
+                : undefined,
+            }}
             title="Click anywhere on the cover to smoothly slide out and unfold diary"
-            className="page-back rounded-r-3xl rounded-l-md border-4 border-amber-950 shadow-[25px_25px_60px_rgba(0,0,0,0.7)] cursor-pointer overflow-hidden flex flex-col items-center justify-between p-8 sm:p-12 text-center select-none"
+            className="page-back rounded-r-3xl rounded-l-md border-4 border-black/20 dark:border-white/10 shadow-[25px_25px_60px_rgba(0,0,0,0.65)] cursor-pointer overflow-hidden select-none flex flex-col items-center justify-center p-8 sm:p-12 relative"
           >
-            {/* Hinge spine shadow facing the center rings on left */}
-            <div className="absolute top-0 bottom-0 left-0 w-12 bg-linear-to-r from-black/50 via-black/20 to-transparent border-r border-amber-900/40 shadow-inner" />
-            
-            {/* Elegant bookmark ribbon hanging down on cover */}
-            <div className="absolute -bottom-4 right-16 w-8 h-20 bg-rose-700 shadow-xl border-x border-rose-950/50 rounded-b-sm transform rotate-3 z-0" />
-
-            {/* Clean Solid Cover Plate (No paper texture) */}
-            <div className="w-full max-w-sm h-full border-2 border-amber-400/40 rounded-2xl p-6 flex flex-col items-center justify-between z-10 bg-black/20 relative overflow-hidden shadow-inner my-auto">
-              <div className="w-14 h-14 rounded-2xl bg-linear-to-tr from-amber-500 via-yellow-400 to-amber-600 flex items-center justify-center shadow-lg border-2 border-amber-200 text-amber-950 mx-auto mt-2 transform hover:rotate-12 transition-transform">
-                <Film className="w-7 h-7 stroke-[2.5]" />
-              </div>
-
-              <div className="space-y-3 my-auto px-4">
-                <span className="px-3.5 py-1 rounded-full bg-amber-500/20 border border-amber-400/60 text-amber-200 text-xs font-black tracking-widest uppercase inline-block shadow-xs">
-                  Vol. I • Cinema Edition
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-black tracking-wider text-amber-100 uppercase font-serif drop-shadow-md">
-                  Movie Diary
+            {/* Custom Title Inscription */}
+            {coverCustomization?.title ? (
+              <div className="z-10 text-center my-auto px-6 max-w-[85%] border-2 border-white/20 p-6 rounded-2xl bg-black/15 backdrop-blur-[2px] shadow-lg">
+                <h2 
+                  style={{ color: coverCustomization.titleColor || '#FFFFFF' }}
+                  className="text-2xl sm:text-4xl font-serif font-black tracking-wide uppercase drop-shadow-md leading-snug"
+                >
+                  {coverCustomization.title}
                 </h2>
-                <div className="w-16 h-1 bg-linear-to-r from-transparent via-amber-400 to-transparent mx-auto opacity-75" />
-                <p className="text-xs font-extrabold text-amber-200/80 tracking-wider uppercase">
-                  Click Cover to Unfold & Center
-                </p>
               </div>
+            ) : null}
 
-              <div className="px-5 py-2.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 border border-amber-500/50 text-amber-100 font-black text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-2 mx-auto mb-2 group hover:scale-105 transition-all">
-                <BookOpen className="w-4 h-4 text-amber-400 stroke-[2.5] group-hover:scale-110 transition-transform" />
-                <span>Unfold Diary</span>
-                <Sparkles className="w-3.5 h-3.5 text-amber-400 fill-amber-300 animate-pulse" />
+            {/* Sticker Decals Arranged around the Cover */}
+            {coverCustomization?.stickers && coverCustomization.stickers.length > 0 ? (
+              <div className="absolute inset-4 sm:inset-8 z-0 pointer-events-none flex flex-wrap items-center justify-center gap-6 sm:gap-8 overflow-hidden opacity-95">
+                {coverCustomization.stickers.map((sticker, idx) => {
+                  const rotations = ['rotate-12', '-rotate-12', 'rotate-6', '-rotate-6', 'rotate-3', '-rotate-3'];
+                  const tilt = rotations[idx % rotations.length];
+                  return (
+                    <span 
+                      key={idx} 
+                      className={`text-4xl sm:text-6xl filter drop-shadow-[0_8px_12px_rgba(0,0,0,0.45)] transform ${tilt} transition-transform hover:scale-125 pointer-events-auto`}
+                    >
+                      {sticker}
+                    </span>
+                  );
+                })}
               </div>
-            </div>
+            ) : null}
           </div>
 
         </div>

@@ -5,6 +5,7 @@
     /* Theme 1: Chic Black Gingham Tablecloth with Beige Tooltip Labels & Porcelain Paper! */
     --bg-primary: #121214; /* Deep matte black & charcoal picnic table */
     --gingham-color: rgba(210, 215, 230, 0.20); /* Classic monochrome black & white checks */
+    --book-cover: #1E1C24; /* Solid chic charcoal hardcover for black gingham */
     
     /* Tablecloth Text (Outside the notebook directly on the dark table!) */
     --tablecloth-text: #FAFAFC; /* Crisp Platinum Pearl White */
@@ -54,6 +55,7 @@
     /* Theme 2: Red Gingham Tablecloth with Fresh Botanical Green Accents! */
     --bg-primary: #FFF0F3; /* Sweet strawberry cream linen */
     --gingham-color: rgba(228, 38, 75, 0.26); /* Classic Red Gingham check */
+    --book-cover: #C42643; /* Solid classic strawberry ruby red hardcover for red gingham */
     
     /* Tablecloth Text */
     --tablecloth-text: #114228; /* Deep botanical pine green */
@@ -433,10 +435,10 @@ body {
   transform: rotateY(0deg);
 }
 
-/* Back face representing outer book cover design with solid leatherette color, zero paper textures */
+/* Back face representing outer book cover design with 1 solid color matching gingham theme, zero textures */
 .page-back {
   transform: rotateY(-180deg);
-  background-color: #4a3525;
+  background-color: var(--book-cover, #C42643);
   background-image: none !important; /* Guarantee NO paper or line textures */
 }
 

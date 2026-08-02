@@ -16,10 +16,11 @@ import { LogMovieModal } from '../components/modals/LogMovieModal';
 import { FriendProfileModal } from '../components/friends/FriendProfileModal';
 import { AccountCenterModal } from '../components/modals/AccountCenterModal';
 import { EditProfileModal } from '../components/modals/EditProfileModal';
-import { Film, Sun, Moon, Plus, Sparkles, Settings, X, BookOpen } from 'lucide-react';
+import { CustomizeCoverModal } from '../components/modals/CustomizeCoverModal';
+import { Film, Sun, Moon, Plus, Sparkles, Settings, X, BookOpen, Palette } from 'lucide-react';
 
 const DashboardContent: React.FC = () => {
-  const { activeTab, theme, toggleTheme, setIsLogModalOpen, setIsAccountModalOpen, setEditingMovie, setPrefillMovie, userProfile, diaryState, setDiaryState } = useMovieDiary();
+  const { activeTab, theme, toggleTheme, setIsLogModalOpen, setIsAccountModalOpen, setIsCustomizeCoverModalOpen, setEditingMovie, setPrefillMovie, userProfile, diaryState, setDiaryState } = useMovieDiary();
 
   const handleOpenLogModal = () => {
     setEditingMovie(null);
@@ -58,6 +59,20 @@ const DashboardContent: React.FC = () => {
 
         {/* Top Right: Lucide Theme Switcher & Log Movie Action */}
         <div className="flex items-center gap-2">
+          {diaryState === 'closed' && (
+            <button
+              onClick={() => setIsCustomizeCoverModalOpen(true)}
+              title="Customize Book Cover Color, Inscription & Stickers"
+              className="w-9 h-9 rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] border-2 border-[var(--border-color)] flex items-center justify-center shadow-sm hover:scale-110 active:scale-95 transition-transform select-none cursor-pointer animate-fade-in"
+            >
+              {theme === 'day' ? (
+                <Palette className="w-4.5 h-4.5 text-amber-500 fill-amber-300/20 stroke-[2.5]" />
+              ) : (
+                <Palette className="w-4.5 h-4.5 text-rose-600 fill-rose-400/20 stroke-[2.5]" />
+              )}
+            </button>
+          )}
+
           <button
             onClick={toggleTheme}
             title={theme === 'day' ? 'Switch to Red Gingham with Green Accents' : 'Switch to Classic Black Gingham with Cream Paper'}
@@ -116,6 +131,7 @@ const DashboardContent: React.FC = () => {
       <FriendProfileModal />
       <AccountCenterModal />
       <EditProfileModal />
+      <CustomizeCoverModal />
 
       {/* Floating Lower-Left Account Center Action (No Label) */}
       <button

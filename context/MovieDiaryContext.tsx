@@ -7,6 +7,13 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Movie, Friend, Recommendation, ActiveTab, ViewMode, SortOption, UserProfile } from '../types/diary';
 import { INITIAL_MOVIES, INITIAL_FRIENDS, INITIAL_RECOMMENDATIONS, INITIAL_USER_PROFILE } from '../data/mockData';
 
+export interface CoverCustomization {
+  color: string;
+  title: string;
+  titleColor: string;
+  stickers: string[];
+}
+
 interface MovieDiaryContextType {
   theme: 'day' | 'midnight';
   toggleTheme: () => void;
@@ -16,6 +23,10 @@ interface MovieDiaryContextType {
   setViewMode: (mode: ViewMode) => void;
   diaryState: 'open' | 'closing' | 'closed' | 'opening';
   setDiaryState: (state: 'open' | 'closing' | 'closed' | 'opening') => void;
+  coverCustomization: CoverCustomization;
+  setCoverCustomization: React.Dispatch<React.SetStateAction<CoverCustomization>>;
+  isCustomizeCoverModalOpen: boolean;
+  setIsCustomizeCoverModalOpen: (open: boolean) => void;
   movies: Movie[];
   friends: Friend[];
   recommendations: Recommendation[];
@@ -60,6 +71,13 @@ export const MovieDiaryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [activeTab, setActiveTab] = useState<ActiveTab>('library');
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
   const [diaryState, setDiaryState] = useState<'open' | 'closing' | 'closed' | 'opening'>('open');
+  const [coverCustomization, setCoverCustomization] = useState<CoverCustomization>({
+    color: 'default',
+    title: '',
+    titleColor: '#FFFFFF',
+    stickers: [],
+  });
+  const [isCustomizeCoverModalOpen, setIsCustomizeCoverModalOpen] = useState<boolean>(false);
   
   const [movies, setMovies] = useState<Movie[]>(INITIAL_MOVIES);
   const [friends, setFriends] = useState<Friend[]>(INITIAL_FRIENDS);
@@ -87,6 +105,7 @@ export const MovieDiaryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         if (parsed.friends) setFriends(parsed.friends);
         if (parsed.recommendations) setRecommendations(parsed.recommendations);
         if (parsed.userProfile) setUserProfile(parsed.userProfile);
+        if (parsed.coverCustomization) setCoverCustomization(parsed.coverCustomization);
         if (parsed.theme) {
           setTheme(parsed.theme);
           if (parsed.theme === 'midnight') {
@@ -106,12 +125,12 @@ export const MovieDiaryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     try {
       localStorage.setItem(
         LOCAL_STORAGE_KEY,
-        JSON.stringify({ movies, friends, recommendations, userProfile, theme })
+        JSON.stringify({ movies, friends, recommendations, userProfile, theme, coverCustomization })
       );
     } catch (e) {
       console.error('Failed to save to localStorage:', e);
     }
-  }, [movies, friends, recommendations, userProfile, theme]);
+  }, [movies, friends, recommendations, userProfile, theme, coverCustomization]);
 
   const toggleTheme = () => {
     const newTheme = theme === 'day' ? 'midnight' : 'day';
@@ -219,6 +238,10 @@ export const MovieDiaryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setViewMode,
         diaryState,
         setDiaryState,
+        coverCustomization,
+        setCoverCustomization,
+        isCustomizeCoverModalOpen,
+        setIsCustomizeCoverModalOpen,
         movies,
         friends,
         recommendations,
