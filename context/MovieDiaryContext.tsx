@@ -14,6 +14,8 @@ interface MovieDiaryContextType {
   setActiveTab: (tab: ActiveTab) => void;
   viewMode: ViewMode;
   setViewMode: (mode: ViewMode) => void;
+  diaryState: 'open' | 'closing' | 'closed' | 'opening';
+  setDiaryState: (state: 'open' | 'closing' | 'closed' | 'opening') => void;
   movies: Movie[];
   friends: Friend[];
   recommendations: Recommendation[];
@@ -57,6 +59,7 @@ export const MovieDiaryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [theme, setTheme] = useState<'day' | 'midnight'>('day');
   const [activeTab, setActiveTab] = useState<ActiveTab>('library');
   const [viewMode, setViewMode] = useState<ViewMode>('timeline');
+  const [diaryState, setDiaryState] = useState<'open' | 'closing' | 'closed' | 'opening'>('open');
   
   const [movies, setMovies] = useState<Movie[]>(INITIAL_MOVIES);
   const [friends, setFriends] = useState<Friend[]>(INITIAL_FRIENDS);
@@ -214,6 +217,8 @@ export const MovieDiaryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setActiveTab,
         viewMode,
         setViewMode,
+        diaryState,
+        setDiaryState,
         movies,
         friends,
         recommendations,

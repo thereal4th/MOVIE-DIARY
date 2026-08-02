@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { MovieDiaryProvider, useMovieDiary } from '../context/MovieDiaryContext';
 import { NotebookSideTabs } from '../components/layout/Navbar';
 import { BinderSpine } from '../components/layout/BinderSpine';
@@ -16,15 +16,23 @@ import { LogMovieModal } from '../components/modals/LogMovieModal';
 import { FriendProfileModal } from '../components/friends/FriendProfileModal';
 import { AccountCenterModal } from '../components/modals/AccountCenterModal';
 import { EditProfileModal } from '../components/modals/EditProfileModal';
-import { Film, Sun, Moon, Plus, Sparkles, Settings } from 'lucide-react';
+import { Film, Sun, Moon, Plus, Sparkles, Settings, X, BookOpen } from 'lucide-react';
 
 const DashboardContent: React.FC = () => {
-  const { activeTab, theme, toggleTheme, setIsLogModalOpen, setIsAccountModalOpen, setEditingMovie, setPrefillMovie } = useMovieDiary();
+  const { activeTab, theme, toggleTheme, setIsLogModalOpen, setIsAccountModalOpen, setEditingMovie, setPrefillMovie, userProfile, diaryState, setDiaryState } = useMovieDiary();
 
   const handleOpenLogModal = () => {
     setEditingMovie(null);
     setPrefillMovie(null);
     setIsLogModalOpen(true);
+  };
+
+  const handleCloseNotebook = () => {
+    setDiaryState('closed');
+  };
+
+  const handleOpenNotebook = () => {
+    setDiaryState('open');
   };
 
   return (
@@ -75,14 +83,26 @@ const DashboardContent: React.FC = () => {
       {/* 📖 Perfectly Centered 100vh Locked Notebook Wrapper! */}
       <div className="max-w-[1360px] w-full flex-1 min-h-0 flex items-stretch justify-center relative mb-0.5">
         
-        {/* Main Leatherette Bound Diary Paper Content Frame: 100vh Locked & 2-Page Split! */}
-        <div className="w-full h-full diary-notebook-frame diary-paper-texture flex flex-row relative z-20 shadow-2xl rounded-3xl overflow-visible">
-          
-          {/* Absolutely position side divider tabs on outer right rim! */}
-          <NotebookSideTabs />
+        {/* Persistent, round pink X close/toggle button fixed on the far-right margin outside main notebook body */}
+        <button
+          onClick={() => setDiaryState(diaryState === 'closed' ? 'open' : 'closed')}
+          title={diaryState === 'closed' ? "Unfold Notebook Open" : "Fold Right Panel Closed"}
+          className="fixed top-[58px] sm:top-[66px] right-3 sm:right-6 lg:right-8 z-[100] w-12 h-12 rounded-full bg-pink-500 hover:bg-pink-600 active:scale-95 text-white border-2 border-white/90 shadow-[0_4px_16px_rgba(236,72,153,0.55)] hover:shadow-[0_6px_20px_rgba(236,72,153,0.7)] flex items-center justify-center hover:scale-110 transition-all duration-200 select-none cursor-pointer group"
+        >
+          <X className={`w-6 h-6 stroke-[3] transition-transform duration-500 ${diaryState === 'closed' ? 'rotate-45 group-hover:rotate-0' : 'group-hover:rotate-90'}`} />
+        </button>
 
-          {/* Journal Paper Interior Content Area: 100vh fixed container for Left & Right pages */}
-          <main className="flex-1 min-w-0 min-h-0 overflow-hidden rounded-3xl z-10 w-full flex flex-col h-full">
+
+        {/* Outer Notebook Wrapper (Transparent container so no background paper remains visible when closed!) */}
+        <div className={`notebook-wrapper w-full h-full flex flex-row relative z-20 overflow-visible ${diaryState === 'closed' ? 'closed' : ''}`}>
+          
+          {/* Automatically fade out side divider tabs when notebook is closed */}
+          <div className={`transition-opacity duration-500 ${diaryState === 'closed' ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+            <NotebookSideTabs />
+          </div>
+
+          {/* Journal Interior Content Area */}
+          <main className="flex-1 min-w-0 min-h-0 overflow-visible z-10 w-full flex flex-col h-full">
             {activeTab === 'library' && <WatchedLibrary />}
             {activeTab === 'friends' && <FriendsSection />}
             {activeTab === 'discover' && <RecommendationsSection />}
@@ -108,6 +128,7 @@ const DashboardContent: React.FC = () => {
     </div>
   );
 };
+
 
 export default function Home() {
   return (
