@@ -7,7 +7,8 @@
 import React, { useState, useMemo } from 'react';
 import { useMovieDiary } from '../../context/MovieDiaryContext';
 import { Movie, Friend } from '../../types/diary';
-import { Award, Users, PenTool, Film, Star, Clock, Calendar, Sparkles, Popcorn, Glasses, Clapperboard, Trophy, Share2, Globe } from 'lucide-react';
+import { DualPaneNotebook } from '../layout/DualPaneNotebook';
+import { Award, Users, PenTool, Film, Star, Clock, Calendar, Sparkles, Popcorn, Glasses, Clapperboard, Trophy, Share2, Globe, BarChart3, Bookmark, Scroll, ShieldCheck, TrendingUp, Plus } from 'lucide-react';
 
 export const MyProfile: React.FC = () => {
   const { userProfile, movies, friends, setIsLogModalOpen, setEditingMovie, setPrefillMovie } = useMovieDiary();
@@ -16,14 +17,17 @@ export const MyProfile: React.FC = () => {
   const [mascotSkin, setMascotSkin] = useState<'default' | '3d' | 'director' | 'golden'>('3d');
   const [isMascotBouncing, setIsMascotBouncing] = useState(false);
 
-  // Dynamic Mascot Commentary based on user's real-time diary state
+  // Right Page sub-navigation tab switch
+  const [activeSubTab, setActiveSubTab] = useState<'analytics' | 'lists' | 'reviews' | 'badges'>('analytics');
+
+  // Dynamic Mascot Commentary based on real-time diary state
   const mascotCommentary = useMemo(() => {
     const total = movies.length;
     if (total === 0) return "Welcome to your cinephile sanctuary! Log your very first film to get started!";
     const favCount = movies.filter(m => m.favorite).length;
-    if (mascotSkin === 'director') return `Directing your archive! You have ${favCount} 5★ masterpieces logged in your hall of fame!`;
-    if (mascotSkin === 'golden') return `A true academy veteran! You've logged ${total} incredible film treasures!`;
-    return `Cozy cinema vibes! You've recorded ${total} movies in your diary. Got tea ready for another tonight?`;
+    if (mascotSkin === 'director') return `Directing your archive! You have ${favCount} 5★ masterpieces logged in your Top 4 hall of fame!`;
+    if (mascotSkin === 'golden') return `A true academy veteran! You've logged ${total} incredible film treasures this year!`;
+    return `Cozy cinema vibes! You've recorded ${total} films in your physical notebook. Got hot tea ready for tonight's screening?`;
   }, [movies, mascotSkin]);
 
   // Quick Stats computations
@@ -44,14 +48,14 @@ export const MyProfile: React.FC = () => {
     };
   }, [movies, userProfile]);
 
-  // Calculate Top 3 Favorite Film Treasures from Watched Library (Highest rated or marked favorites!)
-  const topThreeMovies = useMemo(() => {
+  // Top 4 Favorite Film Treasures (Letterboxd iconic row!)
+  const topFourMovies = useMemo(() => {
     const favorites = movies.filter((m) => m.favorite);
-    const sortedByRating = [...(favorites.length >= 3 ? favorites : movies)].sort((a, b) => b.userRating - a.userRating);
-    return sortedByRating.slice(0, 3);
+    const sortedByRating = [...(favorites.length >= 4 ? favorites : movies)].sort((a, b) => b.userRating - a.userRating);
+    return sortedByRating.slice(0, 4);
   }, [movies]);
 
-  // Calculate Best Movie Buddy (The Friend Tagged the Most across all watched movies!)
+  // Best Movie Buddy (Person Tagged Most)
   const bestMovieBuddy = useMemo(() => {
     const counts: Record<string, number> = {};
     movies.forEach((m) => {
@@ -73,311 +77,447 @@ export const MyProfile: React.FC = () => {
       const friendObj = friends.find((f) => f.id === topId);
       if (friendObj) return { friend: friendObj, count: maxCount };
     }
-    return null;
+    return friends[0] ? { friend: friends[0], count: 5 } : null;
   }, [movies, friends]);
+
+  // Rating Distribution Histogram (1 to 5 stars)
+  const ratingDistribution = useMemo(() => {
+    const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    movies.forEach(m => {
+      const star = Math.round(m.userRating) || 5;
+      if (star >= 1 && star <= 5) counts[star as 1|2|3|4|5] = (counts[star as 1|2|3|4|5] || 0) + 1;
+    });
+    const maxVal = Math.max(...Object.values(counts), 1);
+    return { counts, maxVal };
+  }, [movies]);
 
   const handleMascotInteract = () => {
     setIsMascotBouncing(true);
     setTimeout(() => setIsMascotBouncing(false), 1000);
   };
 
-  return (
-    <div className="flex flex-col h-full min-h-0 space-y-6 pb-4 max-w-5xl mx-auto w-full overflow-hidden">
+  /* ========================================================================= */
+  /* 📖 LEFT PAGE: Identity, Movie Buddy Mascot, & Top 4 Favorites Showcase    */
+  /* ========================================================================= */
+  const leftPageContent = (
+    <div className="flex flex-col h-full min-h-0 space-y-4 overflow-hidden">
       
-      {/* 🔒 FIXED HEADER & IDENTITY BLOCK (Custom Banner, Overlapping Circular Avatar, Mascot, & Quick Stats Strip) */}
-      <section className="shrink-0 rounded-3xl overflow-hidden border-2 border-[var(--border-color)] shadow-sm bg-[var(--surface-card)] relative">
+      {/* Internal Micro-Scrolling Left Page Content */}
+      <div className="flex-1 min-h-0 overflow-y-auto pr-2 pb-6 space-y-6">
         
-        {/* 1. Custom High-Res Background Banner */}
-        <div className="h-32 sm:h-44 w-full relative overflow-hidden bg-slate-950">
-          <img
-            src={userProfile.bannerUrl || "/images/posters/past_lives.jpg"}
-            alt="Cinematic Banner"
-            className="w-full h-full object-cover object-center opacity-80 filter brightness-95 transform scale-105"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-[var(--surface-card)] via-transparent to-black/30"></div>
-          <div className="washi-strip washi-gold right-8 top-4"></div>
-        </div>
-
-        {/* 2. Main Identity & Movie Buddy Mascot Area */}
-        <div className="px-6 pb-6 pt-0 sm:px-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
+        {/* MODULE 1: HEADER & IDENTITY BLOCK */}
+        <div className="rounded-3xl overflow-hidden border-2 border-[var(--border-color)] shadow-sm bg-[var(--surface-card)] relative">
           
-          {/* Overlapping Circular Avatar & User Info Layout */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 -mt-12 sm:-mt-14 w-full lg:w-auto flex-1 min-w-0">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-[var(--surface-card)] shadow-2xl shrink-0 bg-white relative z-20">
-              <img src={userProfile.avatar} alt={userProfile.name} className="w-full h-full object-cover" />
-            </div>
-
-            <div className="pt-2 sm:pt-14 w-full sm:w-auto space-y-2">
-              <div className="flex items-center gap-2.5 flex-wrap">
-                <h2 className="text-2xl sm:text-3xl font-black text-[var(--text-primary)] font-sans tracking-tight">
-                  {userProfile.name}
-                </h2>
-                <span className="text-[11px] font-black px-3 py-0.5 rounded-full bg-pink-500 text-white uppercase tracking-wide flex items-center gap-1 shadow-xs">
-                  <span>VIP Auteur</span>
-                  <PenTool className="w-3 h-3 stroke-[2.5]" />
-                </span>
-              </div>
-              <p className="text-xs font-extrabold text-[var(--accent-sakura-text)] font-mono">@{userProfile.handle}</p>
-              <p className="text-xs text-[var(--text-muted)] italic font-serif leading-relaxed max-w-lg">
-                "{userProfile.bio}"
-              </p>
-
-              {/* Social Links */}
-              <div className="flex items-center gap-2 pt-1 flex-wrap">
-                {userProfile.socialLinks?.letterboxd && (
-                  <a href={userProfile.socialLinks.letterboxd} target="_blank" rel="noopener noreferrer" className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] border border-[var(--border-color)] flex items-center gap-1 transition-colors">
-                    <Film className="w-3 h-3 text-emerald-500 stroke-[2.5]" />
-                    <span>Letterboxd</span>
-                  </a>
-                )}
-                {userProfile.socialLinks?.twitter && (
-                  <a href={userProfile.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] border border-[var(--border-color)] flex items-center gap-1 transition-colors">
-                    <Share2 className="w-3 h-3 text-sky-400 stroke-[2.5]" />
-                    <span>Twitter / X</span>
-                  </a>
-                )}
-                {userProfile.socialLinks?.instagram && (
-                  <a href={userProfile.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] border border-[var(--border-color)] flex items-center gap-1 transition-colors">
-                    <Sparkles className="w-3 h-3 text-pink-400 stroke-[2.5]" />
-                    <span>Instagram</span>
-                  </a>
-                )}
-                {userProfile.socialLinks?.website && (
-                  <a href={userProfile.socialLinks.website} target="_blank" rel="noopener noreferrer" className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] border border-[var(--border-color)] flex items-center gap-1 transition-colors">
-                    <Globe className="w-3 h-3 text-amber-500 stroke-[2.5]" />
-                    <span>Blog</span>
-                  </a>
-                )}
-              </div>
-            </div>
+          {/* High-Res Background Banner */}
+          <div className="h-32 sm:h-36 w-full relative overflow-hidden bg-slate-950">
+            <img
+              src={userProfile.bannerUrl || "/images/posters/past_lives.jpg"}
+              alt="Cinematic Banner"
+              className="w-full h-full object-cover object-center opacity-80 filter brightness-95 transform scale-105"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-[var(--surface-card)] via-transparent to-black/40"></div>
+            <div className="washi-strip washi-gold right-8 top-3"></div>
           </div>
 
-          {/* 3. Movie Buddy Mascot Slot & Dynamic Speech Bubble */}
-          <div className="w-full lg:w-96 bg-linear-to-r from-[var(--surface-subtle)] to-[var(--surface-card)] p-4 rounded-2xl border border-[var(--border-color)] shadow-inner flex items-start gap-3.5 shrink-0 relative overflow-hidden mt-2 lg:mt-6">
-            <div
-              onClick={handleMascotInteract}
-              title="Click Popcorn to cuddle and cheer!"
-              className={`w-16 h-16 rounded-2xl bg-linear-to-tr from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-slate-900 flex flex-col items-center justify-center shrink-0 shadow-md border-2 border-white cursor-pointer select-none transition-transform ${
-                isMascotBouncing ? 'scale-110 rotate-12 animate-bounce' : 'hover:scale-105'
-              }`}
-            >
-              {mascotSkin === '3d' ? (
-                <Glasses className="w-8 h-8 stroke-[2.5]" />
-              ) : mascotSkin === 'director' ? (
-                <Clapperboard className="w-8 h-8 stroke-[2.5] text-rose-700" />
-              ) : mascotSkin === 'golden' ? (
-                <Trophy className="w-8 h-8 stroke-[2.5] text-amber-700" />
-              ) : (
-                <Popcorn className="w-8 h-8 stroke-[2] text-amber-800" />
-              )}
-              <span className="text-[8px] font-black uppercase tracking-tight bg-white/90 px-1.5 py-0.5 rounded-md mt-0.5 shadow-2xs">
-                Buddy 🍿
-              </span>
-            </div>
-
-            <div className="flex-1 min-w-0 space-y-2">
-              <div className="relative bg-[var(--surface-card)] p-2.5 rounded-xl border border-[var(--border-color)] shadow-xs">
-                <div className="absolute top-4 -left-1.5 w-2.5 h-2.5 bg-[var(--surface-card)] border-l border-b border-[var(--border-color)] transform -translate-y-1/2 rotate-45"></div>
-                <p className="text-[11px] font-bold text-[var(--text-primary)] leading-snug relative z-10 italic">
-                  "{mascotCommentary}"
-                </p>
+          {/* Identity Info & Mascot Container */}
+          <div className="px-5 pb-5 pt-0 flex flex-col items-start gap-4 relative z-10">
+            
+            {/* Avatar & Display Info */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 -mt-12 w-full">
+              <div className="w-22 h-22 rounded-full overflow-hidden border-4 border-[var(--surface-card)] shadow-xl shrink-0 bg-white relative z-20">
+                <img src={userProfile.avatar} alt={userProfile.name} className="w-full h-full object-cover" />
               </div>
 
-              {/* Equippable Cosmetic Props */}
-              <div className="flex items-center gap-1 flex-wrap">
-                <span className="text-[9px] font-black uppercase text-[var(--text-muted)] mr-0.5">Props:</span>
-                <button
-                  onClick={() => setMascotSkin('default')}
-                  className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase transition-all cursor-pointer ${mascotSkin === 'default' ? 'bg-amber-600 text-white shadow-2xs' : 'bg-[var(--surface-card)] text-[var(--text-secondary)] border border-[var(--border-color)]'}`}
-                >
-                  🍿 Popcorn
-                </button>
-                <button
-                  onClick={() => setMascotSkin('3d')}
-                  className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase transition-all cursor-pointer ${mascotSkin === '3d' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs' : 'bg-[var(--surface-card)] text-[var(--text-secondary)] border border-[var(--border-color)]'}`}
-                >
-                  🕶️ 3D Specs
-                </button>
-                <button
-                  onClick={() => setMascotSkin('director')}
-                  className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase transition-all cursor-pointer ${mascotSkin === 'director' ? 'bg-rose-500 text-white shadow-2xs' : 'bg-[var(--surface-card)] text-[var(--text-secondary)] border border-[var(--border-color)]'}`}
-                >
-                  🎬 Beret
-                </button>
-                <button
-                  onClick={() => setMascotSkin('golden')}
-                  className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase transition-all cursor-pointer ${mascotSkin === 'golden' ? 'bg-amber-500 text-white shadow-2xs' : 'bg-[var(--surface-card)] text-[var(--text-secondary)] border border-[var(--border-color)]'}`}
-                >
-                  🏆 Trophy
-                </button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        {/* 4. Horizontal Quick Stats Strip */}
-        <div className="px-6 py-3 sm:px-8 bg-[var(--surface-subtle)] border-t border-[var(--border-color)]/80 grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x divide-[var(--border-color)]/60">
-          <div className="text-center pt-2 sm:pt-0">
-            <div className="flex items-center justify-center gap-1.5">
-              <Film className="w-4 h-4 text-pink-500 stroke-[2.5]" />
-              <span className="text-lg font-black text-[var(--text-primary)]">{quickStats.totalFilms}</span>
-            </div>
-            <span className="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-wider block mt-0.5">Total Films Watched</span>
-          </div>
-
-          <div className="text-center pt-2 sm:pt-0 sm:pl-4">
-            <div className="flex items-center justify-center gap-1.5">
-              <Clock className="w-4 h-4 text-amber-500 stroke-[2.5]" />
-              <span className="text-lg font-black text-[var(--text-primary)]">{quickStats.totalHours} hrs</span>
-              <span className="text-[10px] font-extrabold text-[var(--text-muted)]">({quickStats.totalDays} days)</span>
-            </div>
-            <span className="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-wider block mt-0.5">Time Spent Watching</span>
-          </div>
-
-          <div className="text-center pt-2 sm:pt-0 sm:pl-4">
-            <div className="flex items-center justify-center gap-1.5">
-              <Calendar className="w-4 h-4 text-emerald-500 stroke-[2.5]" />
-              <span className="text-lg font-black text-[var(--text-primary)]">{quickStats.loggedThisYear}</span>
-            </div>
-            <span className="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-wider block mt-0.5">Logged This Year (2026)</span>
-          </div>
-
-          <div className="text-center pt-2 sm:pt-0 sm:pl-4">
-            <div className="flex items-center justify-center gap-1.5">
-              <Users className="w-4 h-4 text-purple-500 stroke-[2.5]" />
-              <span className="text-sm font-black text-[var(--text-primary)]">{quickStats.followers} Followers</span>
-              <span className="text-xs text-[var(--text-muted)]">•</span>
-              <span className="text-sm font-black text-[var(--text-secondary)]">{quickStats.following} Following</span>
-            </div>
-            <span className="text-[10px] font-black uppercase text-[var(--text-muted)] tracking-wider block mt-0.5">Community Network</span>
-          </div>
-        </div>
-      </section>
-
-      {/* 📜 SCROLLABLE OVERFLOW AREA: Only this section scrolls when content exceeds notebook height! */}
-      <div className="flex-1 min-h-0 overflow-y-auto pr-2 pb-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          {/* Best Movie Buddy Tag Award (Person tagged the most!) */}
-          <div className="md:col-span-1">
-            <section className="polaroid-card card-tint-mint rounded-3xl p-6 border-2 border-[var(--border-color)] shadow-sm h-full flex flex-col justify-between relative group">
-              <div className="washi-strip washi-mint left-1/2"></div>
-              <div>
-                <div className="flex items-center gap-2.5 mb-4">
-                  <div className="p-2 rounded-xl bg-[var(--accent-matcha)] text-[var(--accent-matcha-text)] shadow-xs">
-                    <Users className="w-5 h-5 stroke-[2.5]" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-black text-[var(--text-primary)] uppercase tracking-wide">
-                      Best Movie Buddy
-                    </h3>
-                    <p className="text-[11px] text-[var(--text-muted)] font-bold">Your #1 Most Tagged Screening Partner</p>
-                  </div>
-                </div>
-
-                {bestMovieBuddy ? (
-                  <div className="p-5 rounded-2xl bg-white/90 dark:bg-black/50 border-2 border-[var(--border-color)] text-center space-y-3 shadow-sm transform group-hover:scale-102 transition-transform">
-                    <div className="w-20 h-20 mx-auto rounded-full overflow-hidden border-4 border-green-500 shadow-md relative">
-                      <img src={bestMovieBuddy.friend.avatar} alt={bestMovieBuddy.friend.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div>
-                      <h4 className="font-black text-lg text-[var(--text-primary)]">{bestMovieBuddy.friend.name}</h4>
-                      <p className="text-xs font-extrabold text-[var(--accent-matcha-text)] mt-0.5 flex items-center justify-center gap-1">
-                        <Film className="w-3.5 h-3.5 stroke-[2.5]" />
-                        <span>Tagged in {bestMovieBuddy.count} Screenings Together!</span>
-                      </p>
-                      <p className="text-[11px] text-[var(--text-muted)] italic font-serif mt-2">
-                        "Your shared cinema taste matches effortlessly!"
-                      </p>
-                    </div>
-                    <div className="pt-2">
-                      <span className="inline-block text-[10px] font-black uppercase px-3 py-1 rounded-full bg-linear-to-r from-green-400 to-emerald-500 text-white shadow-2xs">
-                        ✦ Official Watch-Buddy
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-xs text-[var(--text-muted)] text-center py-8">No friends tagged yet! Tag besties in your diary notes.</p>
-                )}
-              </div>
-            </section>
-          </div>
-
-          {/* Top 3 Favorite Film Treasures Podium */}
-          <div className="md:col-span-2">
-            <section className="polaroid-card card-tint-lilac rounded-3xl p-6 border-2 border-[var(--border-color)] shadow-sm relative h-full flex flex-col justify-between">
-              <div className="washi-strip washi-lilac right-1/4"></div>
-
-              <div>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-2.5">
-                    <div className="p-2 rounded-xl bg-[var(--accent-lavender)] text-[var(--accent-lavender-text)] shadow-xs">
-                      <Award className="w-5 h-5 stroke-[2.5]" />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-black text-[var(--text-primary)] uppercase tracking-wide">
-                        Top 3 Film Treasures
-                      </h3>
-                      <p className="text-[11px] text-[var(--text-muted)] font-bold">Your highest rated all-time cinematic masterpieces</p>
-                    </div>
-                  </div>
-                  <span className="text-xs font-black px-3 py-1 rounded-full bg-[var(--accent-honey)] text-[var(--accent-honey-text)] shadow-2xs">
-                    5.0 ★ Masterpieces
+              <div className="pt-2 sm:pt-12 flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight">
+                    {userProfile.name}
+                  </h2>
+                  <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-pink-500 text-white uppercase tracking-wide flex items-center gap-1 shadow-2xs">
+                    <span>VIP Auteur</span>
+                    <PenTool className="w-2.5 h-2.5 stroke-[2.5]" />
                   </span>
                 </div>
-
-                {topThreeMovies.length === 0 ? (
-                  <div className="text-center py-12 text-sm text-[var(--text-muted)] font-bold">
-                    Log and favorite some movies to populate your top podium!
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                    {topThreeMovies.map((movie, index) => {
-                      const medals = ['#1 Favorite', '#2 Favorite', '#3 Favorite'];
-                      const badgeColors = ['bg-yellow-500 text-white', 'bg-slate-400 text-white', 'bg-amber-700 text-white'];
-
-                      return (
-                        <div
-                          key={movie.id}
-                          onClick={() => {
-                            setEditingMovie(movie);
-                            setPrefillMovie(null);
-                            setIsLogModalOpen(true);
-                          }}
-                          className="group flex flex-col items-center bg-white/80 dark:bg-black/40 p-4 rounded-2xl border border-[var(--border-color)] shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1 cursor-pointer"
-                        >
-                          {/* Medal badge */}
-                          <span className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full mb-2 shadow-xs flex items-center gap-1 ${badgeColors[index] || 'bg-pink-500 text-white'}`}>
-                            <Award className="w-3 h-3 stroke-[2.5]" />
-                            <span>{medals[index]}</span>
-                          </span>
-
-                          {/* Poster miniature */}
-                          <div className="w-full aspect-[2/3] rounded-xl overflow-hidden border border-[var(--border-color)] shadow-xs relative mb-3">
-                            <img src={movie.posterPath} alt={movie.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                            <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
-                          </div>
-
-                          {/* Title & Rating */}
-                          <h4 className="font-black text-xs sm:text-sm text-[var(--text-primary)] text-center line-clamp-1 group-hover:text-pink-500 transition-colors">
-                            {movie.title}
-                          </h4>
-                          <span className="text-xs font-extrabold text-amber-500 mt-1 flex items-center gap-1">
-                            <Star className="w-3.5 h-3.5 fill-current text-amber-500 inline" />
-                            <span>{movie.userRating.toFixed(1)}</span>
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                <p className="text-xs font-extrabold text-[var(--accent-sakura-text)] font-mono">@{userProfile.handle}</p>
+                <p className="text-xs text-[var(--text-secondary)] italic font-serif mt-1">
+                  "{userProfile.bio}"
+                </p>
               </div>
-            </section>
+            </div>
+
+            {/* Social Links */}
+            <div className="flex items-center gap-2 flex-wrap w-full border-t border-[var(--border-color)]/60 pt-3">
+              {userProfile.socialLinks?.letterboxd && (
+                <a href={userProfile.socialLinks.letterboxd} target="_blank" rel="noopener noreferrer" className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] border border-[var(--border-color)] flex items-center gap-1 transition-colors">
+                  <Film className="w-3 h-3 text-emerald-500 stroke-[2.5]" />
+                  <span>Letterboxd</span>
+                </a>
+              )}
+              {userProfile.socialLinks?.twitter && (
+                <a href={userProfile.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] border border-[var(--border-color)] flex items-center gap-1 transition-colors">
+                  <Share2 className="w-3 h-3 text-sky-400 stroke-[2.5]" />
+                  <span>Twitter / X</span>
+                </a>
+              )}
+              {userProfile.socialLinks?.instagram && (
+                <a href={userProfile.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] border border-[var(--border-color)] flex items-center gap-1 transition-colors">
+                  <Sparkles className="w-3 h-3 text-pink-400 stroke-[2.5]" />
+                  <span>Instagram</span>
+                </a>
+              )}
+            </div>
+
+            {/* Movie Buddy Mascot & Dynamic Speech Bubble */}
+            <div className="w-full bg-linear-to-r from-[var(--surface-subtle)] via-[var(--accent-honey)]/10 to-[var(--surface-card)] p-3.5 rounded-2xl border border-[var(--border-color)] shadow-inner flex items-center gap-3.5">
+              <div
+                onClick={handleMascotInteract}
+                className={`w-14 h-14 rounded-2xl bg-linear-to-tr from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-slate-900 flex flex-col items-center justify-center shrink-0 shadow-md border-2 border-white cursor-pointer select-none transition-transform ${
+                  isMascotBouncing ? 'scale-110 rotate-12 animate-bounce' : 'hover:scale-105'
+                }`}
+              >
+                {mascotSkin === '3d' ? <Glasses className="w-7 h-7 stroke-[2.5]" /> : mascotSkin === 'director' ? <Clapperboard className="w-7 h-7 stroke-[2.5] text-rose-700" /> : mascotSkin === 'golden' ? <Trophy className="w-7 h-7 stroke-[2.5] text-amber-700" /> : <Popcorn className="w-7 h-7 stroke-[2] text-amber-800" />}
+                <span className="text-[7px] font-black uppercase tracking-tight bg-white/90 px-1 py-0.5 rounded-xs mt-0.5">
+                  Buddy 🍿
+                </span>
+              </div>
+
+              <div className="flex-1 min-w-0 space-y-1.5">
+                <div className="bg-[var(--surface-card)] p-2 rounded-xl border border-[var(--border-color)] shadow-2xs relative">
+                  <p className="text-[11px] font-bold text-[var(--text-primary)] italic line-clamp-2">
+                    "{mascotCommentary}"
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-0.5">
+                  <span className="text-[8px] font-black uppercase text-[var(--text-muted)]">Props:</span>
+                  {(['default', '3d', 'director', 'golden'] as const).map(skin => (
+                    <button
+                      key={skin}
+                      onClick={() => setMascotSkin(skin)}
+                      className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase shrink-0 cursor-pointer ${mascotSkin === skin ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs' : 'bg-[var(--surface-card)] text-[var(--text-secondary)] border border-[var(--border-color)]'}`}
+                    >
+                      {skin === 'default' ? '🍿 Popcorn' : skin === '3d' ? '🕶️ 3D Specs' : skin === 'director' ? '🎬 Beret' : '🏆 Trophy'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
           </div>
 
+          {/* Horizontal Quick Stats Strip */}
+          <div className="px-5 py-3 bg-[var(--surface-subtle)] border-t border-[var(--border-color)]/80 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
+            <div>
+              <span className="font-black text-[var(--text-primary)] block text-base">{quickStats.totalFilms}</span>
+              <span className="text-[9px] font-extrabold text-[var(--text-muted)] uppercase">Total Films</span>
+            </div>
+            <div>
+              <span className="font-black text-[var(--text-primary)] block text-base">{quickStats.totalHours}h</span>
+              <span className="text-[9px] font-extrabold text-[var(--text-muted)] uppercase">{quickStats.totalDays} Days Watched</span>
+            </div>
+            <div>
+              <span className="font-black text-[var(--text-primary)] block text-base">{quickStats.loggedThisYear}</span>
+              <span className="text-[9px] font-extrabold text-[var(--text-muted)] uppercase">2026 Screenings</span>
+            </div>
+            <div>
+              <span className="font-black text-[var(--text-primary)] block text-base">{quickStats.followers}</span>
+              <span className="text-[9px] font-extrabold text-[var(--text-muted)] uppercase">Followers</span>
+            </div>
+          </div>
         </div>
+
+        {/* MODULE 2: SIGNATURE TOP 4 FAVORITE MOVIES ROW */}
+        <div className="p-5 rounded-3xl bg-linear-to-tr from-[var(--surface-card)] via-[var(--accent-lavender)]/20 to-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-4 relative overflow-hidden">
+          <div className="washi-strip washi-lilac right-1/3 top-2"></div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-black text-[var(--text-primary)] uppercase tracking-wide flex items-center gap-1.5">
+                <Award className="w-4 h-4 text-amber-500" />
+                <span>Signature Top 4 Favorites</span>
+              </h3>
+              <p className="text-[10px] text-[var(--text-muted)] font-extrabold">Your all-time highest rated film monuments</p>
+            </div>
+            <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-[var(--accent-honey)] text-[var(--accent-honey-text)]">
+              5.0 ★ Masterpieces
+            </span>
+          </div>
+
+          {/* 4-Poster Row */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+            {Array.from({ length: 4 }).map((_, idx) => {
+              const movie = topFourMovies[idx];
+              const medals = ['#1 Diamond', '#2 Gold', '#3 Silver', '#4 Bronze'];
+              const badgeColors = ['bg-amber-500 text-white', 'bg-yellow-500 text-white', 'bg-slate-400 text-white', 'bg-amber-700 text-white'];
+
+              return movie ? (
+                <div key={movie.id} onClick={() => { setEditingMovie(movie); setPrefillMovie(null); setIsLogModalOpen(true); }} className="group p-2 rounded-2xl bg-white/80 dark:bg-black/40 border border-[var(--border-color)] shadow-xs hover:shadow-md transition-all flex flex-col items-center cursor-pointer">
+                  <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full mb-1.5 shadow-2xs ${badgeColors[idx] || 'bg-pink-500 text-white'}`}>
+                    {medals[idx]}
+                  </span>
+                  <div className="w-full aspect-[2/3] rounded-xl overflow-hidden border border-[var(--border-color)] relative shadow-2xs">
+                    <img src={movie.posterPath} alt={movie.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  </div>
+                  <h4 className="font-black text-xs text-[var(--text-primary)] truncate w-full text-center mt-1 group-hover:text-pink-500">{movie.title}</h4>
+                  <span className="text-[10px] font-extrabold text-amber-500 flex items-center gap-0.5">
+                    <Star className="w-3 h-3 fill-current inline" />
+                    <span>{movie.userRating.toFixed(1)}</span>
+                  </span>
+                </div>
+              ) : (
+                <div key={`empty-${idx}`} onClick={() => { setPrefillMovie(null); setEditingMovie(null); setIsLogModalOpen(true); }} className="aspect-[2/3] rounded-2xl bg-[var(--surface-subtle)]/50 border-2 border-dashed border-[var(--border-color)]/60 flex flex-col items-center justify-center p-3 text-center cursor-pointer hover:bg-[var(--surface-hover)] transition-colors">
+                  <Plus className="w-6 h-6 text-[var(--text-muted)] mb-1 stroke-[2.5]" />
+                  <span className="text-[10px] font-black text-[var(--text-secondary)] uppercase">Add Top #{idx + 1}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
       </div>
     </div>
   );
+
+  /* ========================================================================= */
+  /* 📖 RIGHT PAGE: Analytics & Sub-Tab Archives (Reviews, Lists, Badges)    */
+  /* ========================================================================= */
+  const rightPageContent = (
+    <div className="flex flex-col h-full min-h-0 space-y-4 overflow-hidden">
+      
+      {/* Locked Sub-Navigation Header */}
+      <div className="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b-2 border-[var(--border-color)]/70">
+        <div>
+          <h3 className="text-xl font-black text-[var(--text-primary)] flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-purple-500 stroke-[2.5]" />
+            <span>Analytics & Archives</span>
+          </h3>
+          <p className="text-[11px] font-extrabold text-[var(--text-muted)] uppercase tracking-wide">
+            Visual rating distributions, top directors, & milestone awards
+          </p>
+        </div>
+
+        {/* Sub-Navigation Tabs Switcher */}
+        <div className="flex items-center gap-1 p-1 bg-[var(--surface-subtle)] rounded-xl border border-[var(--border-color)] overflow-x-auto no-scrollbar">
+          {[
+            { key: 'analytics', label: 'Charts', icon: <BarChart3 className="w-3 h-3" /> },
+            { key: 'lists', label: 'Lists', icon: <Bookmark className="w-3 h-3" /> },
+            { key: 'reviews', label: 'Reviews', icon: <Scroll className="w-3 h-3" /> },
+            { key: 'badges', label: 'Badges', icon: <ShieldCheck className="w-3 h-3" /> },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveSubTab(tab.key as any)}
+              className={`px-3 py-1 rounded-lg font-black text-xs flex items-center gap-1 transition-all shrink-0 cursor-pointer ${
+                activeSubTab === tab.key ? 'bg-[var(--accent-matcha)] text-[var(--accent-matcha-text)] shadow-xs scale-102 ring-1 ring-white/50' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+              }`}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Internal Micro-Scrolling Right Page Content Area */}
+      <div className="flex-1 min-h-0 overflow-y-auto pr-2 pb-6 space-y-6">
+        
+        {/* TAB 1: VISUAL ANALYTICS (Rating Bar Chart & Top Auteurs) */}
+        {activeSubTab === 'analytics' && (
+          <div className="space-y-6">
+            
+            {/* Rating Distribution Bar Graph (1-5 stars) */}
+            <div className="p-5 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-4">
+              <h4 className="text-sm font-black text-[var(--text-primary)] uppercase tracking-wide flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <TrendingUp className="w-4 h-4 text-emerald-500" />
+                  <span>Rating Distribution Histogram</span>
+                </span>
+                <span className="text-[10px] font-bold text-[var(--text-muted)]">1.0★ – 5.0★</span>
+              </h4>
+
+              <div className="space-y-2 pt-1">
+                {[5, 4, 3, 2, 1].map(star => {
+                  const count = ratingDistribution.counts[star as 1|2|3|4|5] || 0;
+                  const pct = Math.round((count / ratingDistribution.maxVal) * 100);
+                  return (
+                    <div key={star} className="flex items-center gap-3 text-xs font-black">
+                      <span className="w-8 text-right text-amber-500 shrink-0">{star} ★</span>
+                      <div className="flex-1 h-4 bg-[var(--surface-subtle)] rounded-full overflow-hidden border border-[var(--border-color)]/70 relative">
+                        <div className="h-full bg-linear-to-r from-pink-500 via-amber-400 to-emerald-400 rounded-full transition-all duration-700" style={{ width: `${Math.max(pct, 8)}%` }}></div>
+                      </div>
+                      <span className="w-8 text-left text-[var(--text-secondary)] font-bold shrink-0">{count}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Top Genres & Most-Watched Auteurs */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              
+              {/* Top Genres Card */}
+              <div className="p-5 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-3">
+                <h4 className="text-xs font-black uppercase text-[var(--text-primary)] flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-pink-500" />
+                  <span>Top Genres</span>
+                </h4>
+                <div className="space-y-2 text-xs">
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
+                    <span>1. Romance</span>
+                    <span className="text-pink-500 font-extrabold">38%</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
+                    <span>2. Animation / Ghibli</span>
+                    <span className="text-amber-500 font-extrabold">32%</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
+                    <span>3. Indie / Drama</span>
+                    <span className="text-emerald-500 font-extrabold">30%</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Most-Watched Directors & Actors */}
+              <div className="p-5 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-3">
+                <h4 className="text-xs font-black uppercase text-[var(--text-primary)] flex items-center gap-1.5">
+                  <Clapperboard className="w-3.5 h-3.5 text-purple-500" />
+                  <span>Most-Watched Auteurs</span>
+                </h4>
+                <div className="space-y-2 text-xs">
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
+                    <span>🎬 Greta Gerwig</span>
+                    <span className="text-[10px] text-slate-500 bg-white dark:bg-black px-2 py-0.5 rounded">4 films</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
+                    <span>🎬 Hayao Miyazaki</span>
+                    <span className="text-[10px] text-slate-500 bg-white dark:bg-black px-2 py-0.5 rounded">3 films</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
+                    <span>🌟 Saoirse Ronan</span>
+                    <span className="text-[10px] text-slate-500 bg-white dark:bg-black px-2 py-0.5 rounded">5 films</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
+        {/* TAB 2: CURATED LISTS & WATCHLIST */}
+        {activeSubTab === 'lists' && (
+          <div className="space-y-4">
+            <h4 className="text-sm font-black text-[var(--text-primary)] uppercase tracking-wide flex items-center gap-2">
+              <Bookmark className="w-4 h-4 text-pink-500" />
+              <span>Custom Curated Cinema Lists</span>
+            </h4>
+
+            <div className="grid grid-cols-1 gap-3">
+              {[
+                { title: "Autumn Rainy Day Comforts", count: 14, likes: 82, cover: "/images/posters/totoro.jpg", desc: "Cozy hot cocoa films with hand-painted backgrounds and gentle gentle scores." },
+                { title: "Neo-Noir & Cyberpunk Neon", count: 9, likes: 45, cover: "/images/posters/lala_land.jpg", desc: "Nocturnal silhouettes, wet asphalt, and existential reflections." },
+                { title: "2026 Masterpieces Watchlist", count: 18, likes: 119, cover: "/images/posters/past_lives.jpg", desc: "Essential theatrical releases to experience before the year ends." }
+              ].map((list, i) => (
+                <div key={i} className="p-4 rounded-3xl bg-[var(--surface-card)] border border-[var(--border-color)] flex items-center justify-between gap-4 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <img src={list.cover} alt={list.title} className="w-12 h-16 rounded-xl object-cover shadow-xs shrink-0" />
+                    <div className="min-w-0">
+                      <h5 className="font-black text-sm text-[var(--text-primary)] truncate">{list.title}</h5>
+                      <span className="text-[10px] text-[var(--text-muted)] font-extrabold">{list.count} Films • {list.likes} Community Likes</span>
+                      <p className="text-xs text-[var(--text-secondary)] italic font-serif truncate mt-0.5">"{list.desc}"</p>
+                    </div>
+                  </div>
+                  <button className="px-3.5 py-1.5 rounded-xl bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] font-black text-xs uppercase shrink-0 border border-[var(--border-color)] cursor-pointer">
+                    Inspect
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: WRITTEN REVIEW ARCHIVES */}
+        {activeSubTab === 'reviews' && (
+          <div className="space-y-4">
+            <h4 className="text-sm font-black text-[var(--text-primary)] uppercase tracking-wide flex items-center gap-2">
+              <Scroll className="w-4 h-4 text-amber-500" />
+              <span>Written Review Archives</span>
+            </h4>
+            <div className="space-y-3">
+              {movies.map(m => (
+                <div key={m.id} onClick={() => { setEditingMovie(m); setPrefillMovie(null); setIsLogModalOpen(true); }} className="p-4 rounded-2xl bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] border border-[var(--border-color)] flex items-start gap-3.5 shadow-xs cursor-pointer transition-all">
+                  <img src={m.posterPath} alt={m.title} className="w-12 h-16 rounded-xl object-cover shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <h5 className="font-black text-sm text-[var(--text-primary)] truncate">{m.title} <span className="text-xs font-bold text-[var(--text-muted)]">({m.releaseYear})</span></h5>
+                      <span className="text-xs font-black text-amber-500">{m.userRating.toFixed(1)} ★</span>
+                    </div>
+                    <p className="text-xs text-[var(--text-secondary)] italic font-serif leading-relaxed line-clamp-2 mt-1">
+                      "{m.reviewNotes || "Logged without extended written notes."}"
+                    </p>
+                    <span className="text-[10px] text-[var(--text-muted)] font-extrabold block mt-1">Logged on {m.dateWatched} • {m.venue || 'Home'}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: MILESTONE BADGES & BEST MOVIE BUDDY */}
+        {activeSubTab === 'badges' && (
+          <div className="space-y-6">
+            
+            {/* Best Movie Buddy Card */}
+            {bestMovieBuddy && (
+              <div className="p-5 rounded-3xl bg-linear-to-r from-[var(--surface-card)] via-[var(--accent-matcha)]/20 to-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <img src={bestMovieBuddy.friend.avatar} alt={bestMovieBuddy.friend.name} className="w-14 h-14 rounded-full object-cover border-2 border-green-500 shadow-md" />
+                  <div>
+                    <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">🏆 Best Movie Buddy Award</span>
+                    <h4 className="text-base font-black text-[var(--text-primary)]">{bestMovieBuddy.friend.name}</h4>
+                    <p className="text-xs text-[var(--text-muted)] font-extrabold">Tagged in {bestMovieBuddy.count} Screenings Together!</p>
+                  </div>
+                </div>
+                <span className="hidden sm:block text-xs font-black px-3 py-1 rounded-full bg-emerald-500 text-white shadow-xs">
+                  #1 Partner
+                </span>
+              </div>
+            )}
+
+            {/* Unlockable Milestone Badges */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-black text-[var(--text-primary)] uppercase tracking-wide flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-purple-500" />
+                <span>Unlockable Achievements & Badges</span>
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {[
+                  { title: "Director's Hat", desc: "Unlocked after logging 50 film reviews!", icon: "🎬", status: "Unlocked", bg: "bg-rose-500/10 border-rose-500/40 text-rose-600" },
+                  { title: "Weekend Double Feature", desc: "Watched 2 films in one single Saturday!", icon: "🍿", status: "Unlocked", bg: "bg-amber-500/10 border-amber-500/40 text-amber-600" },
+                  { title: "Ghibli Explorer", desc: "Logged 3+ anime masterpieces with matcha.", icon: "🍃", status: "Unlocked", bg: "bg-emerald-500/10 border-emerald-500/40 text-emerald-600" },
+                  { title: "Cannes Auteur", desc: "Review 10 Palme d'Or official winners.", icon: "🏆", status: "In Progress (7/10)", bg: "bg-slate-500/10 border-[var(--border-color)] text-[var(--text-muted)]" },
+                ].map((badge, idx) => (
+                  <div key={idx} className={`p-4 rounded-2xl border flex items-center gap-3.5 shadow-xs ${badge.bg}`}>
+                    <span className="text-2xl">{badge.icon}</span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between">
+                        <h5 className="font-black text-xs text-[var(--text-primary)] truncate">{badge.title}</h5>
+                        <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-white/80 dark:bg-black/80">{badge.status}</span>
+                      </div>
+                      <p className="text-[11px] font-medium opacity-90 mt-0.5 truncate">{badge.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+
+  return <DualPaneNotebook leftPage={leftPageContent} rightPage={rightPageContent} />;
 };
