@@ -171,10 +171,10 @@ body {
   background: linear-gradient(90deg, #5CA281 0%, #DDFBEF 50%, #357B5A 100%);
 }
 
-/* 🏷️ Side Protruding Symbol-Only Index Tabs (Permanently anchored to outer edge with Smooth Elongation!) */
+/* 🏷️ Side Protruding Symbol-Only Index Tabs (Permanently anchored to outer edge!) */
 .side-symbol-tab {
   width: 50px;
-  transition: width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+  transition: width 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, box-shadow 0.2s ease;
   border: 2.5px solid var(--border-color);
   border-left: none;
   box-shadow: 4px 3px 10px rgba(0, 0, 0, 0.08);
@@ -185,32 +185,32 @@ body {
 
 @media (min-width: 640px) {
   .side-symbol-tab {
-    width: 58px;
+    width: 56px;
   }
 }
 
-/* Elongates smoothly out to the right when hovered while keeping left edge docked! */
+/* Subtle tactile extension when hovered */
 .side-symbol-tab:hover {
-  width: 66px !important;
-  box-shadow: 8px 5px 18px rgba(0, 0, 0, 0.16);
+  width: 62px !important;
+  box-shadow: 6px 4px 14px rgba(0, 0, 0, 0.16);
 }
 
 @media (min-width: 640px) {
   .side-symbol-tab:hover {
-    width: 76px !important;
+    width: 68px !important;
   }
 }
 
-/* Active open chapter stays slightly elongated */
+/* Active open chapter stays slightly extended */
 .side-symbol-tab.active {
   z-index: 30;
-  width: 58px;
-  box-shadow: 8px 6px 20px rgba(0, 0, 0, 0.18);
+  width: 60px;
+  box-shadow: 6px 5px 16px rgba(0, 0, 0, 0.18);
 }
 
 @media (min-width: 640px) {
   .side-symbol-tab.active {
-    width: 68px;
+    width: 66px;
   }
 }
 

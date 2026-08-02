@@ -313,7 +313,7 @@ export const WatchedLibrary: React.FC = () => {
             }`}
           >
             <Scroll className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Feed</span>
+            <span>Films</span>
           </button>
           <button
             onClick={() => setRightPageMode('grid')}
@@ -322,7 +322,7 @@ export const WatchedLibrary: React.FC = () => {
             }`}
           >
             <Film className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Films</span>
+            <span>Poster Wall</span>
           </button>
         </div>
       </div>

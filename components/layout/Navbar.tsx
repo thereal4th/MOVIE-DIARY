@@ -25,7 +25,7 @@ export const NotebookSideTabs: React.FC = () => {
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
-          <div key={tab.id} className="group relative flex items-center">
+          <div key={tab.id} className="group relative flex flex-col items-start z-10 hover:z-50">
             
             {/* Protruding Symbol-Only Tab Button */}
             <button
@@ -40,19 +40,15 @@ export const NotebookSideTabs: React.FC = () => {
               <span className="select-none inline-flex items-center justify-center">{tab.icon}</span>
             </button>
 
-            {/* ✨ Horizontal Hover Tooltip Tag! Popping directly to the right over the tablecloth! */}
-            <div className="absolute left-[48px] top-1/2 -translate-y-1/2 pointer-events-none opacity-0 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-200 z-60 flex items-center drop-shadow-xl">
+            {/* Compact Hover Label Displaying Below the Tab */}
+            <div className="absolute top-[48px] sm:top-[52px] left-1 sm:left-2 mt-1 pointer-events-none opacity-0 group-hover:opacity-100 group-hover:translate-y-0.5 transition-all duration-200 z-60 flex flex-col items-start drop-shadow-md">
               
-              {/* Left-pointing triangle arrow */}
-              <div className="w-2 h-2 rotate-45 -mr-1 bg-[var(--tooltip-bg)] z-10 border-l border-b border-[var(--tooltip-border)]"></div>
+              {/* Small upward-pointing triangle arrow */}
+              <div className="w-1.5 h-1.5 rotate-45 ml-3 -mb-1 bg-[var(--tooltip-bg)] z-10 border-l border-t border-[var(--tooltip-border)]"></div>
 
-              {/* Tooltip Tag Badge */}
-              <div className="px-3 py-1.5 rounded-xl bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] border border-[var(--tooltip-border)] text-[11px] font-black tracking-wide whitespace-nowrap uppercase flex items-center gap-1.5 shadow-2xl">
-                <span>{tab.icon}</span>
-                <span>{tab.label}</span>
-                {tab.id === 'profile' && userProfile && (
-                  <img src={userProfile.avatar} alt="Me" className="w-4 h-4 rounded-full object-cover border border-white ml-0.5" />
-                )}
+              {/* Compact, cleanly-sized text label badge */}
+              <div className="px-2.5 py-1 rounded-lg bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] border border-[var(--tooltip-border)] text-[10px] font-extrabold tracking-wider whitespace-nowrap uppercase shadow-lg select-none">
+                {tab.label}
               </div>
             </div>
 
