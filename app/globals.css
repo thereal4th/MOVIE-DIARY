@@ -1,26 +1,288 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #3d2c2c;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #ff2c2c;
-    --foreground: #ededed;
+    /* Theme 1: Chic Black Gingham Tablecloth with Beige Tooltip Labels & Porcelain Paper! */
+    --bg-primary: #121214; /* Deep matte black & charcoal picnic table */
+    --gingham-color: rgba(210, 215, 230, 0.20); /* Classic monochrome black & white checks */
+    
+    /* Tablecloth Text (Outside the notebook directly on the dark table!) */
+    --tablecloth-text: #FAFAFC; /* Crisp Platinum Pearl White */
+    --tablecloth-subtext: #BBB6C5; /* Sterling silver subtext */
+
+    /* Tab Tooltip Badge Colors in Dark Mode (Luminous Beige font!) */
+    --tooltip-bg: #1A181C; /* Deep espresso matte black badge */
+    --tooltip-text: #F7ECD9; /* Crisp Warm Vintage Beige font! */
+    --tooltip-border: #D1BEA5; /* Warm beige & gold stitching */
+    
+    --diary-paper: #FCFBFA; /* Bright clean off-white porcelain paper! */
+    --surface-card: #FFFFFF; /* Crisp bright white card surface */
+    --surface-hover: #F8F5F0; /* Subtle warm cream hover */
+    --surface-subtle: #F2EFEA; /* Porcelain contrast */
+    --border-color: #BEB4A8; /* Warm champagne & graphite binding stitch */
+    
+    /* Interior Journal Text (Inside the white porcelain paper!) */
+    --text-primary: #111114; /* Deep velvet carbon ink */
+    --text-secondary: #3D3C45; /* Slate charcoal prose */
+    --text-muted: #6C6873; /* Sterling graphite notes */
+
+    /* Tailored Monochrome, Silver & Champagne Accents for Black Gingham Mode */
+    --accent-sakura: #E5E3EC; /* Sterling Pearl Silver */
+    --accent-sakura-text: #221F2E; /* Deep Obsidian Charcoal */
+    
+    --accent-matcha: #E3EFE5; /* Garden Tea Silver */
+    --accent-matcha-text: #1C3B22; /* Forest Charcoal */
+    
+    --accent-lavender: #ECE5F2; /* Lilac Slate Pearl */
+    --accent-lavender-text: #33233D; /* Amethyst Obsidian */
+    
+    --accent-honey: #FCECCD; /* Warm Champagne Gold */
+    --accent-honey-text: #593D04; /* Antique Bronze Gold */
+    
+    --accent-star: #FFAC00;
+
+    --washi-pink: rgba(225, 215, 235, 0.95);
+    --washi-mint: rgba(215, 235, 220, 0.95);
+    --washi-gold: rgba(250, 225, 165, 0.95);
+    --washi-lilac: rgba(220, 210, 240, 0.95);
+
+    --card-shadow: 0 12px 28px -5px rgba(20, 15, 12, 0.15), 0 6px 14px -6px rgba(20, 15, 12, 0.12);
+    --notebook-shadow: -20px 0 50px rgba(0, 0, 0, 0.8), 0 32px 85px rgba(0, 0, 0, 0.75);
+  }
+
+  .theme-midnight {
+    /* Theme 2: Red Gingham Tablecloth with Fresh Botanical Green Accents! */
+    --bg-primary: #FFF0F3; /* Sweet strawberry cream linen */
+    --gingham-color: rgba(228, 38, 75, 0.26); /* Classic Red Gingham check */
+    
+    /* Tablecloth Text */
+    --tablecloth-text: #114228; /* Deep botanical pine green */
+    --tablecloth-subtext: #3E7A5A; /* Forest green */
+
+    /* Tab Tooltip Badge Colors in Day Mode */
+    --tooltip-bg: #114228; /* Deep botanical pine green */
+    --tooltip-text: #FFFFFF; /* Crisp white text */
+    --tooltip-border: #8FD2B2; /* Botanical mint stitching */
+
+    --diary-paper: #FFFFFF; /* Crisp white journal paper */
+    --surface-card: #FFFFFF;
+    --surface-hover: #EEF9F4; /* Garden mint hover */
+    --surface-subtle: #F5FCF9; /* Botanical leaf air */
+    --border-color: #8FD2B2; /* Fresh Emerald & Jade Green Botanical stitching! */
+    
+    --text-primary: #114228; /* Rich dark pine emerald green ink */
+    --text-secondary: #2C6947; /* Botanical prose */
+    --text-muted: #67987E; /* Moss notes */
+
+    /* Strictly Botanical Green Accents for Red Gingham Mode */
+    --accent-sakura: #C6F2DB; /* Botanical Garden Jade Green */
+    --accent-sakura-text: #0B5B33;
+    
+    --accent-matcha: #D8F7E7; /* Fresh Mint Cucumber Green */
+    --accent-matcha-text: #12633C;
+    
+    --accent-lavender: #B5EADB; /* Emerald Leaf Green */
+    --accent-lavender-text: #0B552F;
+    
+    --accent-honey: #C2F0DA; /* Garden Pine Green */
+    --accent-honey-text: #105936;
+    
+    --accent-star: #FFAC00;
+
+    --washi-pink: rgba(135, 230, 180, 0.95);
+    --washi-mint: rgba(160, 240, 195, 0.95);
+    --washi-gold: rgba(125, 220, 170, 0.95);
+    --washi-lilac: rgba(145, 235, 185, 0.95);
+
+    --card-shadow: 0 12px 30px -5px rgba(25, 95, 60, 0.16), 0 8px 16px -6px rgba(25, 95, 60, 0.12);
+    --notebook-shadow: -18px 0 45px rgba(185, 50, 80, 0.25), 0 30px 75px rgba(165, 40, 70, 0.22);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
+}
+
+/* 🧺 Classic 3-Tone Gingham Checkered Picnic Tablecloth */
+.gingham-tablecloth {
+  background-color: var(--bg-primary);
+  background-image: 
+    linear-gradient(90deg, var(--gingham-color) 50%, transparent 50%),
+    linear-gradient(var(--gingham-color) 50%, transparent 50%);
+  background-size: 40px 40px;
+  background-position: center top;
+  transition: background-color 0.4s ease;
+}
+
+/* 📖 Physical Ring Binder Notebook Container */
+.diary-notebook-frame {
+  background-color: var(--diary-paper);
+  border: 3px solid var(--border-color);
+  border-radius: 32px;
+  box-shadow: var(--notebook-shadow);
+  position: relative;
+  transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Dot-Grid Bullet Journal Paper Texture */
+.diary-paper-texture {
+  background-image: radial-gradient(var(--border-color) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  background-position: center top;
+}
+
+/* Left Margin Stitched Leatherette Binder Spine */
+.journal-spine {
+  background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-subtle) 50%, var(--surface-card) 100%);
+  border-right: 2px dashed var(--border-color);
+  box-shadow: inset -4px 0 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Metal Spiral Binder Rings */
+.binder-ring {
+  width: 24px;
+  height: 12px;
+  background: linear-gradient(90deg, #8C8A94 0%, #FAF6FC 50%, #595763 100%);
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+  display: block;
+}
+
+.theme-midnight .binder-ring {
+  background: linear-gradient(90deg, #5CA281 0%, #DDFBEF 50%, #357B5A 100%);
+}
+
+/* 🏷️ Side Protruding Symbol-Only Index Tabs (Permanently anchored with Smooth Elongation on Hover!) */
+.side-symbol-tab {
+  width: 50px;
+  transition: width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+  border: 3px solid var(--border-color);
+  border-left: none;
+  box-shadow: 5px 3px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
+  cursor: pointer;
+  transform: none !important; /* Never detaches from notebook rim! */
+}
+
+@media (min-width: 640px) {
+  .side-symbol-tab {
+    width: 58px;
+  }
+}
+
+/* Elongates smoothly out to the right when hovered while keeping left edge docked! */
+.side-symbol-tab:hover {
+  width: 66px !important;
+  box-shadow: 8px 5px 18px rgba(0, 0, 0, 0.16);
+}
+
+@media (min-width: 640px) {
+  .side-symbol-tab:hover {
+    width: 76px !important;
+  }
+}
+
+/* Active open chapter stays slightly elongated */
+.side-symbol-tab.active {
+  z-index: 30;
+  width: 58px;
+  box-shadow: 8px 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+@media (min-width: 640px) {
+  .side-symbol-tab.active {
+    width: 68px;
+  }
+}
+
+/* 🎞️ Polaroid Cards with Multi-Tone Variety and Perfect Sizing Fit! */
+.polaroid-card {
+  background-color: var(--surface-card);
+  border: 2px solid var(--border-color);
+  border-radius: 24px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, background-color 0.4s ease, border-color 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.polaroid-card:hover {
+  transform: translateY(-5px) rotate(0.6deg);
+  box-shadow: 0 20px 40px -10px rgba(120, 110, 100, 0.28);
+}
+
+.theme-midnight .polaroid-card:hover {
+  box-shadow: 0 20px 40px -10px rgba(25, 125, 75, 0.25);
+}
+
+/* Decorative Washi Tape Strip */
+.washi-strip {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 95px;
+  height: 22px;
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0.95;
+  border: 1px dashed rgba(255, 255, 255, 0.6);
+}
+
+.washi-pink { background-color: var(--washi-pink); transform: translateX(-40%) rotate(-4deg); }
+.washi-mint { background-color: var(--washi-mint); transform: translateX(-60%) rotate(3deg); }
+.washi-gold { background-color: var(--washi-gold); transform: translateX(-50%) rotate(-2deg); }
+.washi-lilac { background-color: var(--washi-lilac); transform: translateX(-45%) rotate(4deg); }
+
+/* Card Background Tints for variation */
+.card-tint-pink { background: linear-gradient(175deg, var(--surface-card) 65%, var(--accent-sakura) 100%); }
+.card-tint-mint { background: linear-gradient(175deg, var(--surface-card) 65%, var(--accent-matcha) 100%); }
+.card-tint-lilac { background: linear-gradient(175deg, var(--surface-card) 65%, var(--accent-lavender) 100%); }
+.card-tint-gold { background: linear-gradient(175deg, var(--surface-card) 65%, var(--accent-honey) 100%); }
+
+.journal-pill {
+  transition: all 0.2s ease;
+}
+
+.journal-pill:hover {
+  transform: scale(1.05);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 9999px;
+  border: 2px solid var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Vintage Hand-Stamped Badge */
+.date-stamp {
+  font-family: var(--font-geist-mono), monospace;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  border: 1px dashed var(--text-muted);
+  padding: 2px 8px;
+  border-radius: 6px;
+  opacity: 0.85;
 }
