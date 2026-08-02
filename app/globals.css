@@ -104,7 +104,9 @@ body {
   color: var(--text-primary);
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   transition: background-color 0.4s ease, color 0.4s ease;
-  overflow-x: hidden;
+  overflow: hidden;
+  height: 100vh;
+  max-height: 100vh;
 }
 
 /* 🧺 Classic 3-Tone Gingham Checkered Picnic Tablecloth */
@@ -116,6 +118,9 @@ body {
   background-size: 40px 40px;
   background-position: center top;
   transition: background-color 0.4s ease;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 /* 📖 Physical Ring Binder Notebook Container */
@@ -135,7 +140,15 @@ body {
   background-position: center top;
 }
 
-/* Left Margin Stitched Leatherette Binder Spine */
+/* Central Dividing Ring Binder Spine Between Left Page and Right Page */
+.center-ring-spine {
+  background: linear-gradient(90deg, rgba(0,0,0,0.06) 0%, var(--surface-subtle) 40%, var(--surface-card) 50%, var(--surface-subtle) 60%, rgba(0,0,0,0.06) 100%);
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Left Margin Stitched Leatherette Binder Spine (Fallback / Accent) */
 .journal-spine {
   background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-subtle) 50%, var(--surface-card) 100%);
   border-right: 2px dashed var(--border-color);
@@ -144,13 +157,14 @@ body {
 
 /* Metal Spiral Binder Rings */
 .binder-ring {
-  width: 24px;
-  height: 12px;
-  background: linear-gradient(90deg, #8C8A94 0%, #FAF6FC 50%, #595763 100%);
-  border-radius: 6px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+  width: 28px;
+  height: 14px;
+  background: linear-gradient(90deg, #6C6A75 0%, #FAF6FC 50%, #403E48 100%);
+  border-radius: 7px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.22);
   display: block;
+  margin-left: -6px;
 }
 
 .theme-midnight .binder-ring {
