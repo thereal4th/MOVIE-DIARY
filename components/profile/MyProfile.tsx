@@ -20,8 +20,8 @@ export const MyProfile: React.FC = () => {
     handle: userProfile?.handle || "fourth_and_sheena",
     avatar: userProfile?.avatar || "/images/avatars/default.png",
     bannerUrl: userProfile?.bannerUrl || "/images/posters/past_lives.jpg",
-    bio: userProfile?.bio || "Cinema enthusiasts watching everything from Studio Ghibli to Greta Gerwig masterpieces.",
-    tastePhilosophy: userProfile?.tastePhilosophy || "Every screening is an event. We judge films by emotions, set design, and storytelling craftsmanship."
+    bio: userProfile?.bio ?? "Cinema enthusiasts watching everything from Studio Ghibli to Greta Gerwig masterpieces.",
+    tastePhilosophy: userProfile?.tastePhilosophy ?? "Every screening is an event. We judge films by emotions, set design, and storytelling craftsmanship."
   });
 
   const handleOpenEditModal = () => {
@@ -183,9 +183,11 @@ export const MyProfile: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-xs font-extrabold text-[var(--accent-sakura-text)] font-mono">@{userProfile.handle}</p>
-                <p className="text-xs text-[var(--text-secondary)] italic font-serif mt-1">
-                  "{userProfile.bio}"
-                </p>
+                {userProfile.bio && userProfile.bio.trim() !== '' && (
+                  <p className="text-xs text-[var(--text-secondary)] italic font-serif mt-1">
+                    "{userProfile.bio}"
+                  </p>
+                )}
               </div>
             </div>
 
