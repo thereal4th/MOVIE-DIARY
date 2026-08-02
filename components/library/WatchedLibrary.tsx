@@ -167,12 +167,15 @@ export const WatchedLibrary: React.FC = () => {
         ))}
       </div>
 
-      {/* Internal Micro-Scrolling 7-Column Monthly Calendar Grid */}
-      <div className="flex-1 min-h-0 overflow-y-auto pr-1">
-        <div className="grid grid-cols-7 gap-2 pb-6">
+      {/* Fixed-Height 7-Column Monthly Calendar Grid (No Scrolling Needed!) */}
+      <div className="flex-1 min-h-0 w-full overflow-hidden pt-0.5 pb-1">
+        <div 
+          className="grid grid-cols-7 gap-1.5 h-full w-full min-h-0" 
+          style={{ gridTemplateRows: `repeat(${Math.ceil((firstDayOfWeek + daysInMonth) / 7)}, minmax(0, 1fr))` }}
+        >
           {/* Preceding blank padding cells for first week */}
           {Array.from({ length: firstDayOfWeek }).map((_, idx) => (
-            <div key={`empty-${idx}`} className="aspect-[3/4] sm:h-32 rounded-xl bg-[var(--surface-subtle)]/30 border border-dashed border-[var(--border-color)]/30 pointer-events-none opacity-40"></div>
+            <div key={`empty-${idx}`} className="h-full min-h-0 w-full rounded-xl bg-[var(--surface-subtle)]/20 border border-dashed border-[var(--border-color)]/30 pointer-events-none opacity-40"></div>
           ))}
 
           {/* Date Cells */}
@@ -187,9 +190,9 @@ export const WatchedLibrary: React.FC = () => {
             return (
               <div
                 key={dateStr}
-                className={`group relative aspect-[3/4] sm:h-32 rounded-xl border-2 transition-all duration-300 overflow-hidden flex flex-col justify-between p-1.5 select-none ${
+                className={`group relative h-full min-h-0 w-full rounded-xl border-2 transition-all duration-200 overflow-hidden flex flex-col justify-between p-1 select-none ${
                   hasFilms
-                    ? 'border-pink-500/70 shadow-md hover:shadow-xl hover:scale-102 cursor-pointer z-10 hover:z-30 bg-[var(--surface-card)]'
+                    ? 'border-pink-500/70 shadow-sm hover:shadow-lg hover:scale-102 cursor-pointer z-10 hover:z-30 bg-[var(--surface-card)]'
                     : 'border-[var(--border-color)]/70 bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] cursor-pointer'
                 }`}
                 onClick={() => {
@@ -204,15 +207,15 @@ export const WatchedLibrary: React.FC = () => {
               >
                 {/* Top Day Number Label & Multi-log badge */}
                 <div className="flex items-center justify-between z-20 w-full">
-                  <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-md border shadow-xs ${
+                  <span className={`text-[9px] sm:text-[10px] font-black px-1.5 py-0.5 rounded-md border shadow-2xs ${
                     hasFilms ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-white/20' : 'bg-[var(--surface-subtle)] text-[var(--text-secondary)] border-[var(--border-color)]'
                   }`}>
                     {dayNum}
                   </span>
 
                   {isMultiLog && (
-                    <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-linear-to-r from-rose-500 to-amber-500 text-white shadow-md animate-pulse">
-                      +{filmsOnDate.length} watched
+                    <span className="text-[8px] font-black px-1 py-0.5 rounded-full bg-linear-to-r from-rose-500 to-amber-500 text-white shadow-xs animate-pulse truncate max-w-[60px]">
+                      +{filmsOnDate.length}
                     </span>
                   )}
                 </div>
@@ -220,38 +223,38 @@ export const WatchedLibrary: React.FC = () => {
                 {/* CONTENT: Blank Date vs Film Poster */}
                 {!hasFilms ? (
                   <div className="m-auto flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="w-7 h-7 rounded-full bg-linear-to-tr from-[var(--accent-sakura)] to-[var(--accent-matcha)] text-[var(--text-primary)] flex items-center justify-center shadow-md mb-0.5 border border-white/60">
-                      <Plus className="w-4 h-4 stroke-[3]" />
+                    <div className="w-6 h-6 rounded-full bg-linear-to-tr from-[var(--accent-sakura)] to-[var(--accent-matcha)] text-[var(--text-primary)] flex items-center justify-center shadow-xs mb-0.5 border border-white/60">
+                      <Plus className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
                     <span className="text-[8px] font-black uppercase tracking-tighter text-[var(--text-primary)] bg-white/90 dark:bg-black/80 px-1 py-0.5 rounded-xs">
                       + Log
                     </span>
                   </div>
                 ) : (
-                  <div className="absolute inset-0 z-0">
+                  <div className="absolute inset-0 z-0 overflow-hidden rounded-xl">
                     <img src={mainFilm.posterPath} alt={mainFilm.title} className="w-full h-full object-cover filter brightness-95 group-hover:scale-105 transition-transform duration-300" />
                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
                     
                     {/* Hover Metadata Overlay: Star rating, rewatch badge, venue tag, review snippet */}
-                    <div className="absolute inset-0 bg-slate-950/95 p-2 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-30 text-white text-[10px] overflow-hidden">
+                    <div className="absolute inset-0 bg-slate-950/95 p-1.5 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-30 text-white text-[9px] overflow-hidden">
                       <div>
-                        <p className="font-black text-amber-400 truncate text-xs">{mainFilm.title}</p>
-                        <p className="font-bold text-pink-300 mb-1">{mainFilm.userRating.toFixed(1)} ★ {mainFilm.isRewatch && "• 🔄 Rewatch"}</p>
-                        <p className="italic font-serif line-clamp-3 text-slate-200 text-[9px] leading-tight">
-                          "{mainFilm.reviewNotes || "An unforgettable analog screening."}"
+                        <p className="font-black text-amber-400 truncate text-[10px]">{mainFilm.title}</p>
+                        <p className="font-bold text-pink-300 mb-0.5">{mainFilm.userRating.toFixed(1)} ★ {mainFilm.isRewatch && "• 🔄"}</p>
+                        <p className="italic font-serif line-clamp-2 sm:line-clamp-3 text-slate-200 text-[8px] leading-tight">
+                          "{mainFilm.reviewNotes || "An unforgettable screening."}"
                         </p>
                       </div>
-                      <div className="mt-1 pt-1 border-t border-white/20 flex items-center justify-between">
-                        <span className="bg-emerald-600/80 px-1.5 py-0.5 rounded-xs font-black uppercase text-[8px] truncate">
-                          {mainFilm.venue || "Netflix / Home"}
+                      <div className="mt-0.5 pt-0.5 border-t border-white/20 flex items-center justify-between">
+                        <span className="bg-emerald-600/80 px-1 py-0.5 rounded-xs font-black uppercase text-[7px] truncate">
+                          {mainFilm.venue || "Home"}
                         </span>
-                        <span className="text-[8px] text-amber-300 font-bold">Edit ➔</span>
+                        <span className="text-[7px] text-amber-300 font-bold">Edit ➔</span>
                       </div>
                     </div>
 
                     {/* Default bottom title banner */}
                     <div className="absolute bottom-1 left-1 right-1 z-10 text-center">
-                      <p className="text-[10px] font-black text-white truncate drop-shadow-md bg-black/60 px-1.5 py-0.5 rounded-md backdrop-blur-xs">
+                      <p className="text-[8px] sm:text-[9px] font-black text-white truncate drop-shadow-md bg-black/70 px-1 py-0.5 rounded-md backdrop-blur-xs">
                         {mainFilm.title}
                       </p>
                     </div>
