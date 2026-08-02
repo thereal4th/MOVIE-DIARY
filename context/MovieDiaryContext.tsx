@@ -27,6 +27,7 @@ export interface CoverCustomization {
   titlePos?: { x: number; y: number; rot?: number; scale?: number };
   stickerPos?: { [sticker: string]: { x: number; y: number; rot?: number; scale?: number } };
   customTexts?: CoverTextItem[];
+  customStickers?: { id: string; label: string; src: string }[];
 }
 
 export const FONT_OPTIONS = [
@@ -110,6 +111,7 @@ export const MovieDiaryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     titlePos: { x: 50, y: 35, rot: 0, scale: 1 },
     stickerPos: {},
     customTexts: [],
+    customStickers: [],
   });
   const [isCustomizeCoverModalOpen, setIsCustomizeCoverModalOpen] = useState<boolean>(false);
   const [activeCoverItem, setActiveCoverItem] = useState<string | null>(null);

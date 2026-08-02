@@ -41,7 +41,7 @@ const STICKER_CATALOG = [
 ];
 
 export const CustomizeCoverModal: React.FC = () => {
-  const { isCustomizeCoverModalOpen, setIsCustomizeCoverModalOpen, coverCustomization, setCoverCustomization, setActiveCoverItem } = useMovieDiary();
+  const { isCustomizeCoverModalOpen, setIsCustomizeCoverModalOpen, coverCustomization, setCoverCustomization, activeCoverItem, setActiveCoverItem } = useMovieDiary();
   const [activeTab, setActiveTab] = useState<'color' | 'text' | 'stickers'>('color');
 
   if (!isCustomizeCoverModalOpen) return null;
@@ -139,16 +139,54 @@ export const CustomizeCoverModal: React.FC = () => {
     }));
   };
 
+  const handleStickerUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string;
+      if (dataUrl) {
+        const newSticker = {
+          id: `custom_sticker_${Date.now()}`,
+          label: file.name.replace(/\.[^/.]+$/, "") || "Custom Sticker",
+          src: dataUrl,
+        };
+        setCoverCustomization((prev) => ({
+          ...prev,
+          customStickers: [...(prev.customStickers || []), newSticker],
+        }));
+        addSticker(dataUrl);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDeleteCustomSticker = (e: React.MouseEvent, stickerPath: string, stickerId?: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (activeCoverItem === stickerPath) setActiveCoverItem(null);
+    setCoverCustomization((prev) => ({
+      ...prev,
+      stickers: (prev.stickers || []).filter((s) => s !== stickerPath),
+      customStickers: (prev.customStickers || []).filter(
+        (s) => s.src !== stickerPath && s.id !== stickerId
+      ),
+    }));
+  };
+
   const handleReset = () => {
     setActiveCoverItem(null);
     setCoverCustomization({
       color: 'default',
       title: '',
       titleColor: '#FFFFFF',
+      titleFont: 'serif',
       stickers: [],
       titlePos: { x: 50, y: 35, rot: 0, scale: 1 },
       stickerPos: {},
       customTexts: [],
+      customStickers: [],
     });
   };
 
@@ -518,41 +556,80 @@ export const CustomizeCoverModal: React.FC = () => {
           {/* Tab 3: Stickers (#sticker-menu) */}
           {activeTab === 'stickers' && (
             <div id="sticker-menu" className="space-y-4">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-black uppercase tracking-wider text-[var(--text-primary)] block">
-                  Die-Cut Sticker Sheet (Click to Stamp)
-                </label>
-                <span className="text-[11px] font-bold text-purple-500">
-                  {coverCustomization.stickers.length} stamped
-                </span>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <label className="text-xs font-black uppercase tracking-wider text-[var(--text-primary)] block">
+                    Die-Cut Sticker Sheet
+                  </label>
+                  <span className="text-[11px] text-[var(--text-secondary)] font-semibold">Click to stamp onto cover</span>
+                </div>
+                
+                <div className="flex items-center gap-2.5">
+                  <label className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-extrabold text-xs shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer select-none">
+                    <Plus className="w-4 h-4 stroke-[3]" />
+                    <span>Upload Sticker</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleStickerUpload}
+                      className="hidden"
+                    />
+                  </label>
+                  <span className="text-[11px] font-extrabold text-purple-500 px-2 py-0.5 bg-purple-500/10 rounded-lg">
+                    {coverCustomization.stickers.length} stamped
+                  </span>
+                </div>
               </div>
               
               {/* Sticker Sheet Grid Container */}
-              <div className="sticker-sheet-grid p-4 sm:p-5 grid grid-cols-3 sm:grid-cols-4 gap-3.5 max-h-[340px] overflow-y-auto">
-                {STICKER_CATALOG.map((stk) => {
+              <div className="sticker-sheet-grid p-4 sm:p-5 grid grid-cols-3 sm:grid-cols-4 gap-3.5 max-h-[360px] overflow-y-auto">
+                {[...STICKER_CATALOG, ...(coverCustomization.customStickers || [])].map((stk, index) => {
                   const isSelected = coverCustomization.stickers.includes(stk.src);
+                  const isCustom = !STICKER_CATALOG.some(c => c.id === stk.id);
+
                   return (
-                    <button
-                      key={stk.id}
-                      onClick={() => addSticker(stk.src)}
-                      title={`${stk.label} (Click to add/remove)`}
-                      className={`group relative p-3 rounded-2xl transition-all cursor-pointer select-none flex flex-col items-center justify-center hover:scale-105 active:scale-95 border-2 ${
+                    <div
+                      key={`${stk.id}_${index}`}
+                      className={`group relative p-2.5 rounded-2xl transition-all select-none flex flex-col items-center justify-between border-2 shadow-xs hover:shadow-md ${
                         isSelected
-                          ? 'bg-purple-500/25 border-purple-500 ring-4 ring-purple-500/40 shadow-lg scale-105'
-                          : 'bg-white/40 dark:bg-black/40 border-white/70 hover:border-white shadow-xs hover:shadow-md'
+                          ? 'bg-purple-500/25 border-purple-500 ring-4 ring-purple-500/40 shadow-lg'
+                          : 'bg-white/40 dark:bg-black/40 border-white/70 hover:border-white'
                       }`}
                     >
-                      <img 
-                        src={stk.src} 
-                        alt={stk.label} 
-                        className="w-12 h-12 sm:w-14 sm:h-14 object-contain filter drop-shadow-[2px_3px_5px_rgba(0,0,0,0.25)] group-hover:drop-shadow-[3px_5px_8px_rgba(0,0,0,0.35)] transition-all pointer-events-none" 
-                      />
+                      {/* Stamp Trigger Area */}
+                      <div
+                        onClick={() => addSticker(stk.src)}
+                        title={`${stk.label} (Click to add/remove)`}
+                        className="w-full flex-1 flex flex-col items-center justify-center cursor-pointer hover:scale-105 active:scale-95 transition-transform py-1"
+                      >
+                        <img 
+                          src={stk.src} 
+                          alt={stk.label} 
+                          className="w-12 h-12 sm:w-14 sm:h-14 object-contain filter drop-shadow-[2px_3px_5px_rgba(0,0,0,0.25)] group-hover:drop-shadow-[3px_5px_8px_rgba(0,0,0,0.35)] transition-all pointer-events-none" 
+                        />
+                        <span className="text-[9px] font-extrabold text-[var(--text-secondary)] truncate w-full text-center mt-1 opacity-85 group-hover:opacity-100">
+                          {stk.label}
+                        </span>
+                      </div>
+
+                      {/* Top-Left Icon Delete Button for Uploaded Stickers */}
+                      {isCustom && (
+                        <button
+                          type="button"
+                          onClick={(e) => handleDeleteCustomSticker(e, stk.src, stk.id)}
+                          title="Delete uploaded sticker"
+                          className="absolute -top-2.5 -left-2.5 w-7 h-7 rounded-full bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center shadow-lg border-2 border-white z-20 cursor-pointer transition-transform hover:scale-110 active:scale-95"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 stroke-[2.5]" />
+                        </button>
+                      )}
+
                       {isSelected && (
-                        <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center shadow-md border-2 border-white">
+                        <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center shadow-md border-2 border-white pointer-events-none">
                           <Check className="w-3.5 h-3.5 stroke-[3]" />
                         </div>
                       )}
-                    </button>
+                    </div>
                   );
                 })}
               </div>
