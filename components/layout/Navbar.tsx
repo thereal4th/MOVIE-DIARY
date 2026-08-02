@@ -20,35 +20,34 @@ export const NotebookSideTabs: React.FC = () => {
   ];
 
   return (
-    /* 100% Permanently Fused onto the notebook rim! left-full places it at the right edge, -ml-[3px] docks directly into the notebook border! Zero detachment! */
-    <div className="absolute left-full -ml-[3px] top-16 flex flex-col gap-6 z-50 select-none pointer-events-auto">
+    /* 100% Permanently Fused onto the lower right corner of the notebook rim! */
+    <div className="absolute left-full -ml-[3px] bottom-8 flex flex-col gap-3.5 z-50 select-none pointer-events-auto">
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
-          <div key={tab.id} className="group relative flex flex-col items-start">
+          <div key={tab.id} className="group relative flex items-center">
             
-            {/* Protruding Symbol-Only Tab Button (Elongates out to the right when hovered, root is permanently glued to the book!) */}
+            {/* Protruding Symbol-Only Tab Button */}
             <button
               onClick={() => setActiveTab(tab.id)}
               aria-label={tab.label}
-              className={`side-symbol-tab flex items-center justify-center h-12 sm:h-14 rounded-r-2xl shadow-md cursor-pointer ${
+              className={`side-symbol-tab flex items-center justify-center h-12 sm:h-13 rounded-r-2xl shadow-md cursor-pointer ${
                 isActive
                   ? `${tab.bgClass} ${tab.textClass} active font-extrabold ring-2 ring-white/60`
                   : 'bg-[var(--surface-subtle)] text-[var(--text-secondary)] opacity-90 hover:text-[var(--text-primary)]'
               }`}
             >
-              {/* Calm, stationery Lucide symbol */}
               <span className="select-none inline-flex items-center justify-center">{tab.icon}</span>
             </button>
 
-            {/* ✨ Custom Hover Tooltip Tag! Aligned to left-0 hanging directly below over the tablecloth outside the paper! */}
-            <div className="absolute top-[52px] sm:top-[60px] left-0 pointer-events-none opacity-0 group-hover:opacity-100 group-hover:translate-y-1 transition-all duration-200 z-60 flex flex-col items-start drop-shadow-xl">
+            {/* ✨ Horizontal Hover Tooltip Tag! Popping directly to the right over the tablecloth! */}
+            <div className="absolute left-[48px] top-1/2 -translate-y-1/2 pointer-events-none opacity-0 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-200 z-60 flex items-center drop-shadow-xl">
               
-              {/* Upward-facing triangle arrow positioned directly beneath the tab symbol! */}
-              <div className="w-2 h-2 rotate-45 ml-4 -mb-1 bg-[var(--tooltip-bg)] z-10 border-l border-t border-[var(--tooltip-border)]"></div>
+              {/* Left-pointing triangle arrow */}
+              <div className="w-2 h-2 rotate-45 -mr-1 bg-[var(--tooltip-bg)] z-10 border-l border-b border-[var(--tooltip-border)]"></div>
 
-              {/* Tooltip Tag Badge utilizing high-contrast warm Beige font in dark mode! */}
-              <div className="px-3.5 py-1.5 rounded-xl bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] border border-[var(--tooltip-border)] text-[11px] font-black tracking-wide whitespace-nowrap uppercase flex items-center gap-2 shadow-2xl">
+              {/* Tooltip Tag Badge */}
+              <div className="px-3 py-1.5 rounded-xl bg-[var(--tooltip-bg)] text-[var(--tooltip-text)] border border-[var(--tooltip-border)] text-[11px] font-black tracking-wide whitespace-nowrap uppercase flex items-center gap-1.5 shadow-2xl">
                 <span>{tab.icon}</span>
                 <span>{tab.label}</span>
                 {tab.id === 'profile' && userProfile && (

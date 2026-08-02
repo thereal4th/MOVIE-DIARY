@@ -26,43 +26,43 @@ const DashboardContent: React.FC = () => {
   };
 
   return (
-    <div className="h-screen max-h-screen w-full flex flex-col gingham-tablecloth transition-colors duration-400 font-sans p-2 sm:p-3 lg:p-5 items-center overflow-hidden">
+    <div className="h-screen max-h-screen w-full flex flex-col gingham-tablecloth transition-colors duration-400 font-sans p-1.5 sm:p-2.5 lg:px-4 lg:py-2 items-center overflow-hidden">
       
       {/* Upper Tablecloth Bar Outside Notebook: "Filmory" on Left, Controls on Right! */}
-      <header className="w-full max-w-[1550px] shrink-0 flex items-center justify-between mb-2.5 sm:mb-3 select-none z-30 px-2 sm:px-4">
+      <header className="w-full max-w-[1360px] shrink-0 flex items-center justify-between mb-1.5 select-none z-30 px-2">
         
         {/* Top Left: Filmory Brand Identity */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-linear-to-tr from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] flex items-center justify-center shadow-md border-2 border-white/80 transform -rotate-6 hover:rotate-0 transition-transform text-[var(--text-primary)]">
-            <Film className="w-5.5 h-5.5 stroke-[2.5]" />
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-2xl bg-linear-to-tr from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] flex items-center justify-center shadow-md border-2 border-white/80 transform -rotate-6 hover:rotate-0 transition-transform text-[var(--text-primary)]">
+            <Film className="w-5 h-5 stroke-[2.5]" />
           </div>
           <div>
-            <h1 className="font-black text-xl sm:text-2xl tracking-tight text-[var(--tablecloth-text)] font-sans leading-none drop-shadow-sm transition-colors">
+            <h1 className="font-black text-lg sm:text-xl tracking-tight text-[var(--tablecloth-text)] font-sans leading-none drop-shadow-xs transition-colors">
               Filmory
             </h1>
-            <span className="text-[10px] font-black uppercase text-[var(--tablecloth-subtext)] tracking-wider block mt-0.5 transition-colors">
+            <span className="text-[9px] font-black uppercase text-[var(--tablecloth-subtext)] tracking-wider block transition-colors">
               2-Page Open Cinema Journal
             </span>
           </div>
         </div>
 
         {/* Top Right: Lucide Theme Switcher & Log Movie Action */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <button
             onClick={toggleTheme}
             title={theme === 'day' ? 'Switch to Red Gingham with Green Accents' : 'Switch to Classic Black Gingham with Cream Paper'}
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] border-2 border-[var(--border-color)] flex items-center justify-center shadow-md hover:scale-110 active:scale-95 transition-transform select-none cursor-pointer"
+            className="w-9 h-9 rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] border-2 border-[var(--border-color)] flex items-center justify-center shadow-sm hover:scale-110 active:scale-95 transition-transform select-none cursor-pointer"
           >
             {theme === 'day' ? (
-              <Sun className="w-5 h-5 text-amber-500 fill-amber-400 stroke-[2.5]" />
+              <Sun className="w-4.5 h-4.5 text-amber-500 fill-amber-400 stroke-[2.5]" />
             ) : (
-              <Moon className="w-5 h-5 text-indigo-400 fill-indigo-300 stroke-[2.5]" />
+              <Moon className="w-4.5 h-4.5 text-indigo-400 fill-indigo-300 stroke-[2.5]" />
             )}
           </button>
 
           <button
             onClick={handleOpenLogModal}
-            className="group flex items-center gap-2 px-5 py-2.5 rounded-2xl font-black text-xs sm:text-sm uppercase tracking-wider bg-linear-to-r from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-[var(--text-primary)] border-2 border-[var(--border-color)] hover:border-[var(--text-primary)] shadow-md hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0 select-none cursor-pointer"
+            className="group flex items-center gap-1.5 px-4 py-2 rounded-2xl font-black text-xs uppercase tracking-wider bg-linear-to-r from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-[var(--text-primary)] border-2 border-[var(--border-color)] hover:border-[var(--text-primary)] shadow-sm hover:shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0 select-none cursor-pointer"
           >
             <Plus className="w-4 h-4 stroke-[3] transition-transform group-hover:rotate-90" />
             <span>Log Movie</span>
@@ -71,7 +71,7 @@ const DashboardContent: React.FC = () => {
       </header>
       
       {/* 📖 Perfectly Centered 100vh Locked Notebook Wrapper! */}
-      <div className="max-w-[1550px] w-full flex-1 min-h-0 flex items-stretch justify-center relative mb-1">
+      <div className="max-w-[1360px] w-full flex-1 min-h-0 flex items-stretch justify-center relative mb-0.5">
         
         {/* Main Leatherette Bound Diary Paper Content Frame: 100vh Locked & 2-Page Split! */}
         <div className="w-full h-full diary-notebook-frame diary-paper-texture flex flex-row relative z-20 shadow-2xl rounded-3xl overflow-visible">
@@ -92,12 +92,6 @@ const DashboardContent: React.FC = () => {
       {/* Global Interactive Modals */}
       <LogMovieModal />
       <FriendProfileModal />
-
-      {/* Cozy Minimal Compact Footer */}
-      <footer className="w-full shrink-0 pt-1 text-center text-[10px] text-[var(--tablecloth-subtext)] font-extrabold uppercase tracking-widest transition-colors hidden sm:flex items-center justify-center gap-1.5 z-10">
-        <Sparkles className="w-3 h-3 text-[var(--tablecloth-text)] inline" />
-        <span>Filmory • Open Dual-Pane Analog Archives</span>
-      </footer>
     </div>
   );
 };
