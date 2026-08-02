@@ -17,8 +17,6 @@ export const WatchedLibrary: React.FC = () => {
     movies,
     searchQuery,
     setSearchQuery,
-    selectedGenre,
-    setSelectedGenre,
     setEditingMovie,
     setIsLogModalOpen,
     setSelectedFriend,
@@ -27,8 +25,6 @@ export const WatchedLibrary: React.FC = () => {
     updateRating,
     userProfile
   } = useMovieDiary();
-
-  const genres = ['All', 'Animation', 'Romance', 'Drama', 'Sci-Fi', 'Fantasy', 'Indie', 'Family', 'Period'];
 
   // Right page view switcher state (Chronological Feed vs Dense Poster Wall)
   const [rightPageMode, setRightPageMode] = useState<'timeline' | 'grid'>('timeline');
@@ -48,11 +44,9 @@ export const WatchedLibrary: React.FC = () => {
         (movie.hashtags && movie.hashtags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))) ||
         (movie.venue && movie.venue.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      const matchesGenre = selectedGenre === 'All' || movie.genres.includes(selectedGenre);
-
-      return matchesSearch && matchesGenre;
+      return matchesSearch;
     });
-  }, [movies, searchQuery, selectedGenre]);
+  }, [movies, searchQuery]);
 
   // Group Chronological Feed by Month and Year directly for smooth inner micro-scrolling
   const groupedByMonthYear = useMemo(() => {
@@ -327,8 +321,8 @@ export const WatchedLibrary: React.FC = () => {
         </div>
       </div>
 
-      {/* Search & Genre Pill Strip */}
-      <div className="shrink-0 flex flex-col gap-2.5">
+      {/* Search Strip */}
+      <div className="shrink-0">
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)] stroke-[2.5]" />
           <input
@@ -343,23 +337,6 @@ export const WatchedLibrary: React.FC = () => {
               Clear
             </button>
           )}
-        </div>
-
-        {/* Genre Filter Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-          {genres.map((genre) => (
-            <button
-              key={genre}
-              onClick={() => setSelectedGenre(genre)}
-              className={`px-3 py-1 rounded-full text-[11px] font-extrabold transition-all shrink-0 cursor-pointer ${
-                selectedGenre === genre
-                  ? 'bg-[var(--accent-sakura)] text-[var(--accent-sakura-text)] border-2 border-[var(--accent-sakura-text)] shadow-xs scale-105'
-                  : 'bg-[var(--surface-card)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] border border-[var(--border-color)]'
-              }`}
-            >
-              {genre}
-            </button>
-          ))}
         </div>
       </div>
 

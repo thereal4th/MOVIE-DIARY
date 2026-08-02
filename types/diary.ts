@@ -96,6 +96,9 @@ export interface UserProfile {
   bannerUrl?: string;
   followersCount?: number;
   followingCount?: number;
+  favoriteQuote?: string;
+  favoriteQuoteMovie?: string;
+  favoriteQuoteCharacter?: string;
   socialLinks?: {
     letterboxd?: string;
     twitter?: string;

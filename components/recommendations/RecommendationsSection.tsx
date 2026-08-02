@@ -76,21 +76,24 @@ export const RecommendationsSection: React.FC = () => {
     { id: 'w-6', title: 'Petite Maman', posterPath: '/images/posters/little_women.jpg', director: 'Céline Sciamma', releaseYear: 2021, runtimeMinutes: 72, genre: 'Fantasy', provider: 'Mubi', matchScore: 95, decade: '2020s', savedToWatchlist: true },
   ]);
 
-  const [providerFilter, setProviderFilter] = useState<string>('All');
-  const [runtimeFilter, setRuntimeFilter] = useState<string>('All');
   const [genreFilter, setGenreFilter] = useState<string>('All');
+  const [runtimeFilter, setRuntimeFilter] = useState<string>('All');
+  const [decadeFilter, setDecadeFilter] = useState<string>('All');
+  const [showExtraGenres, setShowExtraGenres] = useState<boolean>(false);
+  const primaryGenres = ['All', 'Romance', 'Drama', 'Indie', 'Animation'];
+  const extraGenres = ['Fantasy', 'Sci-Fi', 'Period', 'Comedy', 'Thriller'];
 
   const filteredWatchlist = useMemo(() => {
     return watchlistItems.filter((item) => {
       if (!item.savedToWatchlist) return false;
-      if (providerFilter !== 'All' && item.provider !== providerFilter) return false;
       if (genreFilter !== 'All' && item.genre !== genreFilter) return false;
+      if (decadeFilter !== 'All' && item.decade !== decadeFilter) return false;
       if (runtimeFilter === '< 90 mins' && item.runtimeMinutes >= 90) return false;
       if (runtimeFilter === '90-120 mins' && (item.runtimeMinutes < 90 || item.runtimeMinutes > 120)) return false;
       if (runtimeFilter === '120+ mins' && item.runtimeMinutes < 120) return false;
       return true;
     });
-  }, [watchlistItems, providerFilter, runtimeFilter, genreFilter]);
+  }, [watchlistItems, genreFilter, decadeFilter, runtimeFilter]);
 
   // --- RIGHT PAGE: TASTE MIXER ("Find a Movie for Two") STATE ---
   const [selectedMixerFriendId, setSelectedMixerFriendId] = useState<string>(friends[0]?.id || 'f-1');
@@ -177,70 +180,79 @@ export const RecommendationsSection: React.FC = () => {
       {/* Internal Micro-Scrolling Hubs */}
       <div className="flex-1 min-h-0 overflow-y-auto pr-2 pb-6 space-y-6">
         
-        {/* MODULE 1: "BECAUSE YOU LIKED..." CAROUSEL */}
-        <div className="space-y-4">
-          {topLikedDiaryMovies.slice(0, 2).map((likedMovie) => {
-            const recs = becauseYouLikedData[likedMovie.title] || defaultCarousel;
-            return (
-              <div key={likedMovie.id} className="p-4 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-3">
-                <div className="flex items-center justify-between border-b border-[var(--border-color)]/50 pb-2">
-                  <span className="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                    <Heart className="w-3.5 h-3.5 fill-current text-pink-500" />
-                    <span>Because You Liked <strong className="text-[var(--text-primary)] font-bold">"{likedMovie.title}"</strong> ({likedMovie.userRating.toFixed(1)}★)</span>
-                  </span>
-                  <span className="text-[10px] font-extrabold text-[var(--text-muted)]">AI Match DNA</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {recs.map((rec: any) => (
-                    <div key={rec.id} className="p-2.5 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] flex flex-col justify-between space-y-2 group">
-                      <div className="flex items-start gap-2.5">
-                        <img src={rec.poster || '/images/posters/totoro.jpg'} alt={rec.title} onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)} className="w-12 h-16 rounded-xl object-cover shadow-xs shrink-0 cursor-pointer group-hover:scale-105 transition-transform" title="Log to Diary" />
-                        <div className="min-w-0 flex-1">
-                          <p className="font-black text-xs text-[var(--text-primary)] truncate group-hover:text-pink-500 cursor-pointer" onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)}>{rec.title}</p>
-                          <span className="text-[10px] text-amber-500 font-bold block">{rec.rating} • {rec.provider}</span>
-                          <p className="text-[10px] text-[var(--text-secondary)] italic font-serif line-clamp-2 leading-tight mt-1">
-                            "{rec.reason}"
-                          </p>
-                        </div>
-                      </div>
-                      <button onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)} className="w-full py-1 rounded-lg bg-[var(--accent-matcha)] hover:brightness-105 text-[var(--accent-matcha-text)] font-black text-[10px] uppercase shadow-2xs cursor-pointer flex items-center justify-center gap-1">
-                        <Plus className="w-3 h-3 stroke-[3]" />
-                        <span>Log Movie</span>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* MODULE 2: SMART WATCHLIST FILTERS */}
+        {/* MODULE 1: SMART WATCHLIST FILTERS */}
         <div className="p-5 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex flex-col gap-2.5">
             <h4 className="text-sm font-black text-[var(--text-primary)] flex items-center gap-2 uppercase tracking-wide">
               <Filter className="w-4 h-4 text-purple-500" />
               <span>Smart Watchlist Quick Filters</span>
             </h4>
             
-            {/* Provider Filter Buttons */}
-            <div className="flex items-center gap-1 overflow-x-auto pb-1 no-scrollbar">
-              {['All', 'Netflix', 'Criterion', 'Mubi', 'HBO Max'].map(p => (
+            {/* Genre Filter Buttons (Top Row - fits strictly on 1 line) */}
+            <div className="flex flex-row items-center gap-1 sm:gap-1.5 w-full flex-nowrap">
+              {primaryGenres.map(g => (
                 <button
-                  key={p}
-                  onClick={() => setProviderFilter(p)}
-                  className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase transition-all shrink-0 cursor-pointer ${
-                    providerFilter === p ? 'bg-purple-600 text-white shadow-xs scale-102' : 'bg-[var(--surface-subtle)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)]'
+                  key={g}
+                  onClick={() => setGenreFilter(g)}
+                  className={`px-2 sm:px-2.5 py-1 rounded-lg text-[10px] font-black uppercase transition-all shrink-0 cursor-pointer ${
+                    genreFilter === g ? 'bg-purple-600 text-white shadow-xs scale-102' : 'bg-[var(--surface-subtle)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)]'
                   }`}
                 >
-                  {p}
+                  {g}
                 </button>
               ))}
+              <div className="relative inline-block shrink-0">
+                <button
+                  onClick={() => setShowExtraGenres(!showExtraGenres)}
+                  className={`px-2 sm:px-2.5 py-1 rounded-lg text-[10px] font-black uppercase transition-all flex items-center gap-1 cursor-pointer ${
+                    extraGenres.includes(genreFilter)
+                      ? 'bg-purple-600 text-white shadow-xs scale-102'
+                      : showExtraGenres
+                      ? 'bg-[var(--accent-honey)] text-[var(--accent-honey-text)] ring-1 ring-white/30'
+                      : 'bg-[var(--surface-subtle)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)]'
+                  }`}
+                  title="More Genre Filters"
+                >
+                  <Filter className="w-2.5 h-2.5 shrink-0" />
+                  <span>{extraGenres.includes(genreFilter) ? genreFilter : '+ More'}</span>
+                </button>
+                {showExtraGenres && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setShowExtraGenres(false)} />
+                    <div className="absolute right-0 sm:left-0 top-full mt-2 p-3 w-48 sm:w-52 rounded-2xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-2xl z-50 animate-fadeIn flex flex-col gap-2">
+                      <div className="flex items-center justify-between border-b border-[var(--border-color)]/60 pb-1.5">
+                        <span className="text-[10px] font-black uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1">
+                          <Filter className="w-3 h-3 text-purple-500" />
+                          <span>More Genres</span>
+                        </span>
+                        <button onClick={() => setShowExtraGenres(false)} className="text-[11px] font-black text-[var(--text-muted)] hover:text-[var(--text-primary)] cursor-pointer">
+                          ✕
+                        </button>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {extraGenres.map(g => (
+                          <button
+                            key={g}
+                            onClick={() => {
+                              setGenreFilter(g);
+                              setShowExtraGenres(false);
+                            }}
+                            className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase transition-all cursor-pointer grow text-center ${
+                              genreFilter === g ? 'bg-purple-600 text-white shadow-xs scale-102' : 'bg-[var(--surface-subtle)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]'
+                            }`}
+                          >
+                            {g}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Runtime & Genre Sub-filters */}
+          {/* Runtime & Decade Sub-filters (Bottom Row) */}
           <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--border-color)]/50 pt-3">
             <div className="flex items-center gap-1">
               <Clock className="w-3.5 h-3.5 text-[var(--text-muted)] mr-1" />
@@ -256,13 +268,14 @@ export const RecommendationsSection: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-1">
-              {['All', 'Romance', 'Drama', 'Indie', 'Animation'].map(g => (
+              <Calendar className="w-3.5 h-3.5 text-[var(--text-muted)] mr-1" />
+              {['All', '2020s', '2010s', '2000s', '1990s'].map(d => (
                 <button
-                  key={g}
-                  onClick={() => setGenreFilter(g)}
-                  className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer ${genreFilter === g ? 'bg-[var(--accent-sakura-text)] text-white font-black' : 'bg-[var(--surface-subtle)] text-[var(--text-muted)]'}`}
+                  key={d}
+                  onClick={() => setDecadeFilter(d)}
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer ${decadeFilter === d ? 'bg-[var(--accent-sakura-text)] text-white font-black' : 'bg-[var(--surface-subtle)] text-[var(--text-muted)]'}`}
                 >
-                  {g}
+                  {d}
                 </button>
               ))}
             </div>
@@ -271,7 +284,7 @@ export const RecommendationsSection: React.FC = () => {
           {/* Filtered Watchlist Cards Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
             {filteredWatchlist.length === 0 ? (
-              <p className="text-xs text-[var(--text-muted)] italic py-4 text-center col-span-2">No active watchlist titles match selected streaming filters.</p>
+              <p className="text-xs text-[var(--text-muted)] italic py-4 text-center col-span-2">No active watchlist titles match selected genre, duration, or era filters.</p>
             ) : (
               filteredWatchlist.map(item => (
                 <div key={item.id} className="p-3 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] flex items-center justify-between gap-3 group">
@@ -313,6 +326,45 @@ export const RecommendationsSection: React.FC = () => {
           </div>
         </div>
 
+        {/* MODULE 2: "BECAUSE YOU LIKED..." CAROUSEL */}
+        <div className="space-y-4">
+          {topLikedDiaryMovies.slice(0, 2).map((likedMovie) => {
+            const recs = becauseYouLikedData[likedMovie.title] || defaultCarousel;
+            return (
+              <div key={likedMovie.id} className="p-4 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-3">
+                <div className="flex items-center justify-between border-b border-[var(--border-color)]/50 pb-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                    <Heart className="w-3.5 h-3.5 fill-current text-pink-500" />
+                    <span>Because You Liked <strong className="text-[var(--text-primary)] font-bold">"{likedMovie.title}"</strong> ({likedMovie.userRating.toFixed(1)}★)</span>
+                  </span>
+                  <span className="text-[10px] font-extrabold text-[var(--text-muted)]">AI Match DNA</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {recs.map((rec: any) => (
+                    <div key={rec.id} className="p-2.5 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] flex flex-col justify-between space-y-2 group">
+                      <div className="flex items-start gap-2.5">
+                        <img src={rec.poster || '/images/posters/totoro.jpg'} alt={rec.title} onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)} className="w-12 h-16 rounded-xl object-cover shadow-xs shrink-0 cursor-pointer group-hover:scale-105 transition-transform" title="Log to Diary" />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-black text-xs text-[var(--text-primary)] truncate group-hover:text-pink-500 cursor-pointer" onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)}>{rec.title}</p>
+                          <span className="text-[10px] text-amber-500 font-bold block">{rec.rating} • {rec.provider}</span>
+                          <p className="text-[10px] text-[var(--text-secondary)] italic font-serif line-clamp-2 leading-tight mt-1">
+                            "{rec.reason}"
+                          </p>
+                        </div>
+                      </div>
+                      <button onClick={() => handleLogRecommendation(rec.title, rec.director, rec.year, rec.poster)} className="w-full py-1 rounded-lg bg-[var(--accent-matcha)] hover:brightness-105 text-[var(--accent-matcha-text)] font-black text-[10px] uppercase shadow-2xs cursor-pointer flex items-center justify-center gap-1">
+                        <Plus className="w-3 h-3 stroke-[3]" />
+                        <span>Log Movie</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
       </div>
     </div>
   );
@@ -344,7 +396,6 @@ export const RecommendationsSection: React.FC = () => {
         
         {/* MODULE 1: INTERACTIVE TASTE MIXER ("Find a Movie for Two") */}
         <div className="p-5 rounded-3xl bg-linear-to-tr from-[var(--surface-card)] via-rose-500/10 to-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-4 relative overflow-hidden">
-          <div className="washi-strip washi-pink right-6 top-3"></div>
           
           <div>
             <h4 className="text-sm font-black text-[var(--text-primary)] flex items-center gap-1.5 uppercase tracking-wide">

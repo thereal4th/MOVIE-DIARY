@@ -14,10 +14,12 @@ import { RecommendationsSection } from '../components/recommendations/Recommenda
 import { MyProfile } from '../components/profile/MyProfile';
 import { LogMovieModal } from '../components/modals/LogMovieModal';
 import { FriendProfileModal } from '../components/friends/FriendProfileModal';
-import { Film, Sun, Moon, Plus, Sparkles } from 'lucide-react';
+import { AccountCenterModal } from '../components/modals/AccountCenterModal';
+import { EditProfileModal } from '../components/modals/EditProfileModal';
+import { Film, Sun, Moon, Plus, Sparkles, Settings } from 'lucide-react';
 
 const DashboardContent: React.FC = () => {
-  const { activeTab, theme, toggleTheme, setIsLogModalOpen, setEditingMovie, setPrefillMovie } = useMovieDiary();
+  const { activeTab, theme, toggleTheme, setIsLogModalOpen, setIsAccountModalOpen, setEditingMovie, setPrefillMovie } = useMovieDiary();
 
   const handleOpenLogModal = () => {
     setEditingMovie(null);
@@ -28,20 +30,20 @@ const DashboardContent: React.FC = () => {
   return (
     <div className="h-screen max-h-screen w-full flex flex-col gingham-tablecloth transition-colors duration-400 font-sans p-1.5 sm:p-2.5 lg:px-4 lg:py-2 items-center overflow-hidden">
       
-      {/* Upper Tablecloth Bar Outside Notebook: "Filmory" on Left, Controls on Right! */}
+      {/* Upper Tablecloth Bar Outside Notebook: "Filmoire" on Left, Controls on Right! */}
       <header className="w-full max-w-[1360px] shrink-0 flex items-center justify-between mb-1.5 select-none z-30 px-2">
         
-        {/* Top Left: Filmory Brand Identity */}
+        {/* Top Left: Filmoire Brand Identity */}
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-2xl bg-linear-to-tr from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] flex items-center justify-center shadow-md border-2 border-white/80 transform -rotate-6 hover:rotate-0 transition-transform text-[var(--text-primary)]">
             <Film className="w-5 h-5 stroke-[2.5]" />
           </div>
           <div>
             <h1 className="font-black text-lg sm:text-xl tracking-tight text-[var(--tablecloth-text)] font-sans leading-none drop-shadow-xs transition-colors">
-              Filmory
+              Filmoire
             </h1>
             <span className="text-[9px] font-black uppercase text-[var(--tablecloth-subtext)] tracking-wider block transition-colors">
-              2-Page Open Cinema Journal
+              Fourth and Sheena's Movie Journal
             </span>
           </div>
         </div>
@@ -92,6 +94,17 @@ const DashboardContent: React.FC = () => {
       {/* Global Interactive Modals */}
       <LogMovieModal />
       <FriendProfileModal />
+      <AccountCenterModal />
+      <EditProfileModal />
+
+      {/* Floating Lower-Left Account Center Action (No Label) */}
+      <button
+        onClick={() => setIsAccountModalOpen(true)}
+        className="fixed bottom-3.5 left-3.5 sm:bottom-5 sm:left-5 z-50 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] text-[var(--text-primary)] border-2 border-[var(--border-color)] hover:border-[var(--text-primary)] shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer select-none group"
+        title="Open User Dashboard & Account Center"
+      >
+        <Settings className="w-5 h-5 text-rose-500 stroke-[2.5] transition-transform duration-500 group-hover:rotate-90" />
+      </button>
     </div>
   );
 };

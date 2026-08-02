@@ -8,27 +8,13 @@ import React, { useState, useMemo } from 'react';
 import { useMovieDiary } from '../../context/MovieDiaryContext';
 import { Movie, Friend } from '../../types/diary';
 import { DualPaneNotebook } from '../layout/DualPaneNotebook';
-import { Award, Users, PenTool, Film, Star, Clock, Calendar, Sparkles, Popcorn, Glasses, Clapperboard, Trophy, Share2, Globe, BarChart3, Bookmark, Scroll, ShieldCheck, TrendingUp, Plus } from 'lucide-react';
+import { Award, Users, PenTool, Film, Star, Clock, Calendar, Sparkles, Popcorn, Glasses, Clapperboard, Trophy, Share2, Globe, BarChart3, Bookmark, Scroll, ShieldCheck, TrendingUp, Plus, Edit3, X } from 'lucide-react';
 
 export const MyProfile: React.FC = () => {
-  const { userProfile, movies, friends, setIsLogModalOpen, setEditingMovie, setPrefillMovie } = useMovieDiary();
-
-  // Mascot cosmetic state & animations
-  const [mascotSkin, setMascotSkin] = useState<'default' | '3d' | 'director' | 'golden'>('3d');
-  const [isMascotBouncing, setIsMascotBouncing] = useState(false);
+  const { userProfile, setIsEditProfileModalOpen, movies, friends, setIsLogModalOpen, setEditingMovie, setPrefillMovie } = useMovieDiary();
 
   // Right Page sub-navigation tab switch
   const [activeSubTab, setActiveSubTab] = useState<'analytics' | 'lists' | 'reviews' | 'badges'>('analytics');
-
-  // Dynamic Mascot Commentary based on real-time diary state
-  const mascotCommentary = useMemo(() => {
-    const total = movies.length;
-    if (total === 0) return "Welcome to your cinephile sanctuary! Log your very first film to get started!";
-    const favCount = movies.filter(m => m.favorite).length;
-    if (mascotSkin === 'director') return `Directing your archive! You have ${favCount} 5★ masterpieces logged in your Top 4 hall of fame!`;
-    if (mascotSkin === 'golden') return `A true academy veteran! You've logged ${total} incredible film treasures this year!`;
-    return `Cozy cinema vibes! You've recorded ${total} films in your physical notebook. Got hot tea ready for tonight's screening?`;
-  }, [movies, mascotSkin]);
 
   // Quick Stats computations
   const quickStats = useMemo(() => {
@@ -91,13 +77,8 @@ export const MyProfile: React.FC = () => {
     return { counts, maxVal };
   }, [movies]);
 
-  const handleMascotInteract = () => {
-    setIsMascotBouncing(true);
-    setTimeout(() => setIsMascotBouncing(false), 1000);
-  };
-
   /* ========================================================================= */
-  /* 📖 LEFT PAGE: Identity, Movie Buddy Mascot, & Top 4 Favorites Showcase    */
+  /* 📖 LEFT PAGE: Identity, Favorite Movie Quote, & Top 4 Favorites Showcase  */
   /* ========================================================================= */
   const leftPageContent = (
     <div className="flex flex-col h-full min-h-0 space-y-4 overflow-hidden">
@@ -116,7 +97,15 @@ export const MyProfile: React.FC = () => {
               className="w-full h-full object-cover object-center opacity-80 filter brightness-95 transform scale-105"
             />
             <div className="absolute inset-0 bg-linear-to-t from-[var(--surface-card)] via-transparent to-black/40"></div>
-            <div className="washi-strip washi-gold right-8 top-3"></div>
+
+            {/* Edit Profile Button (Symbol only in Top Right Corner) */}
+            <button
+              onClick={() => setIsEditProfileModalOpen(true)}
+              className="absolute top-3 right-3.5 z-20 p-2 rounded-xl bg-black/55 hover:bg-[var(--accent-honey)] hover:text-[var(--accent-honey-text)] text-white border border-white/30 transition-all cursor-pointer shadow-md backdrop-blur-xs hover:scale-110 flex items-center justify-center"
+              title="Edit Profile"
+            >
+              <Edit3 className="w-4 h-4 stroke-[2.5]" />
+            </button>
           </div>
 
           {/* Identity Info & Mascot Container */}
@@ -139,9 +128,11 @@ export const MyProfile: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-xs font-extrabold text-[var(--accent-sakura-text)] font-mono">@{userProfile.handle}</p>
-                <p className="text-xs text-[var(--text-secondary)] italic font-serif mt-1">
-                  "{userProfile.bio}"
-                </p>
+                {userProfile.bio && userProfile.bio.trim() !== '' && (
+                  <p className="text-xs text-[var(--text-secondary)] italic font-serif mt-1">
+                    "{userProfile.bio}"
+                  </p>
+                )}
               </div>
             </div>
 
@@ -167,38 +158,23 @@ export const MyProfile: React.FC = () => {
               )}
             </div>
 
-            {/* Movie Buddy Mascot & Dynamic Speech Bubble */}
-            <div className="w-full bg-linear-to-r from-[var(--surface-subtle)] via-[var(--accent-honey)]/10 to-[var(--surface-card)] p-3.5 rounded-2xl border border-[var(--border-color)] shadow-inner flex items-center gap-3.5">
-              <div
-                onClick={handleMascotInteract}
-                className={`w-14 h-14 rounded-2xl bg-linear-to-tr from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-slate-900 flex flex-col items-center justify-center shrink-0 shadow-md border-2 border-white cursor-pointer select-none transition-transform ${
-                  isMascotBouncing ? 'scale-110 rotate-12 animate-bounce' : 'hover:scale-105'
-                }`}
-              >
-                {mascotSkin === '3d' ? <Glasses className="w-7 h-7 stroke-[2.5]" /> : mascotSkin === 'director' ? <Clapperboard className="w-7 h-7 stroke-[2.5] text-rose-700" /> : mascotSkin === 'golden' ? <Trophy className="w-7 h-7 stroke-[2.5] text-amber-700" /> : <Popcorn className="w-7 h-7 stroke-[2] text-amber-800" />}
-                <span className="text-[7px] font-black uppercase tracking-tight bg-white/90 px-1 py-0.5 rounded-xs mt-0.5">
-                  Buddy 🍿
-                </span>
-              </div>
+            {/* Favorite Movie Quote Showcase */}
+            <div className="w-full bg-linear-to-br from-[var(--surface-subtle)] via-[var(--surface-card)] to-[var(--surface-subtle)] p-4 rounded-2xl border-2 border-[var(--border-color)] shadow-inner relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-bl from-[var(--accent-honey)]/15 via-[var(--accent-sakura)]/10 to-transparent rounded-full pointer-events-none blur-xl"></div>
+              
+              <div className="relative z-10 space-y-2">
+                <blockquote className="text-xs sm:text-sm font-extrabold text-[var(--text-primary)] font-serif italic leading-relaxed pl-3.5 border-l-3 border-[var(--accent-honey)]">
+                  "{userProfile.favoriteQuote || "In another life, I would have really liked just doing laundry and taxes with you."}"
+                </blockquote>
 
-              <div className="flex-1 min-w-0 space-y-1.5">
-                <div className="bg-[var(--surface-card)] p-2 rounded-xl border border-[var(--border-color)] shadow-2xs relative">
-                  <p className="text-[11px] font-bold text-[var(--text-primary)] italic line-clamp-2">
-                    "{mascotCommentary}"
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-0.5">
-                  <span className="text-[8px] font-black uppercase text-[var(--text-muted)]">Props:</span>
-                  {(['default', '3d', 'director', 'golden'] as const).map(skin => (
-                    <button
-                      key={skin}
-                      onClick={() => setMascotSkin(skin)}
-                      className={`px-1.5 py-0.5 rounded text-[8px] font-black uppercase shrink-0 cursor-pointer ${mascotSkin === skin ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs' : 'bg-[var(--surface-card)] text-[var(--text-secondary)] border border-[var(--border-color)]'}`}
-                    >
-                      {skin === 'default' ? '🍿 Popcorn' : skin === '3d' ? '🕶️ 3D Specs' : skin === 'director' ? '🎬 Beret' : '🏆 Trophy'}
-                    </button>
-                  ))}
+                <div className="flex items-center justify-end gap-1.5 text-right text-xs pt-0.5 flex-wrap">
+                  <span className="font-extrabold text-[var(--text-primary)] font-sans">
+                    — {userProfile.favoriteQuoteCharacter || "Waymond Wang"}
+                  </span>
+                  <span className="text-[var(--text-muted)] font-bold">in</span>
+                  <span className="font-black text-[var(--accent-sakura-text)] font-sans">
+                    {userProfile.favoriteQuoteMovie || "Everything Everywhere All at Once (2022)"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -228,7 +204,6 @@ export const MyProfile: React.FC = () => {
 
         {/* MODULE 2: SIGNATURE TOP 4 FAVORITE MOVIES ROW */}
         <div className="p-5 rounded-3xl bg-linear-to-tr from-[var(--surface-card)] via-[var(--accent-lavender)]/20 to-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-4 relative overflow-hidden">
-          <div className="washi-strip washi-lilac right-1/3 top-2"></div>
           
           <div className="flex items-center justify-between">
             <div>
@@ -285,116 +260,192 @@ export const MyProfile: React.FC = () => {
     <div className="flex flex-col h-full min-h-0 space-y-4 overflow-hidden">
       
       {/* Locked Sub-Navigation Header */}
-      <div className="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b-2 border-[var(--border-color)]/70">
+      <div className="shrink-0 flex flex-col gap-3 pb-4 border-b-2 border-[var(--border-color)]/70">
         <div>
-          <h3 className="text-xl font-black text-[var(--text-primary)] flex items-center gap-2">
+          <h3 className="text-xl font-black text-[var(--text-primary)] flex items-center gap-2 font-serif">
             <BarChart3 className="w-5 h-5 text-purple-500 stroke-[2.5]" />
             <span>Analytics & Archives</span>
           </h3>
-          <p className="text-[11px] font-extrabold text-[var(--text-muted)] uppercase tracking-wide">
-            Visual rating distributions, top directors, & milestone awards
+          <p className="text-xs font-extrabold text-[var(--text-muted)] tracking-wide mt-0.5">
+            Explore your screening metrics, custom cinema collections, & achievement badges
           </p>
         </div>
 
-        {/* Sub-Navigation Tabs Switcher */}
-        <div className="flex items-center gap-1 p-1 bg-[var(--surface-subtle)] rounded-xl border border-[var(--border-color)] overflow-x-auto no-scrollbar">
+        {/* Sub-Navigation Tabs Switcher Bar */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1.5 bg-[var(--surface-subtle)] rounded-2xl border border-[var(--border-color)] shadow-inner">
           {[
-            { key: 'analytics', label: 'Charts', icon: <BarChart3 className="w-3 h-3" /> },
-            { key: 'lists', label: 'Lists', icon: <Bookmark className="w-3 h-3" /> },
-            { key: 'reviews', label: 'Reviews', icon: <Scroll className="w-3 h-3" /> },
-            { key: 'badges', label: 'Badges', icon: <ShieldCheck className="w-3 h-3" /> },
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveSubTab(tab.key as any)}
-              className={`px-3 py-1 rounded-lg font-black text-xs flex items-center gap-1 transition-all shrink-0 cursor-pointer ${
-                activeSubTab === tab.key ? 'bg-[var(--accent-matcha)] text-[var(--accent-matcha-text)] shadow-xs scale-102 ring-1 ring-white/50' : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-              }`}
-            >
-              {tab.icon}
-              <span>{tab.label}</span>
-            </button>
-          ))}
+            { key: 'analytics', label: 'DNA & Charts', icon: <BarChart3 className="w-3.5 h-3.5 text-emerald-500 stroke-[2.5]" /> },
+            { key: 'lists', label: 'Curated Lists', icon: <Bookmark className="w-3.5 h-3.5 text-pink-500 stroke-[2.5]" /> },
+            { key: 'reviews', label: 'All Reviews', icon: <Scroll className="w-3.5 h-3.5 text-amber-500 stroke-[2.5]" /> },
+            { key: 'badges', label: 'VIP Badges', icon: <ShieldCheck className="w-3.5 h-3.5 text-purple-500 stroke-[2.5]" /> },
+          ].map((tab) => {
+            const isActive = activeSubTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setActiveSubTab(tab.key as any)}
+                className={`py-2 px-2.5 rounded-xl font-black text-[11px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all cursor-pointer select-none ${
+                  isActive
+                    ? 'bg-[var(--accent-honey)] text-[var(--accent-honey-text)] shadow-md scale-102 ring-1 ring-[var(--border-color)] font-black'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-card)]'
+                }`}
+              >
+                <span className={isActive ? 'text-[var(--accent-honey-text)] transition-colors' : 'transition-colors'}>{tab.icon}</span>
+                <span className="truncate">{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
       {/* Internal Micro-Scrolling Right Page Content Area */}
-      <div className="flex-1 min-h-0 overflow-y-auto pr-2 pb-6 space-y-6">
+      <div className={`flex-1 min-h-0 overflow-x-hidden ${activeSubTab === 'analytics' ? 'overflow-y-hidden pb-1 space-y-4' : 'overflow-y-auto pr-2 pb-6 space-y-6'} no-scrollbar`}>
         
         {/* TAB 1: VISUAL ANALYTICS (Rating Bar Chart & Top Auteurs) */}
         {activeSubTab === 'analytics' && (
-          <div className="space-y-6">
+          <div className="space-y-3.5 animate-fadeIn">
             
-            {/* Rating Distribution Bar Graph (1-5 stars) */}
-            <div className="p-5 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-4">
-              <h4 className="text-sm font-black text-[var(--text-primary)] uppercase tracking-wide flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
-                  <TrendingUp className="w-4 h-4 text-emerald-500" />
-                  <span>Rating Distribution Histogram</span>
-                </span>
-                <span className="text-[10px] font-bold text-[var(--text-muted)]">1.0★ – 5.0★</span>
-              </h4>
+            {/* Rating Spectrum Histogram Card */}
+            <div className="p-4 sm:p-5 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-md space-y-3 relative overflow-hidden group">
+              {/* Subtle ambient decorative backdrop gradient */}
+              <div className="absolute -right-10 -top-10 w-40 h-40 bg-gradient-to-br from-amber-500/10 via-purple-500/10 to-transparent rounded-full blur-2xl pointer-events-none" />
 
-              <div className="space-y-2 pt-1">
-                {[5, 4, 3, 2, 1].map(star => {
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--border-color)]/60 pb-2.5 relative z-10">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                    <TrendingUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400 stroke-[2.5]" />
+                  </div>
+                  <span className="text-xs sm:text-sm font-black tracking-tight text-[var(--text-primary)] uppercase font-serif">
+                    Screening Sentiment Spectrum
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 bg-[var(--surface-subtle)] px-3 py-1 rounded-xl border border-[var(--border-color)] shadow-inner">
+                  <span className="text-[10px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">Avg Score:</span>
+                  <span className="text-xs font-black text-amber-500 flex items-center gap-0.5">
+                    <span>{quickStats.avgRating}</span>
+                    <Star className="w-3 h-3 fill-amber-500" />
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-2 pt-0.5 relative z-10">
+                {[
+                  { star: 5, label: 'Masterpieces', colors: 'from-amber-400 via-rose-500 to-purple-600', text: 'text-amber-500' },
+                  { star: 4, label: 'Exceptional', colors: 'from-emerald-400 to-teal-500', text: 'text-emerald-500' },
+                  { star: 3, label: 'Enjoyable', colors: 'from-sky-400 to-blue-600', text: 'text-sky-500' },
+                  { star: 2, label: 'Mixed Feelings', colors: 'from-amber-500 to-orange-600', text: 'text-orange-500' },
+                  { star: 1, label: 'Critical Pass', colors: 'from-rose-500 to-red-700', text: 'text-rose-500' },
+                ].map(({ star, label, colors, text }) => {
                   const count = ratingDistribution.counts[star as 1|2|3|4|5] || 0;
                   const pct = Math.round((count / ratingDistribution.maxVal) * 100);
                   return (
-                    <div key={star} className="flex items-center gap-3 text-xs font-black">
-                      <span className="w-8 text-right text-amber-500 shrink-0">{star} ★</span>
-                      <div className="flex-1 h-4 bg-[var(--surface-subtle)] rounded-full overflow-hidden border border-[var(--border-color)]/70 relative">
-                        <div className="h-full bg-linear-to-r from-pink-500 via-amber-400 to-emerald-400 rounded-full transition-all duration-700" style={{ width: `${Math.max(pct, 8)}%` }}></div>
+                    <div key={star} className="flex items-center gap-3 text-xs font-black group/bar">
+                      <span className={`w-10 text-right font-black shrink-0 flex items-center justify-end gap-1 text-xs ${text}`}>
+                        <span>{star}</span>
+                        <Star className="w-3.5 h-3.5 fill-current" />
+                      </span>
+                      
+                      <div className="flex-1 h-5 bg-[var(--surface-subtle)] rounded-full overflow-hidden border border-[var(--border-color)]/70 relative p-0.5 shadow-inner flex items-center">
+                        <div
+                          className={`h-full bg-linear-to-r ${colors} rounded-full transition-all duration-1000 ease-out flex items-center justify-end pr-2 group-hover/bar:brightness-110 shadow-xs`}
+                          style={{ width: `${Math.max(pct, 12)}%` }}
+                        >
+                          <span className="text-[9px] font-black text-white uppercase tracking-wider drop-shadow-sm truncate pl-1">
+                            {count} {count === 1 ? 'film' : 'films'}
+                          </span>
+                        </div>
                       </div>
-                      <span className="w-8 text-left text-[var(--text-secondary)] font-bold shrink-0">{count}</span>
+
+                      <span className="w-24 text-left text-[var(--text-muted)] font-bold shrink-0 text-[10px] truncate hidden sm:block">
+                        {label}
+                      </span>
                     </div>
                   );
                 })}
               </div>
             </div>
 
-            {/* Top Genres & Most-Watched Auteurs */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Top Genres & Most-Watched Auteurs Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               
-              {/* Top Genres Card */}
-              <div className="p-5 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-3">
-                <h4 className="text-xs font-black uppercase text-[var(--text-primary)] flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-pink-500" />
-                  <span>Top Genres</span>
-                </h4>
-                <div className="space-y-2 text-xs">
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
-                    <span>1. Romance</span>
-                    <span className="text-pink-500 font-extrabold">38%</span>
+              {/* Cinema Taste DNA Card */}
+              <div className="p-4 sm:p-4.5 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-md space-y-2.5 relative overflow-hidden flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between border-b border-[var(--border-color)]/60 pb-2 mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-pink-500/15 border border-pink-500/30 flex items-center justify-center shrink-0">
+                        <Sparkles className="w-3.5 h-3.5 text-pink-500" />
+                      </div>
+                      <span className="text-xs font-black uppercase tracking-wider text-[var(--text-primary)] font-serif">
+                        Cinema Taste DNA
+                      </span>
+                    </div>
+                    <span className="text-[9px] font-black uppercase bg-pink-500/10 text-pink-500 border border-pink-500/30 px-2 py-0.5 rounded-md">
+                      Top Genres
+                    </span>
                   </div>
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
-                    <span>2. Animation / Ghibli</span>
-                    <span className="text-amber-500 font-extrabold">32%</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
-                    <span>3. Indie / Drama</span>
-                    <span className="text-emerald-500 font-extrabold">30%</span>
+
+                  <div className="space-y-2 text-xs">
+                    {[
+                      { name: "Romance", pct: "38%", num: 38, bar: "bg-pink-500", text: "text-pink-500" },
+                      { name: "Animation / Ghibli", pct: "32%", num: 32, bar: "bg-amber-500", text: "text-amber-500" },
+                      { name: "Indie / Drama", pct: "30%", num: 30, bar: "bg-purple-500", text: "text-purple-500" }
+                    ].map(g => (
+                      <div key={g.name} className="p-2 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)]/60 space-y-1.5 shadow-2xs hover:border-[var(--border-color)] transition-colors">
+                        <div className="flex items-center justify-between text-xs font-black px-1">
+                          <span className="flex items-center gap-2 truncate">
+                            <span className={`w-2 h-2 rounded-full shrink-0 ${g.bar} shadow-xs`} />
+                            <span className="text-[var(--text-primary)] truncate">{g.name}</span>
+                          </span>
+                          <span className={`font-mono font-extrabold text-[11px] shrink-0 ml-2 ${g.text}`}>{g.pct}</span>
+                        </div>
+                        <div className="w-full h-1.5 bg-black/5 dark:bg-white/10 rounded-full overflow-hidden">
+                          <div className={`h-full ${g.bar} rounded-full transition-all duration-700`} style={{ width: `${g.num}%` }} />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
 
-              {/* Most-Watched Directors & Actors */}
-              <div className="p-5 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-sm space-y-3">
-                <h4 className="text-xs font-black uppercase text-[var(--text-primary)] flex items-center gap-1.5">
-                  <Clapperboard className="w-3.5 h-3.5 text-purple-500" />
-                  <span>Most-Watched Auteurs</span>
-                </h4>
-                <div className="space-y-2 text-xs">
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
-                    <span>🎬 Greta Gerwig</span>
-                    <span className="text-[10px] text-slate-500 bg-white dark:bg-black px-2 py-0.5 rounded">4 films</span>
+              {/* Most-Screened Legends Card */}
+              <div className="p-4 sm:p-4.5 rounded-3xl bg-[var(--surface-card)] border-2 border-[var(--border-color)] shadow-md space-y-2.5 relative overflow-hidden flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between border-b border-[var(--border-color)]/60 pb-2 mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-purple-500/15 border border-purple-500/30 flex items-center justify-center shrink-0">
+                        <Clapperboard className="w-3.5 h-3.5 text-purple-500" />
+                      </div>
+                      <span className="text-xs font-black uppercase tracking-wider text-[var(--text-primary)] font-serif">
+                        Auteur Showcase
+                      </span>
+                    </div>
+                    <span className="text-[9px] font-black uppercase bg-purple-500/10 text-purple-500 border border-purple-500/30 px-2 py-0.5 rounded-md">
+                      Most Screened
+                    </span>
                   </div>
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
-                    <span>🎬 Hayao Miyazaki</span>
-                    <span className="text-[10px] text-slate-500 bg-white dark:bg-black px-2 py-0.5 rounded">3 films</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-subtle)] font-black">
-                    <span>🌟 Saoirse Ronan</span>
-                    <span className="text-[10px] text-slate-500 bg-white dark:bg-black px-2 py-0.5 rounded">5 films</span>
+
+                  <div className="space-y-2 text-xs">
+                    {[
+                      { role: "Director", name: "Greta Gerwig", initials: "GG", count: "4 films", avatarBg: "from-rose-400 to-pink-600" },
+                      { role: "Director", name: "Hayao Miyazaki", initials: "HM", count: "3 films", avatarBg: "from-emerald-400 to-teal-700" },
+                      { role: "Lead Star", name: "Saoirse Ronan", initials: "SR", count: "5 films", avatarBg: "from-amber-400 via-orange-500 to-purple-600" }
+                    ].map((a, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-2 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)]/60 font-black shadow-2xs hover:border-[var(--border-color)] transition-colors">
+                        <div className="flex items-center gap-2.5 truncate">
+                          <div className={`w-7 h-7 rounded-xl bg-linear-to-tr ${a.avatarBg} text-white flex items-center justify-center font-extrabold text-[10px] shrink-0 shadow-sm border border-white/40`}>
+                            {a.initials}
+                          </div>
+                          <div className="flex flex-col truncate">
+                            <span className="text-[var(--text-primary)] font-bold text-xs truncate leading-tight">{a.name}</span>
+                            <span className="text-[9px] text-[var(--text-muted)] font-bold uppercase tracking-wider">{a.role}</span>
+                          </div>
+                        </div>
+                        <span className="text-[10px] text-purple-600 dark:text-purple-400 font-extrabold bg-[var(--surface-card)] px-2.5 py-1 rounded-xl border border-[var(--border-color)] font-mono shrink-0 ml-2 shadow-2xs flex items-center gap-1">
+                          <span>{a.count}</span>
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -511,7 +562,6 @@ export const MyProfile: React.FC = () => {
                 ))}
               </div>
             </div>
-
           </div>
         )}
 
