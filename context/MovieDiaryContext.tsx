@@ -7,11 +7,39 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Movie, Friend, Recommendation, ActiveTab, ViewMode, SortOption, UserProfile } from '../types/diary';
 import { INITIAL_MOVIES, INITIAL_FRIENDS, INITIAL_RECOMMENDATIONS, INITIAL_USER_PROFILE } from '../data/mockData';
 
+export interface CoverTextItem {
+  id: string;
+  text: string;
+  color: string;
+  font?: string;
+  x: number;
+  y: number;
+  rot?: number;
+  scale?: number;
+}
+
 export interface CoverCustomization {
   color: string;
   title: string;
   titleColor: string;
+  titleFont?: string;
   stickers: string[];
+  titlePos?: { x: number; y: number; rot?: number; scale?: number };
+  stickerPos?: { [sticker: string]: { x: number; y: number; rot?: number; scale?: number } };
+  customTexts?: CoverTextItem[];
+}
+
+export const FONT_OPTIONS = [
+  { label: 'Classic Serif', value: 'serif', fontFamily: 'Georgia, "Times New Roman", serif' },
+  { label: 'Modern Sans', value: 'sans', fontFamily: 'system-ui, -apple-system, sans-serif' },
+  { label: 'Typewriter Mono', value: 'mono', fontFamily: '"Courier New", Courier, monospace' },
+  { label: 'Journal Script', value: 'cursive', fontFamily: '"Brush Script MT", "Caveat", "Segoe Script", cursive' },
+  { label: 'Cinema Marquee', value: 'cinema', fontFamily: 'Impact, "Arial Black", sans-serif' },
+];
+
+export function getFontFamily(fontValue?: string): string {
+  const match = FONT_OPTIONS.find((f) => f.value === fontValue);
+  return match ? match.fontFamily : 'Georgia, "Times New Roman", serif';
 }
 
 interface MovieDiaryContextType {
@@ -27,6 +55,8 @@ interface MovieDiaryContextType {
   setCoverCustomization: React.Dispatch<React.SetStateAction<CoverCustomization>>;
   isCustomizeCoverModalOpen: boolean;
   setIsCustomizeCoverModalOpen: (open: boolean) => void;
+  activeCoverItem: string | null;
+  setActiveCoverItem: (id: string | null) => void;
   movies: Movie[];
   friends: Friend[];
   recommendations: Recommendation[];
@@ -75,9 +105,14 @@ export const MovieDiaryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     color: 'default',
     title: '',
     titleColor: '#FFFFFF',
+    titleFont: 'serif',
     stickers: [],
+    titlePos: { x: 50, y: 35, rot: 0, scale: 1 },
+    stickerPos: {},
+    customTexts: [],
   });
   const [isCustomizeCoverModalOpen, setIsCustomizeCoverModalOpen] = useState<boolean>(false);
+  const [activeCoverItem, setActiveCoverItem] = useState<string | null>(null);
   
   const [movies, setMovies] = useState<Movie[]>(INITIAL_MOVIES);
   const [friends, setFriends] = useState<Friend[]>(INITIAL_FRIENDS);
@@ -242,6 +277,8 @@ export const MovieDiaryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setCoverCustomization,
         isCustomizeCoverModalOpen,
         setIsCustomizeCoverModalOpen,
+        activeCoverItem,
+        setActiveCoverItem,
         movies,
         friends,
         recommendations,
