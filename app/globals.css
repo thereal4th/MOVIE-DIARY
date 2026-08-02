@@ -171,16 +171,16 @@ body {
   background: linear-gradient(90deg, #5CA281 0%, #DDFBEF 50%, #357B5A 100%);
 }
 
-/* 🏷️ Side Protruding Symbol-Only Index Tabs (Permanently anchored with Smooth Elongation on Hover!) */
+/* 🏷️ Side Protruding Symbol-Only Index Tabs (Permanently anchored to outer edge with Smooth Elongation!) */
 .side-symbol-tab {
   width: 50px;
   transition: width 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease, box-shadow 0.2s ease;
-  border: 3px solid var(--border-color);
+  border: 2.5px solid var(--border-color);
   border-left: none;
-  box-shadow: 5px 3px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 4px 3px 10px rgba(0, 0, 0, 0.08);
   position: relative;
   cursor: pointer;
-  transform: none !important; /* Never detaches from notebook rim! */
+  transform: none !important; /* Anchored cleanly to outer rim without intersection */
 }
 
 @media (min-width: 640px) {

@@ -20,8 +20,8 @@ export const NotebookSideTabs: React.FC = () => {
   ];
 
   return (
-    /* 100% Permanently Fused onto the lower right corner of the notebook rim! */
-    <div className="absolute left-full -ml-[3px] bottom-8 flex flex-col gap-3.5 z-50 select-none pointer-events-auto">
+    /* Positioned squarely along the outer right edge near the bottom, directly above the corner curve without intersecting the paper! */
+    <div className="absolute left-full -ml-[1px] bottom-14 flex flex-col gap-3 z-50 select-none pointer-events-auto">
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
