@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useMovieDiary } from '../../context/MovieDiaryContext';
-import { X, Palette, Type, Check, RotateCcw, Sticker as StickerIcon, Wand2 } from 'lucide-react';
+import { X, Palette, Type, Check, RotateCcw, Sticker as StickerIcon, Wand2, Plus } from 'lucide-react';
 
 const COLOR_OPTIONS = [
   { label: 'Gingham Theme Match', value: 'default', colorClass: 'bg-linear-to-r from-red-600 via-rose-500 to-zinc-900' },
@@ -31,6 +31,9 @@ export const CustomizeCoverModal: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'color' | 'text' | 'stickers'>('color');
 
   if (!isCustomizeCoverModalOpen) return null;
+
+  const isCustomColor = !COLOR_OPTIONS.some((opt) => opt.value === coverCustomization.color);
+  const isCustomTextColor = !TEXT_COLOR_OPTIONS.some((tOpt) => tOpt.value === coverCustomization.titleColor);
 
   const handleSelectColor = (colorValue: string) => {
     setCoverCustomization((prev) => ({ ...prev, color: colorValue }));
@@ -144,28 +147,55 @@ export const CustomizeCoverModal: React.FC = () => {
               <label className="text-xs font-black uppercase tracking-wider text-[var(--text-primary)] block">
                 Choose Hardcover Solid Tone
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-wrap items-center gap-4 pt-2">
                 {COLOR_OPTIONS.map((opt) => {
                   const isSelected = coverCustomization.color === opt.value;
                   return (
                     <button
                       key={opt.value}
                       onClick={() => handleSelectColor(opt.value)}
-                      className={`flex items-center gap-3 p-3 rounded-2xl border-2 transition-all cursor-pointer select-none text-left ${
+                      title={opt.label}
+                      className={`w-12 h-12 rounded-full border-2 transition-all cursor-pointer select-none flex items-center justify-center shadow-md hover:scale-110 active:scale-95 ${opt.colorClass} ${
                         isSelected
-                          ? 'border-purple-500 bg-purple-500/10 shadow-md ring-2 ring-purple-400/30'
-                          : 'border-[var(--border-color)] hover:border-purple-400/50 bg-[var(--surface-subtle)]/40 hover:bg-[var(--surface-hover)]'
+                          ? 'border-white ring-4 ring-purple-500/60 scale-105'
+                          : 'border-white/60 hover:border-white'
                       }`}
                     >
-                      <div className={`w-8 h-8 rounded-xl shrink-0 shadow-sm border border-white/40 flex items-center justify-center ${opt.colorClass}`}>
-                        {isSelected && <Check className="w-4 h-4 text-white stroke-[3] drop-shadow-sm" />}
-                      </div>
-                      <span className="text-xs font-bold text-[var(--text-primary)] leading-tight">
-                        {opt.label}
-                      </span>
+                      {isSelected && (
+                        <Check className="w-5 h-5 text-white stroke-[3] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
+                      )}
                     </button>
                   );
                 })}
+
+                {/* + Custom Color Wheel Trigger */}
+                <div className="relative">
+                  <label
+                    title="Choose Custom Hex Color from Color Wheel"
+                    className={`w-12 h-12 rounded-full border-2 border-dashed border-[var(--text-primary)]/50 hover:border-[var(--text-primary)] bg-linear-to-tr from-red-500 via-green-500 to-blue-500 p-0.5 flex items-center justify-center cursor-pointer shadow-md hover:scale-110 active:scale-95 transition-all select-none ${
+                      isCustomColor
+                        ? 'ring-4 ring-purple-500/60 scale-105 border-solid border-white'
+                        : ''
+                    }`}
+                  >
+                    <div 
+                      className="w-full h-full rounded-full flex items-center justify-center bg-[var(--surface-card)] overflow-hidden"
+                      style={isCustomColor ? { backgroundColor: coverCustomization.color } : {}}
+                    >
+                      {isCustomColor ? (
+                        <Check className="w-5 h-5 text-white stroke-[3] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
+                      ) : (
+                        <Plus className="w-6 h-6 text-[var(--text-primary)] stroke-[2.5]" />
+                      )}
+                    </div>
+                    <input
+                      type="color"
+                      value={isCustomColor ? coverCustomization.color : '#C42643'}
+                      onChange={(e) => handleSelectColor(e.target.value)}
+                      className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+                    />
+                  </label>
+                </div>
               </div>
             </div>
           )}
@@ -195,28 +225,56 @@ export const CustomizeCoverModal: React.FC = () => {
                   <label className="text-xs font-black uppercase tracking-wider text-[var(--text-primary)] block">
                     Inscription Foil Color
                   </label>
-                  <div className="grid grid-cols-2 gap-2.5">
+                  <div className="flex flex-wrap items-center gap-4 pt-1">
                     {TEXT_COLOR_OPTIONS.map((tOpt) => {
                       const isSelected = coverCustomization.titleColor === tOpt.value;
+                      const isLight = tOpt.value === '#FFFFFF' || tOpt.value === '#F7ECD9' || tOpt.value === '#FCD34D';
                       return (
                         <button
                           key={tOpt.value}
                           onClick={() => handleTitleColorChange(tOpt.value)}
-                          className={`flex items-center gap-2.5 p-3 rounded-2xl border-2 transition-all cursor-pointer ${
+                          title={tOpt.label}
+                          className={`w-10 h-10 rounded-full border-2 transition-all cursor-pointer select-none flex items-center justify-center shadow-md hover:scale-110 active:scale-95 ${tOpt.bgClass} ${
                             isSelected
-                              ? 'border-purple-500 bg-purple-500/10 shadow-sm'
-                              : 'border-[var(--border-color)] hover:bg-[var(--surface-hover)]'
+                              ? 'ring-4 ring-purple-500/60 scale-105 border-zinc-900 dark:border-white'
+                              : 'hover:border-purple-400'
                           }`}
                         >
-                          <div className={`w-6 h-6 rounded-full border-2 ${tOpt.bgClass} shadow-xs flex items-center justify-center shrink-0`}>
-                            {isSelected && <Check className={`w-3.5 h-3.5 ${tOpt.value === '#FFFFFF' || tOpt.value === '#F7ECD9' || tOpt.value === '#FCD34D' ? 'text-black' : 'text-white'} stroke-[3]`} />}
-                          </div>
-                          <span className="text-xs font-extrabold text-[var(--text-primary)]">
-                            {tOpt.label}
-                          </span>
+                          {isSelected && (
+                            <Check className={`w-4 h-4 ${isLight ? 'text-black' : 'text-white'} stroke-[3] filter drop-shadow-xs`} />
+                          )}
                         </button>
                       );
                     })}
+
+                    {/* + Custom Text Foil Color Wheel Trigger */}
+                    <div className="relative">
+                      <label
+                        title="Choose Custom Foil Tone from Color Wheel"
+                        className={`w-10 h-10 rounded-full border-2 border-dashed border-[var(--text-primary)]/50 hover:border-[var(--text-primary)] bg-linear-to-tr from-yellow-400 via-rose-400 to-purple-500 p-0.5 flex items-center justify-center cursor-pointer shadow-md hover:scale-110 active:scale-95 transition-all select-none ${
+                          isCustomTextColor
+                            ? 'ring-4 ring-purple-500/60 scale-105 border-solid border-white'
+                            : ''
+                        }`}
+                      >
+                        <div 
+                          className="w-full h-full rounded-full flex items-center justify-center bg-[var(--surface-card)] overflow-hidden"
+                          style={isCustomTextColor ? { backgroundColor: coverCustomization.titleColor } : {}}
+                        >
+                          {isCustomTextColor ? (
+                            <Check className="w-4 h-4 text-white stroke-[3] filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
+                          ) : (
+                            <Plus className="w-5 h-5 text-[var(--text-primary)] stroke-[2.5]" />
+                          )}
+                        </div>
+                        <input
+                          type="color"
+                          value={isCustomTextColor ? coverCustomization.titleColor : '#FCD34D'}
+                          onChange={(e) => handleTitleColorChange(e.target.value)}
+                          className="absolute inset-0 opacity-0 w-full h-full cursor-pointer"
+                        />
+                      </label>
+                    </div>
                   </div>
                 </div>
               )}
