@@ -24,6 +24,8 @@ interface MovieDiaryContextType {
   setIsLogModalOpen: (open: boolean) => void;
   isAccountModalOpen: boolean;
   setIsAccountModalOpen: (open: boolean) => void;
+  isEditProfileModalOpen: boolean;
+  setIsEditProfileModalOpen: (open: boolean) => void;
   editingMovie: Movie | null;
   setEditingMovie: (movie: Movie | null) => void;
   prefillMovie: Partial<Movie> | null;
@@ -64,6 +66,7 @@ export const MovieDiaryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
   const [isLogModalOpen, setIsLogModalOpen] = useState<boolean>(false);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState<boolean>(false);
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState<boolean>(false);
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
   const [prefillMovie, setPrefillMovie] = useState<Partial<Movie> | null>(null);
   
@@ -221,6 +224,8 @@ export const MovieDiaryProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         setIsLogModalOpen,
         isAccountModalOpen,
         setIsAccountModalOpen,
+        isEditProfileModalOpen,
+        setIsEditProfileModalOpen,
         editingMovie,
         setEditingMovie,
         prefillMovie,

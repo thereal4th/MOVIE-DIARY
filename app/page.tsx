@@ -15,6 +15,7 @@ import { MyProfile } from '../components/profile/MyProfile';
 import { LogMovieModal } from '../components/modals/LogMovieModal';
 import { FriendProfileModal } from '../components/friends/FriendProfileModal';
 import { AccountCenterModal } from '../components/modals/AccountCenterModal';
+import { EditProfileModal } from '../components/modals/EditProfileModal';
 import { Film, Sun, Moon, Plus, Sparkles, Settings } from 'lucide-react';
 
 const DashboardContent: React.FC = () => {
@@ -94,6 +95,7 @@ const DashboardContent: React.FC = () => {
       <LogMovieModal />
       <FriendProfileModal />
       <AccountCenterModal />
+      <EditProfileModal />
 
       {/* Floating Lower-Left Account Center Action (No Label) */}
       <button

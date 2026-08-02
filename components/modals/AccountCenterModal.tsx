@@ -17,7 +17,7 @@ export const AccountCenterModal: React.FC = () => {
 
   return (
     <>
-      <div className="fixed inset-0 z-60 bg-black/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
+      <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
         <div 
           onClick={(e) => e.stopPropagation()} 
           className="w-full max-w-2xl max-h-[90vh] flex flex-col bg-[var(--surface-card)] border-2 border-[var(--border-color)] rounded-3xl shadow-2xl overflow-hidden relative"
@@ -197,7 +197,7 @@ export const AccountCenterModal: React.FC = () => {
 
       {/* LOG OUT CONFIRMATION MODAL */}
       {isLogoutModalOpen && (
-        <div className="fixed inset-0 z-70 bg-black/75 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
+        <div className="fixed inset-0 z-[110] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
           <div className="w-full max-w-md bg-[var(--surface-card)] border-2 border-[var(--border-color)] rounded-3xl p-6 shadow-2xl space-y-5 text-center relative">
             <div className="w-16 h-16 rounded-3xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-600 dark:text-rose-400 mx-auto shadow-inner">
               <LogOut className="w-8 h-8 stroke-[2.5]" />

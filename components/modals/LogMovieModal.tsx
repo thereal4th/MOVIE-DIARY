@@ -144,7 +144,7 @@ export const LogMovieModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn overflow-hidden">
+    <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-fadeIn overflow-hidden">
       <div className="relative bg-[var(--surface-card)] border-2 border-[var(--border-color)] rounded-3xl w-full max-w-4xl max-h-[92vh] overflow-hidden shadow-2xl p-5 sm:p-6 flex flex-col justify-between gap-4">
         
         {/* Compact Header Bar */}
