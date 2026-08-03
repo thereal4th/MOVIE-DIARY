@@ -261,35 +261,69 @@ export const WatchedLibrary: React.FC = () => {
 
       {/* Selected Day Multi-Log Popup */}
       {selectedDayMovies && (
-        <div className="shrink-0 p-4 bg-slate-900 text-white rounded-2xl border-2 border-amber-500 shadow-2xl animate-fadeIn flex flex-col space-y-3 relative z-30">
+        <div 
+          className="shrink-0 p-4 rounded-2xl border-2 shadow-2xl animate-fadeIn flex flex-col space-y-3 relative z-30 transition-colors duration-300"
+          style={{
+            backgroundColor: 'var(--popup-bg)',
+            borderColor: 'var(--popup-border)',
+            boxShadow: 'var(--popup-shadow)',
+            color: 'var(--popup-text)'
+          }}
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+            <span 
+              className="text-xs font-black uppercase tracking-wider flex items-center gap-1.5 drop-shadow-xs"
+              style={{ color: 'var(--popup-title)' }}
+            >
               <Sparkles className="w-4 h-4" />
               <span>{selectedDayMovies.list.length > 1 ? 'Double Feature Day' : 'Diary Log Day'} ({selectedDayMovies.date})</span>
             </span>
-            <button onClick={() => setSelectedDayMovies(null)} className="text-slate-400 hover:text-white font-black text-sm cursor-pointer">
-              <X className="w-4 h-4" />
+            <button 
+              onClick={() => setSelectedDayMovies(null)} 
+              className="w-7 h-7 rounded-full flex items-center justify-center font-black text-sm cursor-pointer transition-transform hover:scale-110 active:scale-95"
+              style={{ color: 'var(--popup-title)' }}
+              title="Close popup"
+            >
+              <X className="w-4 h-4 stroke-[3]" />
             </button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-40 overflow-y-auto pr-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-44 overflow-y-auto pr-1">
             {selectedDayMovies.list.map((m) => (
-              <div key={m.id} onClick={() => handleEdit(m)} className="group relative p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 flex items-center gap-2 cursor-pointer transition-all duration-200 overflow-hidden" title="Click to edit entry">
-                <img src={m.posterPath} alt={m.title} className="w-10 h-14 rounded-lg object-cover shrink-0" />
-                <div className="min-w-0 flex-1 pr-6">
-                  <p className="text-xs font-black text-white truncate">{m.title}</p>
-                  <p className="text-[10px] text-amber-400 font-extrabold">{m.userRating.toFixed(1)} ★</p>
-                  <span className="text-[9px] text-slate-300 block truncate">{m.venue || 'Home Screening'}</span>
+              <div 
+                key={m.id} 
+                onClick={() => handleEdit(m)} 
+                className="group relative p-2 rounded-xl border flex items-center gap-2.5 cursor-pointer transition-all duration-200 overflow-hidden shadow-sm hover:shadow-md hover:scale-[1.02]"
+                style={{
+                  backgroundColor: 'var(--popup-card-bg)',
+                  borderColor: 'var(--popup-card-border)'
+                }}
+                title="Click to edit entry"
+              >
+                <img src={m.posterPath} alt={m.title} className="w-11 h-16 rounded-lg object-cover shadow-md shrink-0" />
+                <div className="min-w-0 flex-1 pr-6 py-0.5 flex flex-col justify-between h-16">
+                  <div>
+                    <p className="text-xs font-black truncate leading-snug" style={{ color: 'var(--popup-text)' }}>{m.title}</p>
+                    <p className="text-[11px] font-extrabold tracking-wide mt-0.5" style={{ color: 'var(--popup-stars)' }}>{m.userRating.toFixed(1)} ★</p>
+                  </div>
+                  <span className="text-[9px] font-bold truncate tracking-tight" style={{ color: 'var(--popup-subtext)' }}>{m.venue || 'Home Screening'}</span>
                 </div>
 
                 {/* Hover action button group on top right */}
-                <div className="opacity-0 group-hover:opacity-100 transition-all duration-200 absolute top-1.5 right-1.5 flex items-center gap-1 bg-slate-950/95 backdrop-blur-md px-1.5 py-1 rounded-lg border border-white/30 shadow-lg z-20">
+                <div 
+                  className="opacity-0 group-hover:opacity-100 transition-all duration-200 absolute top-1.5 right-1.5 flex items-center gap-1 px-1.5 py-1 rounded-lg border shadow-xl z-20 backdrop-blur-md"
+                  style={{
+                    backgroundColor: 'var(--popup-bg)',
+                    borderColor: 'var(--popup-border)'
+                  }}
+                >
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEdit(m);
                     }}
-                    className="p-1 rounded-md text-amber-400 hover:bg-amber-500 hover:text-slate-950 transition-colors cursor-pointer flex items-center justify-center"
+                    className="p-1 rounded-md hover:scale-115 transition-transform cursor-pointer flex items-center justify-center"
+                    style={{ color: 'var(--popup-edit-icon)' }}
                     title="Edit comments, ratings, and details"
                   >
                     <Pencil className="w-3.5 h-3.5" />
@@ -308,7 +342,8 @@ export const WatchedLibrary: React.FC = () => {
                         }
                       }
                     }}
-                    className="p-1 rounded-md text-rose-400 hover:bg-rose-600 hover:text-white transition-colors cursor-pointer flex items-center justify-center"
+                    className="p-1 rounded-md hover:scale-115 transition-transform cursor-pointer flex items-center justify-center"
+                    style={{ color: 'var(--popup-delete-icon)' }}
                     title="Delete movie in case of mistaken log"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -317,7 +352,7 @@ export const WatchedLibrary: React.FC = () => {
               </div>
             ))}
           </div>
-          <div className="pt-2 border-t border-white/10 flex justify-end">
+          <div className="pt-2 border-t flex justify-end" style={{ borderColor: 'var(--popup-card-border)' }}>
             <button
               type="button"
               onClick={() => {
@@ -325,7 +360,11 @@ export const WatchedLibrary: React.FC = () => {
                 setSelectedDayMovies(null);
                 handleLogForDate(targetDate);
               }}
-              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md hover:shadow-lg transition-transform hover:scale-102 active:scale-95 cursor-pointer"
+              className="px-4 py-2 rounded-xl font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer border border-white/20"
+              style={{
+                backgroundColor: 'var(--popup-btn-bg)',
+                color: 'var(--popup-btn-text)'
+              }}
             >
               <span>+ Add Another</span>
             </button>

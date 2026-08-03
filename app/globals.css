@@ -54,6 +54,23 @@
     --btn-close-border: #FFF6EA; /* Crisp Pearl Ivory border ring around the circle */
     --btn-close-shadow: 0 4px 16px rgba(200, 150, 86, 0.45);
 
+    /* Diary Log Day Popup Theme Variables (Night Mode: Espresso & Champagne Gold) */
+    --popup-bg: #1A171D; /* Deep matte espresso charcoal */
+    --popup-border: #D1BEA5; /* Champagne Gold stitching */
+    --popup-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 16px rgba(209, 190, 165, 0.25);
+    --popup-title: #E8CAA3; /* Warm champagne radiant title */
+    --popup-card-bg: rgba(255, 245, 230, 0.07); /* Subtle warm beige glass */
+    --popup-card-hover: rgba(255, 245, 230, 0.14);
+    --popup-card-border: rgba(209, 190, 165, 0.35);
+    --popup-text: #F7ECD9; /* Warm vintage beige text */
+    --popup-subtext: #AD9883; /* Muted champagne notes */
+    --popup-stars: #FBBF24; /* Radiant golden amber */
+    --popup-btn-bg: #C89656; /* Rich Champagne Golden Amber */
+    --popup-btn-hover: #D8A666;
+    --popup-btn-text: #17130E; /* Deep velvet charcoal contrast */
+    --popup-edit-icon: #FCD34D; /* Warm champagne gold */
+    --popup-delete-icon: #FB7185; /* Soft glowing rose */
+
     --card-shadow: 0 12px 28px -5px rgba(20, 15, 12, 0.15), 0 6px 14px -6px rgba(20, 15, 12, 0.12);
     --notebook-shadow: -20px 0 50px rgba(0, 0, 0, 0.8), 0 32px 85px rgba(0, 0, 0, 0.75);
   }
@@ -109,6 +126,23 @@
     --btn-close-text: #FFFFFF; /* Crisp white icon */
     --btn-close-border: #E8FCF3; /* Bright Botanical Mint White border ring around the circle */
     --btn-close-shadow: 0 4px 16px rgba(34, 142, 88, 0.40);
+
+    /* Diary Log Day Popup Theme Variables (Day Mode: Soft Gingham Picnic) */
+    --popup-bg: #FFF9F0; /* Warm sun-dappled picnic cream linen */
+    --popup-border: #DE7993; /* Sweet strawberry gingham rose stitching */
+    --popup-shadow: 0 12px 32px rgba(216, 112, 139, 0.25), 0 4px 12px rgba(90, 40, 55, 0.08);
+    --popup-title: #9B2C4B; /* Vintage rosewood berry ink */
+    --popup-card-bg: #FFF0F4; /* Soft rose strawberry cream glaze */
+    --popup-card-hover: #FFE6EC; /* Slightly richer strawberry puff on hover */
+    --popup-card-border: #F0B3C4; /* Delicate rose gingham line */
+    --popup-text: #3D2B30; /* Deep cocoa rose ink for sharp readability */
+    --popup-subtext: #8C5C68; /* Muted sweet tea notes */
+    --popup-stars: #D9880B; /* Rich sunny caramel gold */
+    --popup-btn-bg: #C64B6C; /* Rich Strawberry Gingham Berry Rose */
+    --popup-btn-hover: #D65A7D; /* Luminous rose puff hover */
+    --popup-btn-text: #FFFFFF; /* Crisp pearl linen contrast */
+    --popup-edit-icon: #B87308; /* Warm honey caramel */
+    --popup-delete-icon: #D93856; /* Vibrant strawberry rose berry */
 
     --card-shadow: 0 12px 30px -5px rgba(25, 95, 60, 0.16), 0 8px 16px -6px rgba(25, 95, 60, 0.12);
     --notebook-shadow: -18px 0 45px rgba(185, 50, 80, 0.25), 0 30px 75px rgba(165, 40, 70, 0.22);
