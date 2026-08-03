@@ -598,9 +598,6 @@ export const CustomizeCoverModal: React.FC = () => {
                           alt={stk.label} 
                           className="w-12 h-12 sm:w-14 sm:h-14 object-contain filter drop-shadow-[2px_3px_5px_rgba(0,0,0,0.25)] group-hover:drop-shadow-[3px_5px_8px_rgba(0,0,0,0.35)] transition-all pointer-events-none" 
                         />
-                        <span className="text-[9px] font-extrabold text-[var(--text-secondary)] truncate w-full text-center mt-1 opacity-85 group-hover:opacity-100">
-                          {stk.label}
-                        </span>
                       </div>
 
                       {/* Top-Left Icon Delete Button for Uploaded Stickers */}
