@@ -202,8 +202,8 @@ export const LogMovieModal: React.FC = () => {
               {/* Interactive Half-Star Rating & Favorite Switch */}
               <div className="p-3 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] flex items-center justify-between gap-2 shrink-0 shadow-xs">
                 <div>
-                  <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Your Rating (Half-Star)</span>
-                  <StarRating rating={userRating} interactive={true} size="md" onRatingChange={(val) => setUserRating(val)} />
+                  <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Your Rating</span>
+                  <StarRating rating={userRating} interactive={true} size="md" showTooltip={false} onRatingChange={(val) => setUserRating(val)} />
                 </div>
                 <button
                   type="button"

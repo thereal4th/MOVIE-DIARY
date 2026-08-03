@@ -831,12 +831,10 @@ export const WatchedLibrary: React.FC = () => {
                     maxRating={5}
                     size="lg"
                     interactive={true}
+                    showTooltip={false}
                     onRatingChange={(val) => setUserTagRating(val)}
                   />
                 </div>
-                <span className="text-[11px] font-black font-mono px-3 py-0.5 rounded-full bg-amber-500/20 text-amber-500 border border-amber-500/30">
-                  {userTagRating.toFixed(1)} out of 5.0 Stars
-                </span>
               </div>
 
               {/* Comment & Diary Notes */}

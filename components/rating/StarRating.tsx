@@ -15,7 +15,7 @@ export const StarRating: React.FC<StarRatingProps> = ({
   onRatingChange,
   size = 'md',
   interactive = false,
-  showTooltip = true,
+  showTooltip = false,
 }) => {
   const [hoverRating, setHoverRating] = useState<number | null>(null);
 
