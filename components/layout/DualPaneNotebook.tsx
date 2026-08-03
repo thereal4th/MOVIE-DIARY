@@ -299,7 +299,7 @@ export const DualPaneNotebook: React.FC<DualPaneNotebookProps> = ({ leftPage, ri
                         onClick={(e) => removeItem(e, 'title')}
                         onTouchEnd={(e) => removeItem(e, 'title')}
                         title="Delete text"
-                        className="absolute -top-3.5 -right-3.5 w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-lg border-2 border-white hover:scale-110 active:scale-95 z-[60] cursor-pointer"
+                        className="theme-x-btn absolute -top-3.5 -right-3.5 w-7 h-7 rounded-full flex items-center justify-center z-[60] cursor-pointer"
                       >
                         <X className="w-4 h-4 stroke-[3]" />
                       </button>
@@ -386,7 +386,7 @@ export const DualPaneNotebook: React.FC<DualPaneNotebookProps> = ({ leftPage, ri
                           onClick={(e) => removeItem(e, txt.id)}
                           onTouchEnd={(e) => removeItem(e, txt.id)}
                           title="Delete text"
-                          className="absolute -top-3.5 -right-3.5 w-7 h-7 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-lg border-2 border-white hover:scale-110 active:scale-95 z-[60] cursor-pointer"
+                          className="theme-x-btn absolute -top-3.5 -right-3.5 w-7 h-7 rounded-full flex items-center justify-center z-[60] cursor-pointer"
                         >
                           <X className="w-4 h-4 stroke-[3]" />
                         </button>
@@ -480,7 +480,7 @@ export const DualPaneNotebook: React.FC<DualPaneNotebookProps> = ({ leftPage, ri
                             onClick={(e) => removeItem(e, stickerPath)}
                             onTouchEnd={(e) => removeItem(e, stickerPath)}
                             title="Remove sticker"
-                            className="absolute -top-3 -right-3 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-rose-600 text-white flex items-center justify-center shadow-lg border-2 border-white hover:scale-110 active:scale-95 z-[60] cursor-pointer"
+                            className="theme-x-btn absolute -top-3 -right-3 w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center z-[60] cursor-pointer"
                           >
                             <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[3]" />
                           </button>

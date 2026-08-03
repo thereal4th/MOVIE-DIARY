@@ -39,7 +39,7 @@ export const AccountCenterModal: React.FC = () => {
             </div>
             <button
               onClick={() => setIsAccountModalOpen(false)}
-              className="p-2 rounded-xl bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors border border-[var(--border-color)] cursor-pointer shrink-0"
+              className="theme-x-btn w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer shrink-0"
               title="Close Account Center"
             >
               <X className="w-4 h-4 stroke-[2.5]" />

@@ -98,14 +98,16 @@ const DashboardContent: React.FC = () => {
       {/* 📖 Perfectly Centered 100vh Locked Notebook Wrapper! */}
       <div className="max-w-[1360px] w-full flex-1 min-h-0 flex items-stretch justify-center relative mb-0.5">
         
-        {/* Persistent, round pink X close/toggle button fixed on the far-right margin outside main notebook body */}
-        <button
-          onClick={() => setDiaryState(diaryState === 'closed' ? 'open' : 'closed')}
-          title={diaryState === 'closed' ? "Unfold Notebook Open" : "Fold Right Panel Closed"}
-          className="fixed top-[58px] sm:top-[66px] right-3 sm:right-6 lg:right-8 z-[100] w-12 h-12 rounded-full bg-pink-500 hover:bg-pink-600 active:scale-95 text-white border-2 border-white/90 shadow-[0_4px_16px_rgba(236,72,153,0.55)] hover:shadow-[0_6px_20px_rgba(236,72,153,0.7)] flex items-center justify-center hover:scale-110 transition-all duration-200 select-none cursor-pointer group"
-        >
-          <X className={`w-6 h-6 stroke-[3] transition-transform duration-500 ${diaryState === 'closed' ? 'rotate-45 group-hover:rotate-0' : 'group-hover:rotate-90'}`} />
-        </button>
+        {/* Theme-aligned round X close button fixed on the far-right margin (Only visible when notebook is open!) */}
+        {diaryState !== 'closed' && (
+          <button
+            onClick={() => setDiaryState('closed')}
+            title="Fold Notebook Closed"
+            className="theme-x-btn fixed top-[58px] sm:top-[66px] right-3 sm:right-6 lg:right-8 z-[100] w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-200 select-none cursor-pointer group animate-fadeIn shadow-2xl"
+          >
+            <X className="w-5 h-5 sm:w-6 sm:h-6 stroke-[3] transition-transform duration-300 group-hover:rotate-90" />
+          </button>
+        )}
 
 
         {/* Outer Notebook Wrapper (Transparent container so no background paper remains visible when closed!) */}

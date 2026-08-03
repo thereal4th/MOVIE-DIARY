@@ -203,7 +203,8 @@ export const CustomizeCoverModal: React.FC = () => {
 
           <button
             onClick={() => setIsCustomizeCoverModalOpen(false)}
-            className="w-9 h-9 rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] border border-[var(--border-color)] flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-transform hover:scale-110 active:scale-95 cursor-pointer"
+            className="theme-x-btn w-9 h-9 rounded-full flex items-center justify-center cursor-pointer shrink-0"
+            title="Close modal"
           >
             <X className="w-5 h-5 stroke-[2.5]" />
           </button>

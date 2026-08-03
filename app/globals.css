@@ -47,6 +47,13 @@
     --washi-gold: rgba(250, 225, 165, 0.95);
     --washi-lilac: rgba(220, 210, 240, 0.95);
 
+    /* Theme-Aligned X-Buttons (Black & Beige Night Mode - Champagne Gold Circle, NO BLACK!) */
+    --btn-close-bg: #C89656; /* Rich Champagne Golden Amber */
+    --btn-close-hover: #DCAC6C; /* Luminous Gold Sheen */
+    --btn-close-text: #17130E; /* Deep contrast charcoal ink for crisp icon visibility */
+    --btn-close-border: #FFF6EA; /* Crisp Pearl Ivory border ring around the circle */
+    --btn-close-shadow: 0 4px 16px rgba(200, 150, 86, 0.45);
+
     --card-shadow: 0 12px 28px -5px rgba(20, 15, 12, 0.15), 0 6px 14px -6px rgba(20, 15, 12, 0.12);
     --notebook-shadow: -20px 0 50px rgba(0, 0, 0, 0.8), 0 32px 85px rgba(0, 0, 0, 0.75);
   }
@@ -96,9 +103,38 @@
     --washi-gold: rgba(125, 220, 170, 0.95);
     --washi-lilac: rgba(145, 235, 185, 0.95);
 
+    /* Theme-Aligned X-Buttons (Botanical Green Day Mode - Vibrant Botanical Emerald Circle) */
+    --btn-close-bg: #228E58; /* Vibrant Emerald Botanical Green */
+    --btn-close-hover: #29A566; /* Fresh lush green hover */
+    --btn-close-text: #FFFFFF; /* Crisp white icon */
+    --btn-close-border: #E8FCF3; /* Bright Botanical Mint White border ring around the circle */
+    --btn-close-shadow: 0 4px 16px rgba(34, 142, 88, 0.40);
+
     --card-shadow: 0 12px 30px -5px rgba(25, 95, 60, 0.16), 0 8px 16px -6px rgba(25, 95, 60, 0.12);
     --notebook-shadow: -18px 0 45px rgba(185, 50, 80, 0.25), 0 30px 75px rgba(165, 40, 70, 0.22);
   }
+}
+
+/* Theme-Aligned X Close & Delete Buttons with Distinct Circle Ring */
+.theme-x-btn {
+  background-color: var(--btn-close-bg) !important;
+  color: var(--btn-close-text) !important;
+  border: 2.5px solid var(--btn-close-border) !important;
+  box-shadow: var(--btn-close-shadow) !important;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important;
+}
+.theme-x-btn:hover {
+  background-color: var(--btn-close-hover) !important;
+  color: var(--btn-close-text) !important;
+  border-color: var(--btn-close-text) !important;
+  transform: scale(1.1);
+}
+.theme-x-btn:active {
+  transform: scale(0.95);
 }
 
 body {
