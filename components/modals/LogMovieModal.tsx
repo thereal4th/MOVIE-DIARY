@@ -77,7 +77,7 @@ export const LogMovieModal: React.FC = () => {
       setGenres(prefillMovie.genres || ['Indie', 'Romance']);
       setUserRating(prefillMovie.userRating || 5.0);
       setReviewNotes(prefillMovie.reviewNotes || 'An enchanting cinematic discovery! ✿');
-      setDateWatched(new Date().toISOString().split('T')[0]);
+      setDateWatched(prefillMovie.dateWatched || new Date().toISOString().split('T')[0]);
       setWatchFormat('Cozy Couch 🛋️');
       setMoodTags(prefillMovie.moodTags || ['☁️ Comfort Watch', '🎨 Aesthetic Gem']);
       setTaggedFriendIds([]);
@@ -337,17 +337,17 @@ export const LogMovieModal: React.FC = () => {
           </div>
 
           {/* Compact Submit Footer */}
-          <div className="shrink-0 flex items-center justify-end gap-3 pt-3 border-t border-[var(--border-color)]">
+          <div className="shrink-0 flex flex-wrap items-center justify-end gap-2.5 pt-3 border-t border-[var(--border-color)]">
             <button
               type="button"
               onClick={() => setIsLogModalOpen(false)}
-              className="px-5 py-2 rounded-xl bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] font-black text-xs transition-colors cursor-pointer border border-[var(--border-color)]"
+              className="px-4 py-2 rounded-xl bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] font-black text-xs transition-colors cursor-pointer border border-[var(--border-color)]"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 rounded-xl bg-linear-to-r from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-[var(--text-primary)] font-black text-xs shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 border border-white/40 cursor-pointer uppercase tracking-wider"
+              className="px-5 py-2 rounded-xl bg-linear-to-r from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-[var(--text-primary)] font-black text-xs shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 border border-white/40 cursor-pointer uppercase tracking-wider active:scale-95"
             >
               <span>✿</span>
               <span>{editingMovie ? 'Save Updates' : 'Save to Diary'}</span>

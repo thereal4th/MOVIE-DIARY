@@ -190,10 +190,8 @@ export const WatchedLibrary: React.FC = () => {
                     : 'border-[var(--border-color)]/70 bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] cursor-pointer'
                 }`}
                 onClick={() => {
-                  if (isMultiLog) {
+                  if (hasFilms) {
                     setSelectedDayMovies({ date: dateStr, list: filmsOnDate });
-                  } else if (hasFilms && mainFilm) {
-                    handleEdit(mainFilm);
                   } else {
                     handleLogForDate(dateStr);
                   }
@@ -266,7 +264,7 @@ export const WatchedLibrary: React.FC = () => {
           <div className="flex items-center justify-between">
             <span className="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
               <Sparkles className="w-4 h-4" />
-              <span>Double Feature Day ({selectedDayMovies.date})</span>
+              <span>{selectedDayMovies.list.length > 1 ? 'Double Feature Day' : 'Diary Log Day'} ({selectedDayMovies.date})</span>
             </span>
             <button onClick={() => setSelectedDayMovies(null)} className="text-slate-400 hover:text-white font-black text-sm cursor-pointer">
               <X className="w-4 h-4" />
@@ -274,7 +272,7 @@ export const WatchedLibrary: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-40 overflow-y-auto pr-1">
             {selectedDayMovies.list.map((m) => (
-              <div key={m.id} onClick={() => handleEdit(m)} className="p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 flex items-center gap-2 cursor-pointer">
+              <div key={m.id} onClick={() => handleEdit(m)} className="p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 flex items-center gap-2 cursor-pointer" title="Click to edit entry">
                 <img src={m.posterPath} alt={m.title} className="w-10 h-14 rounded-lg object-cover shrink-0" />
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-black text-white truncate">{m.title}</p>
@@ -283,6 +281,19 @@ export const WatchedLibrary: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="pt-2 border-t border-white/10 flex justify-end">
+            <button
+              type="button"
+              onClick={() => {
+                const targetDate = selectedDayMovies.date;
+                setSelectedDayMovies(null);
+                handleLogForDate(targetDate);
+              }}
+              className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md hover:shadow-lg transition-transform hover:scale-102 active:scale-95 cursor-pointer"
+            >
+              <span>+ Add Another</span>
+            </button>
           </div>
         </div>
       )}
