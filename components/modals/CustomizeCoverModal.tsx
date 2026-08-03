@@ -26,18 +26,9 @@ const TEXT_COLOR_OPTIONS = [
 ];
 
 const STICKER_CATALOG = [
-  { id: 'popcorn', label: 'Popcorn Box', src: 'https://cdn-icons-png.flaticon.com/512/2798/2798007.png' },
-  { id: 'clapper', label: 'Cinema Clapperboard', src: 'https://cdn-icons-png.flaticon.com/512/2809/2809590.png' },
-  { id: 'camera', label: 'Movie Projector', src: 'https://cdn-icons-png.flaticon.com/512/3163/3163478.png' },
-  { id: 'ticket', label: 'Cinema Ticket', src: 'https://cdn-icons-png.flaticon.com/512/2798/2798055.png' },
-  { id: 'reel', label: 'Film Reel', src: 'https://cdn-icons-png.flaticon.com/512/3163/3163531.png' },
-  { id: 'trophy', label: 'Golden Star Award', src: 'https://cdn-icons-png.flaticon.com/512/2798/2798124.png' },
-  { id: 'vhs', label: 'Retro VHS Cassette', src: 'https://cdn-icons-png.flaticon.com/512/3163/3163503.png' },
-  { id: 'soda', label: 'Cinema Soda Cup', src: 'https://cdn-icons-png.flaticon.com/512/2798/2798031.png' },
-  { id: 'glasses3d', label: '3D Glasses', src: 'https://cdn-icons-png.flaticon.com/512/2809/2809623.png' },
-  { id: 'sign', label: 'Neon Cinema Sign', src: 'https://cdn-icons-png.flaticon.com/512/2809/2809579.png' },
-  { id: 'chair', label: "Director's Chair", src: 'https://cdn-icons-png.flaticon.com/512/3163/3163518.png' },
-  { id: 'megaphone', label: 'Director Megaphone', src: 'https://cdn-icons-png.flaticon.com/512/3163/3163509.png' },
+  { id: 'cartoon_girl', label: 'Girl Doodle (Head Only)', src: '/images/cartoon_girl_sticker.png' },
+  { id: 'cartoon_boy', label: 'Boy Doodle (Head Only)', src: '/images/cartoon_boy_sticker.png' },
+  { id: 'ramen_doodle', label: 'Ramen Bowl Doodle', src: '/images/ramen_sticker.png' },
 ];
 
 export const CustomizeCoverModal: React.FC = () => {
