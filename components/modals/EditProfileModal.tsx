@@ -91,7 +91,7 @@ const EditProfileModalContent: React.FC = () => {
           </div>
           <button
             onClick={() => setIsEditProfileModalOpen(false)}
-            className="p-1.5 rounded-xl bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+            className="theme-x-btn w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer shrink-0"
             title="Close"
           >
             <X className="w-4 h-4 stroke-[2.5]" />

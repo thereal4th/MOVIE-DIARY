@@ -11,7 +11,7 @@ import { MoodTag, WatchFormat, Movie } from '../../types/diary';
 import { StarRating } from '../rating/StarRating';
 
 export const LogMovieModal: React.FC = () => {
-  const { isLogModalOpen, setIsLogModalOpen, addMovie, updateMovie, editingMovie, prefillMovie, friends } = useMovieDiary();
+  const { isLogModalOpen, setIsLogModalOpen, addMovie, updateMovie, deleteMovie, editingMovie, prefillMovie, friends } = useMovieDiary();
 
   const [title, setTitle] = useState('');
   const [director, setDirector] = useState('');
@@ -77,7 +77,7 @@ export const LogMovieModal: React.FC = () => {
       setGenres(prefillMovie.genres || ['Indie', 'Romance']);
       setUserRating(prefillMovie.userRating || 5.0);
       setReviewNotes(prefillMovie.reviewNotes || 'An enchanting cinematic discovery! ✿');
-      setDateWatched(new Date().toISOString().split('T')[0]);
+      setDateWatched(prefillMovie.dateWatched || new Date().toISOString().split('T')[0]);
       setWatchFormat('Cozy Couch 🛋️');
       setMoodTags(prefillMovie.moodTags || ['☁️ Comfort Watch', '🎨 Aesthetic Gem']);
       setTaggedFriendIds([]);
@@ -202,8 +202,8 @@ export const LogMovieModal: React.FC = () => {
               {/* Interactive Half-Star Rating & Favorite Switch */}
               <div className="p-3 rounded-2xl bg-[var(--surface-subtle)] border border-[var(--border-color)] flex items-center justify-between gap-2 shrink-0 shadow-xs">
                 <div>
-                  <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Your Rating (Half-Star)</span>
-                  <StarRating rating={userRating} interactive={true} size="md" onRatingChange={(val) => setUserRating(val)} />
+                  <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider block mb-1">Your Rating</span>
+                  <StarRating rating={userRating} interactive={true} size="md" showTooltip={false} onRatingChange={(val) => setUserRating(val)} />
                 </div>
                 <button
                   type="button"
@@ -337,21 +337,40 @@ export const LogMovieModal: React.FC = () => {
           </div>
 
           {/* Compact Submit Footer */}
-          <div className="shrink-0 flex items-center justify-end gap-3 pt-3 border-t border-[var(--border-color)]">
-            <button
-              type="button"
-              onClick={() => setIsLogModalOpen(false)}
-              className="px-5 py-2 rounded-xl bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] font-black text-xs transition-colors cursor-pointer border border-[var(--border-color)]"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-6 py-2 rounded-xl bg-linear-to-r from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-[var(--text-primary)] font-black text-xs shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 border border-white/40 cursor-pointer uppercase tracking-wider"
-            >
-              <span>✿</span>
-              <span>{editingMovie ? 'Save Updates' : 'Save to Diary'}</span>
-            </button>
+          <div className="shrink-0 flex flex-wrap items-center justify-between gap-2.5 pt-3 border-t border-[var(--border-color)]">
+            <div>
+              {editingMovie && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (confirm(`Delete "${editingMovie.title}" from your movie diary?`)) {
+                      deleteMovie(editingMovie.id);
+                      setIsLogModalOpen(false);
+                    }
+                  }}
+                  className="px-4 py-2 rounded-xl bg-rose-600/10 hover:bg-rose-600/20 text-rose-500 font-black text-xs transition-colors cursor-pointer border border-rose-500/30 flex items-center gap-1.5"
+                  title="Delete this entry from your movie diary"
+                >
+                  <span>🗑️ Delete</span>
+                </button>
+              )}
+            </div>
+            <div className="flex items-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => setIsLogModalOpen(false)}
+                className="px-4 py-2 rounded-xl bg-[var(--surface-subtle)] hover:bg-[var(--surface-hover)] text-[var(--text-secondary)] font-black text-xs transition-colors cursor-pointer border border-[var(--border-color)]"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-5 py-2 rounded-xl bg-linear-to-r from-[var(--accent-sakura)] via-[var(--accent-honey)] to-[var(--accent-matcha)] text-[var(--text-primary)] font-black text-xs shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 border border-white/40 cursor-pointer uppercase tracking-wider active:scale-95"
+              >
+                <span>✿</span>
+                <span>{editingMovie ? 'Save Updates' : 'Save to Diary'}</span>
+              </button>
+            </div>
           </div>
         </form>
       </div>

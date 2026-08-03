@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { MovieDiaryProvider, useMovieDiary } from '../context/MovieDiaryContext';
 import { NotebookSideTabs } from '../components/layout/Navbar';
 import { BinderSpine } from '../components/layout/BinderSpine';
@@ -16,15 +16,24 @@ import { LogMovieModal } from '../components/modals/LogMovieModal';
 import { FriendProfileModal } from '../components/friends/FriendProfileModal';
 import { AccountCenterModal } from '../components/modals/AccountCenterModal';
 import { EditProfileModal } from '../components/modals/EditProfileModal';
-import { Film, Sun, Moon, Plus, Sparkles, Settings } from 'lucide-react';
+import { CustomizeCoverModal } from '../components/modals/CustomizeCoverModal';
+import { Film, Sun, Moon, Plus, Sparkles, Settings, X, BookOpen, Palette } from 'lucide-react';
 
 const DashboardContent: React.FC = () => {
-  const { activeTab, theme, toggleTheme, setIsLogModalOpen, setIsAccountModalOpen, setEditingMovie, setPrefillMovie } = useMovieDiary();
+  const { activeTab, theme, toggleTheme, setIsLogModalOpen, setIsAccountModalOpen, setIsCustomizeCoverModalOpen, setEditingMovie, setPrefillMovie, userProfile, diaryState, setDiaryState } = useMovieDiary();
 
   const handleOpenLogModal = () => {
     setEditingMovie(null);
     setPrefillMovie(null);
     setIsLogModalOpen(true);
+  };
+
+  const handleCloseNotebook = () => {
+    setDiaryState('closed');
+  };
+
+  const handleOpenNotebook = () => {
+    setDiaryState('open');
   };
 
   return (
@@ -50,6 +59,20 @@ const DashboardContent: React.FC = () => {
 
         {/* Top Right: Lucide Theme Switcher & Log Movie Action */}
         <div className="flex items-center gap-2">
+          {diaryState === 'closed' && (
+            <button
+              onClick={() => setIsCustomizeCoverModalOpen(true)}
+              title="Customize Book Cover Color, Inscription & Stickers"
+              className="w-9 h-9 rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] border-2 border-[var(--border-color)] flex items-center justify-center shadow-sm hover:scale-110 active:scale-95 transition-transform select-none cursor-pointer animate-fade-in"
+            >
+              {theme === 'day' ? (
+                <Palette className="w-4.5 h-4.5 text-amber-500 fill-amber-300/20 stroke-[2.5]" />
+              ) : (
+                <Palette className="w-4.5 h-4.5 text-rose-600 fill-rose-400/20 stroke-[2.5]" />
+              )}
+            </button>
+          )}
+
           <button
             onClick={toggleTheme}
             title={theme === 'day' ? 'Switch to Red Gingham with Green Accents' : 'Switch to Classic Black Gingham with Cream Paper'}
@@ -75,14 +98,28 @@ const DashboardContent: React.FC = () => {
       {/* 📖 Perfectly Centered 100vh Locked Notebook Wrapper! */}
       <div className="max-w-[1360px] w-full flex-1 min-h-0 flex items-stretch justify-center relative mb-0.5">
         
-        {/* Main Leatherette Bound Diary Paper Content Frame: 100vh Locked & 2-Page Split! */}
-        <div className="w-full h-full diary-notebook-frame diary-paper-texture flex flex-row relative z-20 shadow-2xl rounded-3xl overflow-visible">
-          
-          {/* Absolutely position side divider tabs on outer right rim! */}
-          <NotebookSideTabs />
+        {/* Theme-aligned round X close button fixed on the far-right margin (Only visible when notebook is open!) */}
+        {diaryState !== 'closed' && (
+          <button
+            onClick={() => setDiaryState('closed')}
+            title="Fold Notebook Closed"
+            className="theme-x-btn fixed top-[58px] sm:top-[66px] right-3 sm:right-6 lg:right-8 z-[100] w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-200 select-none cursor-pointer group animate-fadeIn shadow-2xl"
+          >
+            <X className="w-5 h-5 sm:w-6 sm:h-6 stroke-[3] transition-transform duration-300 group-hover:rotate-90" />
+          </button>
+        )}
 
-          {/* Journal Paper Interior Content Area: 100vh fixed container for Left & Right pages */}
-          <main className="flex-1 min-w-0 min-h-0 overflow-hidden rounded-3xl z-10 w-full flex flex-col h-full">
+
+        {/* Outer Notebook Wrapper (Transparent container so no background paper remains visible when closed!) */}
+        <div className={`notebook-wrapper w-full h-full flex flex-row relative z-20 overflow-visible ${diaryState === 'closed' ? 'closed' : ''}`}>
+          
+          {/* Automatically fade out side divider tabs when notebook is closed */}
+          <div className={`transition-opacity duration-500 ${diaryState === 'closed' ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+            <NotebookSideTabs />
+          </div>
+
+          {/* Journal Interior Content Area */}
+          <main className="flex-1 min-w-0 min-h-0 overflow-visible z-10 w-full flex flex-col h-full">
             {activeTab === 'library' && <WatchedLibrary />}
             {activeTab === 'friends' && <FriendsSection />}
             {activeTab === 'discover' && <RecommendationsSection />}
@@ -96,18 +133,22 @@ const DashboardContent: React.FC = () => {
       <FriendProfileModal />
       <AccountCenterModal />
       <EditProfileModal />
+      <CustomizeCoverModal />
 
-      {/* Floating Lower-Left Account Center Action (No Label) */}
-      <button
-        onClick={() => setIsAccountModalOpen(true)}
-        className="fixed bottom-3.5 left-3.5 sm:bottom-5 sm:left-5 z-50 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] text-[var(--text-primary)] border-2 border-[var(--border-color)] hover:border-[var(--text-primary)] shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer select-none group"
-        title="Open User Dashboard & Account Center"
-      >
-        <Settings className="w-5 h-5 text-rose-500 stroke-[2.5] transition-transform duration-500 group-hover:rotate-90" />
-      </button>
+      {/* Floating Lower-Right Account Center Action (Only visible when notebook is closed!) */}
+      {diaryState === 'closed' && (
+        <button
+          onClick={() => setIsAccountModalOpen(true)}
+          className="fixed bottom-3.5 right-3.5 sm:bottom-5 sm:right-5 z-50 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[var(--surface-card)] hover:bg-[var(--surface-hover)] text-[var(--text-primary)] border-2 border-[var(--border-color)] hover:border-[var(--text-primary)] shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer select-none group animate-fadeIn"
+          title="Open User Dashboard & Account Center"
+        >
+          <Settings className="w-5 h-5 text-rose-500 stroke-[2.5] transition-transform duration-500 group-hover:rotate-90" />
+        </button>
+      )}
     </div>
   );
 };
+
 
 export default function Home() {
   return (

@@ -5,6 +5,7 @@
     /* Theme 1: Chic Black Gingham Tablecloth with Beige Tooltip Labels & Porcelain Paper! */
     --bg-primary: #121214; /* Deep matte black & charcoal picnic table */
     --gingham-color: rgba(210, 215, 230, 0.20); /* Classic monochrome black & white checks */
+    --book-cover: #1E1C24; /* Solid chic charcoal hardcover for black gingham */
     
     /* Tablecloth Text (Outside the notebook directly on the dark table!) */
     --tablecloth-text: #FAFAFC; /* Crisp Platinum Pearl White */
@@ -46,6 +47,30 @@
     --washi-gold: rgba(250, 225, 165, 0.95);
     --washi-lilac: rgba(220, 210, 240, 0.95);
 
+    /* Theme-Aligned X-Buttons (Black & Beige Night Mode - Champagne Gold Circle, NO BLACK!) */
+    --btn-close-bg: #C89656; /* Rich Champagne Golden Amber */
+    --btn-close-hover: #DCAC6C; /* Luminous Gold Sheen */
+    --btn-close-text: #17130E; /* Deep contrast charcoal ink for crisp icon visibility */
+    --btn-close-border: #FFF6EA; /* Crisp Pearl Ivory border ring around the circle */
+    --btn-close-shadow: 0 4px 16px rgba(200, 150, 86, 0.45);
+
+    /* Diary Log Day Popup Theme Variables (Night Mode: Espresso & Champagne Gold) */
+    --popup-bg: #1A171D; /* Deep matte espresso charcoal */
+    --popup-border: #D1BEA5; /* Champagne Gold stitching */
+    --popup-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 16px rgba(209, 190, 165, 0.25);
+    --popup-title: #E8CAA3; /* Warm champagne radiant title */
+    --popup-card-bg: rgba(255, 245, 230, 0.07); /* Subtle warm beige glass */
+    --popup-card-hover: rgba(255, 245, 230, 0.14);
+    --popup-card-border: rgba(209, 190, 165, 0.35);
+    --popup-text: #F7ECD9; /* Warm vintage beige text */
+    --popup-subtext: #AD9883; /* Muted champagne notes */
+    --popup-stars: #FBBF24; /* Radiant golden amber */
+    --popup-btn-bg: #C89656; /* Rich Champagne Golden Amber */
+    --popup-btn-hover: #D8A666;
+    --popup-btn-text: #17130E; /* Deep velvet charcoal contrast */
+    --popup-edit-icon: #FCD34D; /* Warm champagne gold */
+    --popup-delete-icon: #FB7185; /* Soft glowing rose */
+
     --card-shadow: 0 12px 28px -5px rgba(20, 15, 12, 0.15), 0 6px 14px -6px rgba(20, 15, 12, 0.12);
     --notebook-shadow: -20px 0 50px rgba(0, 0, 0, 0.8), 0 32px 85px rgba(0, 0, 0, 0.75);
   }
@@ -54,6 +79,7 @@
     /* Theme 2: Red Gingham Tablecloth with Fresh Botanical Green Accents! */
     --bg-primary: #FFF0F3; /* Sweet strawberry cream linen */
     --gingham-color: rgba(228, 38, 75, 0.26); /* Classic Red Gingham check */
+    --book-cover: #C42643; /* Solid classic strawberry ruby red hardcover for red gingham */
     
     /* Tablecloth Text */
     --tablecloth-text: #114228; /* Deep botanical pine green */
@@ -94,9 +120,55 @@
     --washi-gold: rgba(125, 220, 170, 0.95);
     --washi-lilac: rgba(145, 235, 185, 0.95);
 
+    /* Theme-Aligned X-Buttons (Botanical Green Day Mode - Vibrant Botanical Emerald Circle) */
+    --btn-close-bg: #228E58; /* Vibrant Emerald Botanical Green */
+    --btn-close-hover: #29A566; /* Fresh lush green hover */
+    --btn-close-text: #FFFFFF; /* Crisp white icon */
+    --btn-close-border: #E8FCF3; /* Bright Botanical Mint White border ring around the circle */
+    --btn-close-shadow: 0 4px 16px rgba(34, 142, 88, 0.40);
+
+    /* Diary Log Day Popup Theme Variables (Day Mode: Soft Gingham Picnic) */
+    --popup-bg: #FFF9F0; /* Warm sun-dappled picnic cream linen */
+    --popup-border: #DE7993; /* Sweet strawberry gingham rose stitching */
+    --popup-shadow: 0 12px 32px rgba(216, 112, 139, 0.25), 0 4px 12px rgba(90, 40, 55, 0.08);
+    --popup-title: #9B2C4B; /* Vintage rosewood berry ink */
+    --popup-card-bg: #FFF0F4; /* Soft rose strawberry cream glaze */
+    --popup-card-hover: #FFE6EC; /* Slightly richer strawberry puff on hover */
+    --popup-card-border: #F0B3C4; /* Delicate rose gingham line */
+    --popup-text: #3D2B30; /* Deep cocoa rose ink for sharp readability */
+    --popup-subtext: #8C5C68; /* Muted sweet tea notes */
+    --popup-stars: #D9880B; /* Rich sunny caramel gold */
+    --popup-btn-bg: #C64B6C; /* Rich Strawberry Gingham Berry Rose */
+    --popup-btn-hover: #D65A7D; /* Luminous rose puff hover */
+    --popup-btn-text: #FFFFFF; /* Crisp pearl linen contrast */
+    --popup-edit-icon: #B87308; /* Warm honey caramel */
+    --popup-delete-icon: #D93856; /* Vibrant strawberry rose berry */
+
     --card-shadow: 0 12px 30px -5px rgba(25, 95, 60, 0.16), 0 8px 16px -6px rgba(25, 95, 60, 0.12);
     --notebook-shadow: -18px 0 45px rgba(185, 50, 80, 0.25), 0 30px 75px rgba(165, 40, 70, 0.22);
   }
+}
+
+/* Theme-Aligned X Close & Delete Buttons with Distinct Circle Ring */
+.theme-x-btn {
+  background-color: var(--btn-close-bg) !important;
+  color: var(--btn-close-text) !important;
+  border: 2.5px solid var(--btn-close-border) !important;
+  box-shadow: var(--btn-close-shadow) !important;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 9999px !important;
+}
+.theme-x-btn:hover {
+  background-color: var(--btn-close-hover) !important;
+  color: var(--btn-close-text) !important;
+  border-color: var(--btn-close-text) !important;
+  transform: scale(1.1);
+}
+.theme-x-btn:active {
+  transform: scale(0.95);
 }
 
 body {
@@ -142,10 +214,13 @@ body {
 
 /* Central Dividing Ring Binder Spine Between Left Page and Right Page */
 .center-ring-spine {
-  background: linear-gradient(90deg, rgba(0,0,0,0.06) 0%, var(--surface-subtle) 40%, var(--surface-card) 50%, var(--surface-subtle) 60%, rgba(0,0,0,0.06) 100%);
+  background-color: var(--surface-card);
+  background-image: radial-gradient(var(--border-color) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  background-position: center top;
   border-left: 1px solid var(--border-color);
   border-right: 1px solid var(--border-color);
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.08);
+  box-shadow: inset 6px 0 12px -3px rgba(0, 0, 0, 0.08), inset -6px 0 12px -3px rgba(0, 0, 0, 0.08);
 }
 
 /* Left Margin Stitched Leatherette Binder Spine (Fallback / Accent) */
@@ -311,3 +386,129 @@ body {
   -ms-overflow-style: none !important;  /* IE and Edge */
   scrollbar-width: none !important;  /* Firefox */
 }
+
+/* ==========================================================================
+   UI-UX-PRO-MAX: Left Page Only Flip Over Ring Binder Holes (Right Side Stationary)
+   ========================================================================== */
+@keyframes leftPageFoldClose {
+  0% { 
+    transform: perspective(2000px) rotateY(0deg);
+    opacity: 1;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+  }
+  60% { 
+    transform: perspective(2000px) rotateY(110deg);
+    opacity: 0.95;
+    filter: drop-shadow(-35px 25px 50px rgba(0,0,0,0.65));
+  }
+  100% { 
+    transform: perspective(2000px) rotateY(175deg);
+    opacity: 0;
+    filter: drop-shadow(0 15px 35px rgba(0,0,0,0.85));
+  }
+}
+
+@keyframes leftPageFoldOpen {
+  0% { 
+    transform: perspective(2000px) rotateY(175deg);
+    opacity: 0;
+    filter: drop-shadow(0 15px 35px rgba(0,0,0,0.85));
+  }
+  40% {
+    transform: perspective(2000px) rotateY(110deg);
+    opacity: 0.95;
+    filter: drop-shadow(-35px 25px 50px rgba(0,0,0,0.65));
+  }
+  100% { 
+    transform: perspective(2000px) rotateY(0deg);
+    opacity: 1;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4));
+  }
+}
+
+@keyframes closedBookDrop {
+  0% { 
+    transform: perspective(2000px) scale(1.05) translateY(-10px);
+    opacity: 0.5;
+  }
+  100% { 
+    transform: perspective(2000px) scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-left-page-close {
+  animation: leftPageFoldClose 0.6s cubic-bezier(0.3, 0, 0.2, 1) forwards;
+  transform-origin: right center;
+  z-index: 30;
+}
+
+.animate-left-page-open {
+  animation: leftPageFoldOpen 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: right center;
+  z-index: 30;
+}
+
+.animate-book-drop {
+  animation: closedBookDrop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: center center;
+}
+
+/* ==========================================================================
+   UI-UX-PRO-MAX: Pure 3D Left Panel Hinge & Container Centered Slide Mechanics
+   ========================================================================== */
+
+/* The outer notebook container wrapper with smooth translation to stay centered when closed */
+.notebook-wrapper {
+  perspective: 2500px;
+  transform: translateX(0%);
+  transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+/* When closed, shift -25% horizontally so the closed book (sitting in right half) lands dead center on screen */
+.notebook-wrapper.closed {
+  transform: translateX(-25%);
+}
+
+/* The single 3D card wrapper for the left panel */
+#left-panel {
+  transform-style: preserve-3d;
+  transform-origin: right center;
+  transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+  transform: rotateY(0deg);
+}
+
+/* Trigger 180 degree fold over the center ring binder onto the right panel when closed */
+.notebook-wrapper.closed #left-panel {
+  transform: rotateY(180deg);
+}
+
+/* Both faces positioned absolutely to eliminate jitter and layout shifts */
+.page-front,
+.page-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Front face holding left page content */
+.page-front {
+  transform: rotateY(0deg);
+}
+
+/* Back face representing outer book cover design with 1 solid color matching gingham theme, zero textures */
+.page-back {
+  transform: rotateY(-180deg);
+  background-color: var(--book-cover, #C42643);
+  background-image: none !important; /* Guarantee NO paper or line textures */
+}
+
