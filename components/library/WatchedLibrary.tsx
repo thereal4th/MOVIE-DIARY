@@ -10,7 +10,7 @@ import { MovieCard } from './MovieCard';
 import { SortOption, ViewMode, Movie } from '../../types/diary';
 import { StarRating } from '../rating/StarRating';
 import { DualPaneNotebook } from '../layout/DualPaneNotebook';
-import { Search, Scroll, Film, Calendar as CalendarIcon, RotateCcw, MapPin, CalendarDays, Plus, X, Sparkles, Heart, Users } from 'lucide-react';
+import { Search, Scroll, Film, Calendar as CalendarIcon, RotateCcw, MapPin, CalendarDays, Plus, X, Sparkles, Heart, Users, Pencil, Trash2 } from 'lucide-react';
 
 export const WatchedLibrary: React.FC = () => {
   const {
@@ -23,7 +23,8 @@ export const WatchedLibrary: React.FC = () => {
     getTaggedFriends,
     setPrefillMovie,
     updateRating,
-    userProfile
+    userProfile,
+    deleteMovie
   } = useMovieDiary();
 
   // Right page view switcher state (Chronological Feed vs Dense Poster Wall)
@@ -272,12 +273,46 @@ export const WatchedLibrary: React.FC = () => {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-40 overflow-y-auto pr-1">
             {selectedDayMovies.list.map((m) => (
-              <div key={m.id} onClick={() => handleEdit(m)} className="p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 flex items-center gap-2 cursor-pointer" title="Click to edit entry">
+              <div key={m.id} onClick={() => handleEdit(m)} className="group relative p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 flex items-center gap-2 cursor-pointer transition-all duration-200 overflow-hidden" title="Click to edit entry">
                 <img src={m.posterPath} alt={m.title} className="w-10 h-14 rounded-lg object-cover shrink-0" />
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 flex-1 pr-6">
                   <p className="text-xs font-black text-white truncate">{m.title}</p>
                   <p className="text-[10px] text-amber-400 font-extrabold">{m.userRating.toFixed(1)} ★</p>
                   <span className="text-[9px] text-slate-300 block truncate">{m.venue || 'Home Screening'}</span>
+                </div>
+
+                {/* Hover action button group on top right */}
+                <div className="opacity-0 group-hover:opacity-100 transition-all duration-200 absolute top-1.5 right-1.5 flex items-center gap-1 bg-slate-950/95 backdrop-blur-md px-1.5 py-1 rounded-lg border border-white/30 shadow-lg z-20">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit(m);
+                    }}
+                    className="p-1 rounded-md text-amber-400 hover:bg-amber-500 hover:text-slate-950 transition-colors cursor-pointer flex items-center justify-center"
+                    title="Edit comments, ratings, and details"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (confirm(`Are you sure you want to delete "${m.title}" from your diary?`)) {
+                        deleteMovie(m.id);
+                        const updatedList = selectedDayMovies.list.filter(item => item.id !== m.id);
+                        if (updatedList.length === 0) {
+                          setSelectedDayMovies(null);
+                        } else {
+                          setSelectedDayMovies({ ...selectedDayMovies, list: updatedList });
+                        }
+                      }
+                    }}
+                    className="p-1 rounded-md text-rose-400 hover:bg-rose-600 hover:text-white transition-colors cursor-pointer flex items-center justify-center"
+                    title="Delete movie in case of mistaken log"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
             ))}
